@@ -16,6 +16,10 @@ local function InitializeDatabase()
         addon.databaseStatus = "incompatible; existing data preserved"
         return
     end
+    if type(database.minimapPos) ~= "number" or database.minimapPos ~= database.minimapPos
+        or math.abs(database.minimapPos) > 360 then
+        database.minimapPos = 225
+    end
     addon.db = database
     addon.databaseStatus = "ready (schema 1)"
     addon.initialized = true
@@ -38,6 +42,7 @@ frame:SetScript("OnEvent", function(self, event, loadedAddon)
         self:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_LOGIN" then
         if addon.initialized then
+            addon.CreateMinimapButton()
             addon.Print("Ready.")
         else
             addon.Print("Database unavailable; diagnostics remain available.")

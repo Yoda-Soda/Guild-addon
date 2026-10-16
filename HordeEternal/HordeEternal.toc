@@ -9,3 +9,4 @@ Compat.lua
 Diagnostics.lua
 Core.lua
 Canvas.lua
+MinimapButton.lua
