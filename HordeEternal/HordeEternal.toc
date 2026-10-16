@@ -1,0 +1,11 @@
+## Interface: 16001
+## Title: HordeEternal
+## Notes: Horde Eternal guild canvas prototype. Interface 16001 is provisional; verify against the running client.
+## Version: 0.1.0
+## SavedVariables: HordeEternalDB
+## IconTexture: Interface\AddOns\HordeEternal\media\HordeEternalEmblem.tga
+
+Compat.lua
+Diagnostics.lua
+Core.lua
+Canvas.lua
