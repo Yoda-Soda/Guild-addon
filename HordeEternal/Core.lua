@@ -16,9 +16,15 @@ local function InitializeDatabase()
         addon.databaseStatus = "incompatible; existing data preserved"
         return
     end
+    if database.minimapPositionVersion == nil then
+        if database.minimapPos == nil or database.minimapPos == 225 then
+            database.minimapPos = 315
+        end
+        database.minimapPositionVersion = 1
+    end
     if type(database.minimapPos) ~= "number" or database.minimapPos ~= database.minimapPos
         or math.abs(database.minimapPos) > 360 then
-        database.minimapPos = 225
+        database.minimapPos = 315
     end
     addon.db = database
     addon.databaseStatus = "ready (schema 1)"

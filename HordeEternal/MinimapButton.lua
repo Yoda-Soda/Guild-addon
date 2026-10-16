@@ -6,11 +6,12 @@ local function Position(button, angle)
     if not Minimap then
         return
     end
-    local radius = Minimap:GetWidth() / 2 + 5
+    local radiusX = Minimap:GetWidth() / 2 + 5
+    local radiusY = Minimap:GetHeight() / 2 + 5
     local radians = math.rad(angle)
     button:ClearAllPoints()
-    button:SetPoint("CENTER", Minimap, "CENTER", math.cos(radians) * radius,
-        math.sin(radians) * radius)
+    button:SetPoint("CENTER", Minimap, "CENTER", math.cos(radians) * radiusX,
+        math.sin(radians) * radiusY)
 end
 
 local function CursorAngle()
@@ -35,28 +36,31 @@ function addon.CreateMinimapButton()
 
     local button = CreateFrame("Button", "HordeEternalMinimapButton", Minimap)
     addon.minimapButton = button
-    button:SetSize(31, 31)
+    button:SetSize(33, 33)
     button:SetFrameStrata("MEDIUM")
     button:SetFrameLevel(8)
 
     local border = button:CreateTexture(nil, "OVERLAY")
     border:SetSize(53, 53)
-    border:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0)
+    border:SetPoint("CENTER", button, "CENTER")
     border:SetTexture(136430)
 
     local background = button:CreateTexture(nil, "BACKGROUND")
-    background:SetSize(20, 20)
-    background:SetPoint("TOPLEFT", button, "TOPLEFT", 7, -5)
+    background:SetSize(22, 22)
+    background:SetPoint("CENTER", button, "CENTER")
     background:SetTexture(136467)
 
     local icon = button:CreateTexture(nil, "ARTWORK")
     icon:SetTexture(iconTexture)
-    icon:SetSize(18, 18)
+    icon:SetSize(22, 22)
     icon:SetPoint("CENTER", button)
 
     local settings = addon.db
-    local angle = type(settings.minimapPos) == "number" and settings.minimapPos or 225
+    local angle = type(settings.minimapPos) == "number" and settings.minimapPos or 315
     Position(button, angle)
+    Minimap:HookScript("OnSizeChanged", function()
+        Position(button, angle)
+    end)
 
     button:RegisterForDrag("LeftButton")
     button:SetScript("OnClick", function(_, mouseButton)
