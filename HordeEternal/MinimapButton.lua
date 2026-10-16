@@ -40,9 +40,14 @@ function addon.CreateMinimapButton()
     button:SetFrameStrata("MEDIUM")
     button:SetFrameLevel(8)
 
+    local border = button:CreateTexture(nil, "OVERLAY")
+    border:SetSize(53, 53)
+    border:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0)
+    border:SetTexture(136430)
+
     local background = button:CreateTexture(nil, "BACKGROUND")
     background:SetSize(22, 22)
-    background:SetPoint("CENTER", button, "CENTER")
+    background:SetPoint("TOPLEFT", button, "TOPLEFT", 7, -5)
     background:SetTexture(136467)
 
     local icon = button:CreateTexture(nil, "ARTWORK")
