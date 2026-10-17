@@ -1,0 +1,613 @@
+{
+    "project":  "LibProfessionDB",
+    "version":  "1.9.1",
+    "libStubMajor":  "LibProfessionDB-1.0",
+    "libStubMinor":  13,
+    "source":  "https://www.curseforge.com/wow/addons/libprofessiondb/files/9095167",
+    "archiveSha256":  "909CB41720CF6BF6920F1C25C644F89B39AD63087F589C07737E7DA943C52379",
+    "game":  "Forever",
+    "dataBuild":  "1.60.1.69977",
+    "expectedRecipes":  2511,
+    "files":  [
+                  {
+                      "path":  "libs/LibStub/LibStub.lua",
+                      "sha256":  "02D25B7433AF734B59F0C4571BFAA73B2B660992D71D2FB6A8809B32DE3F964C"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/LibProfessionDB-1.0.lua",
+                      "sha256":  "906D23FBC4E006502A468E51B914B9A66C434ACFCFB51FB444EFECF1CAF3324E"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/LICENSE",
+                      "sha256":  "0333C25C451F6F0D12BC9BBD38D996FC80A44F5BA05900FE50D045B4769A0A15"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Alchemy.lua",
+                      "sha256":  "F81340A90AEE32787E4B38AB75A951D40E888032FA4020C19F97B89FB97DF7BB"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Blacksmithing.lua",
+                      "sha256":  "0A193AB5E33B3DC361AF178BB1F9624AB1F1B729F9EBD16FB78E878AEC3CF675"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Cooking.lua",
+                      "sha256":  "91B7567C02C296E7068DBC380331FFE1E50579E2D6EB684DD1ACD9AE7C2469D6"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Enchanting.lua",
+                      "sha256":  "789454377E85CACB1EE68E2EE7E213F05263BF7C00E9C3A8F2E2F6E8389861DE"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Engineering.lua",
+                      "sha256":  "2D3E87DAE3EBBE223DD56730C3A650A0205F121DDC39307C2C4AEA03CBC5AA27"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Firstaid.lua",
+                      "sha256":  "9364A7106173952C411F4AE8C78D23DD2DDF991E1A8C3D7024201B370AA06D6F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Fishing.lua",
+                      "sha256":  "EFACC79F6FCB90BD2461BE8382AACB4C9355DDA50526701CAD87135242A92867"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Leatherworking.lua",
+                      "sha256":  "2F6B0E1B0B9807513D82E7C04E467D9282EBBAAF0776BFE0DF28627B9F7F58B1"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Mining.lua",
+                      "sha256":  "E5AC5B12A63CB4DA62D62608D35931AFA6027ACCB16AA417A4020DBEAFB966F4"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Tailoring.lua",
+                      "sha256":  "A1D1A4C6179C3C82E3875639E4F96D809FE7EF7D1417F9321B3957DE60F221E3"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/RecipeItems.lua",
+                      "sha256":  "100496D28485C05F4B12BC846F51C2D296BF12C3BBB766954E5ABA0C793A0B18"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/HiddenRecipes.lua",
+                      "sha256":  "1F8D6EF6EC09148BA758CC9BE9DB2083DAD7E4BA4D6EA5CDAEDED616B108569D"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/AcquireMethods.lua",
+                      "sha256":  "A93BC6A028251522244BCE056D86262B8F97463764244393E0D6DD6B155A06CA"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/Sources.lua",
+                      "sha256":  "BDCD7C50113A6E8751620B4C56DABFE16AE8094468360148A4729785D82A1C6D"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/_core/SourceNames.lua",
+                      "sha256":  "A5B89D8DDD89D38D68DA07ACF218BBE6470F9BD0A3A322841EB4F058E326CF54"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Alchemy.lua",
+                      "sha256":  "B20BA2C78391E81E8C7A6D93570A72BFAC761B7FE62213F5F0417B3577DC5231"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Blacksmithing.lua",
+                      "sha256":  "FC638B855AF56A52D7871D83A1D0960D7B7A9B50C4D16FDF1EC3C6E2917D6574"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Cooking.lua",
+                      "sha256":  "38F8F17C42BC5768AE51930E1DD6E18F190B5E121F31A1B93DE305EB3008E414"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Enchanting.lua",
+                      "sha256":  "F958687BA66CA4661A26B25D969D33676F37F57D394105048FDF2B7AFF7527DA"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Engineering.lua",
+                      "sha256":  "3750378A2E22107FB3187AD9FF9AEE764B022EDF44D72F179EBEA683B8458D16"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Firstaid.lua",
+                      "sha256":  "27297B2DCB22C0B65A43B88E88D345CBB9C4D5FF4498084F281D05DAC5EBDA19"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Fishing.lua",
+                      "sha256":  "4A19C2322B8CB48E8AC5E36BD577425D3BFC440D6864578A314C846C024FE8B0"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Leatherworking.lua",
+                      "sha256":  "44891883370064773D796B822080A6E7F13D2B13CA9638DD69C3EBDE7CD0B69F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Mining.lua",
+                      "sha256":  "616018C3EDDE336EFB10C0D0D8DE00D1EB951F721E41483971B999DE57BBEA98"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/Tailoring.lua",
+                      "sha256":  "EF2DDFF32DD364C8BA231A0CEB874446BC1C6BAE9586EF358145968138920A00"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/deDE/RecipeScrollPrefixes.lua",
+                      "sha256":  "5D1C013D3253B30680FA9BEDA1B0882B7054D835B19D62FC364195F798830EC4"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Alchemy.lua",
+                      "sha256":  "117FF265550B13D35E3D7E15578E37EE34118D134E4E42B0A579B104A9B5F4EE"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Blacksmithing.lua",
+                      "sha256":  "AB19635DD370C90063757F1FE2DC92935B8C6EA213B188547611D43F5A1021E7"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Cooking.lua",
+                      "sha256":  "5D79F560A64697996E6C753FB2A152F5A15E8649DF88BB59DF6C36B5E60E6021"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Enchanting.lua",
+                      "sha256":  "F419E90C89321C500C15EEB8CAA7693B278790615BD924C6D6DD634A38852437"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Engineering.lua",
+                      "sha256":  "698FFDA8D05B2A869F3574EAA2084316895AED70AE398D32271A796AD25A7031"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Firstaid.lua",
+                      "sha256":  "B18C4B8E828EF26CC596BBB826CFA70838BAD0990369077004444617A325C7F8"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Fishing.lua",
+                      "sha256":  "F839E24BD9FE3B41EF1CFCFF347155D912FEB6EA5133F31871924D92FFD4CFF5"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Leatherworking.lua",
+                      "sha256":  "CC16B8447FD0AB55351971D2DA0450924725CF765514CB791ABFA2D9FBCE398A"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Mining.lua",
+                      "sha256":  "89961F5F712B16E88D9B78F4E189B8B13BC65829834EFC1AC462CB2547CE0309"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/Tailoring.lua",
+                      "sha256":  "6C2ABC57ED1AEE7B4040BD79B66037BCE6A33722C4027EF9BC9178D45CDB9B2E"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enGB/RecipeScrollPrefixes.lua",
+                      "sha256":  "7C5E407EF252081F9B09956899E21B99E2E7E54F5E6670FB8EA37030207D45DD"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Alchemy.lua",
+                      "sha256":  "BF53472505040A7ED30DAF4C7DFDDB29006AB07B6706D3A152DFF5D2C8E671A6"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Blacksmithing.lua",
+                      "sha256":  "0A4997BAF49A064DEE0A1B7634AA2A3008855FC64113C6164B8245AAF2BA0CF6"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Cooking.lua",
+                      "sha256":  "AF430D0D74C94A3A835FB5DE2563FD486383C7F7A910D58F5D87DF4F5A30D4E6"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Enchanting.lua",
+                      "sha256":  "944C79F9CFA7281822E60DABC0388114A0C948B2D36D9F74FEF30A5557AA0E5B"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Engineering.lua",
+                      "sha256":  "8BA6C07EEA147D5B4601D7FD9D514E50F8453FE3BFD1828062BB4579863209D4"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Firstaid.lua",
+                      "sha256":  "BD5421AFA0444AA8200E3FDDAEFAD81C9E4B513523230D9458CBB55B38AD70C1"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Fishing.lua",
+                      "sha256":  "428B1975B564D3656D510A95ADE160F1A1026208108785CCAC9814FA223FB310"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Leatherworking.lua",
+                      "sha256":  "0E6F6EF69C224EC60141A84933683D74DBFB0C9926B2219857B62EC050BD7A9C"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Mining.lua",
+                      "sha256":  "D3920983527035BDC535042590D1A2E657896F61EBB9EA1C4331C689AD24478B"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/Tailoring.lua",
+                      "sha256":  "87152E4CCBE457350812EA25FD6AC738F4EE4C735AF95713C6CDE592604D6C08"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/enUS/RecipeScrollPrefixes.lua",
+                      "sha256":  "465BA842719242CF0A53F0F291CBA05E09DFC1A318FB109C9551EA7D1E6C9018"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Alchemy.lua",
+                      "sha256":  "1843481FADD51B6BABE0057D06AC510E9B8737DE4D3B95668A8C56D096584D72"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Blacksmithing.lua",
+                      "sha256":  "66A257367E409BABC8FD2D9114FD1EA839E64F57D8F4B687282897E25825EC87"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Cooking.lua",
+                      "sha256":  "A66A2749ED33946DEC8D67ED7FBA22AEFB1E6E3828E7E1CFAB6B8496A7EB865D"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Enchanting.lua",
+                      "sha256":  "086D9FAFF544296796A5266C6389EEB247EFDCB209CFEB86B11E5CA66580C950"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Engineering.lua",
+                      "sha256":  "267707024E7B0CF8734EBDAE4F4C4F90C9BD76D1077DC2F94929EEAA94974A58"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Firstaid.lua",
+                      "sha256":  "4476FA2D4398FC4DEBE53A729C67D0D2F9120B05B61907541B913AF078E2D0EF"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Fishing.lua",
+                      "sha256":  "82EF477AEE054CE2C27BEC028B919E28BAA94EF179E9120BF99DE2EF5BDF5E8F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Leatherworking.lua",
+                      "sha256":  "C0BD0582F6F7E5C5F1117FF8BB0ADB89C5D5C8219590BBDB55C1143964CD43B7"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Mining.lua",
+                      "sha256":  "E1C445689966DD4DF21E2F58A8A37BF85B08DC22403644F211294210C0FE9D47"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/Tailoring.lua",
+                      "sha256":  "17D49FEC52B8ACE542DE869B0496409417D4468EF38B85C3AD1A5667D31C0D5F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esES/RecipeScrollPrefixes.lua",
+                      "sha256":  "A1E74726005EAC362428BE985430C36F9B1AB054655FBB067BC494191F05928F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Alchemy.lua",
+                      "sha256":  "A39665D4925A70D5BBD430410E8B35F410CD12072CD6FB6323000C106123C59F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Blacksmithing.lua",
+                      "sha256":  "02D405D9B093E2D8D2D6328DC7B35633B4C3FD49418DE622B32D0B3C85E80761"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Cooking.lua",
+                      "sha256":  "45FD57D7207CB27825E5E82BE0AE3A5BCAB1D93F2B21F3A070F3AB6847B76354"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Enchanting.lua",
+                      "sha256":  "6BE4604E8074B2868CAFEC042DD8D0F5EE9A38CEE71BDD22AF0E688AE039C74E"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Engineering.lua",
+                      "sha256":  "BF222CB880386D192AEEF97A974008CBFEB809DFE92E272C0738EBB17E8AFC7D"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Firstaid.lua",
+                      "sha256":  "B4BD8668358540CB1FD8A4B701C87A3B15A18646FDE8A6B2F638BBD3C05F2411"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Fishing.lua",
+                      "sha256":  "AE7D5AD978DDD1D5EBDD25B1B0FE28A5C0EF4410B437F6FCBA45674EBFED172F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Leatherworking.lua",
+                      "sha256":  "FFB0B0E54F4CAEF0DD1BDA7FE1A870344ED79B532ABBB5FB68DE18071493DBE8"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Mining.lua",
+                      "sha256":  "9E756138B28C18C0152B8B9FBEE0135E111D82DE1737283A982482809E687DC3"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/Tailoring.lua",
+                      "sha256":  "74FC6DC3446265E4FD37088248107BD4DCA95E942EFE435E263DB8952B61818B"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/esMX/RecipeScrollPrefixes.lua",
+                      "sha256":  "2B6EA7CECDB7F8E800227CF397BBC469D8181F14A4D3BC2681EC48BF72047BEE"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Alchemy.lua",
+                      "sha256":  "124F8E52D7C88BB25311949EC2625EA4125ED6554E6835B6C45959553059F17A"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Blacksmithing.lua",
+                      "sha256":  "1B20F685B380965440AFFFA6358F9504AB3A7B2A2E93A38F0A417B394E9BE74D"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Cooking.lua",
+                      "sha256":  "992D2B4D262B878F789E15241DBF847FEDF18FEF47A8012AD5542CB9DBBCBDAD"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Enchanting.lua",
+                      "sha256":  "0F040A3E0852118FD4BC367A31F4AB5554C743E7B2F000EF4142DA92BFDFBD55"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Engineering.lua",
+                      "sha256":  "9DEA794FC662D2AA21D2B5F83A05D60B84A92A0A586A236E705803416AB9E843"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Firstaid.lua",
+                      "sha256":  "D1FF5A5245849C8CD5740E5C12B5E8A2C699B16E63D2949AE4336533FC72B87B"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Fishing.lua",
+                      "sha256":  "EA42F04DFF4FC0A0A106A21A0AB1F0EAFC945E5E8806EEAB61907A71965E6156"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Leatherworking.lua",
+                      "sha256":  "7C7A11EFF6EA713F23A75F8F448A014A3803A4AFE69CCC9E01B744EA4908C469"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Mining.lua",
+                      "sha256":  "87D14D671FDE95E6B3B80DB78224776F538CFA2C65D31F923D00542787AF0B96"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/Tailoring.lua",
+                      "sha256":  "E0FFCE8A8BF8CBC5F9B2414B2E5ADB7A6524AB0A6FF022E98A2FB48376D84BD1"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/frFR/RecipeScrollPrefixes.lua",
+                      "sha256":  "15335F7A3D85D36C33A0A958EFF7837BB6F6D5EBD446009AF62A9247873B607B"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Alchemy.lua",
+                      "sha256":  "D66EDC5644604CCD1F054A6B1BA5F4F8EB53D7A02381ED22CBCB4C7A7C3E8AA0"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Blacksmithing.lua",
+                      "sha256":  "CCBB7FA432D83652EEABE0148F2B18EF3F91C89451F1A9B20C8B43D694634946"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Cooking.lua",
+                      "sha256":  "7635289401EE697DE5E4764D797262E622B22E0281A6AF6BB70C51BFD97E92E2"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Enchanting.lua",
+                      "sha256":  "7949776E38F7F6841F47CD98E1FA5F9C3CC2430DFD1D1E4AA9DE2DC7CD1AA18A"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Engineering.lua",
+                      "sha256":  "E0060468E33300F75DEDCBDF6802768AEF5D47A0325F8CF2BA1FEA5222E8395E"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Firstaid.lua",
+                      "sha256":  "2A36A3361D7A21C1EF3D2564ABA55BC6E7D8E03CB8CDFBD01A13510EF823D91B"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Fishing.lua",
+                      "sha256":  "DDE616890B0F2B4DF88D40B58F2FA88F9D1AE99062828317615BA106B6BAB41F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Leatherworking.lua",
+                      "sha256":  "E183AC5CD1BE77CD53F4893B2E470353422EA151D605C61567D5814170D1C7F4"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Mining.lua",
+                      "sha256":  "3ED5014621857FE3FF1CF85891539E83D3AD9071DE70B049DB7F3AB6FFB46187"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/Tailoring.lua",
+                      "sha256":  "78DF67076D7F035509F02C90F4531901B2D8A8A48F8AEADCAE5B4623CAEA1818"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/itIT/RecipeScrollPrefixes.lua",
+                      "sha256":  "9D471A5F143DE9F3F21783D1E256D2FC27E2A1B8C93026A5B20655ADAAB6EB15"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Alchemy.lua",
+                      "sha256":  "9FAF88686C25F69C4858D808E99913A2494236C0E6BF3A66D09864DD6E320FBA"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Blacksmithing.lua",
+                      "sha256":  "0E0B248B27A41FB192EEC2FEFCE33FD99C6BC2A1C66A7D79C851D29DAC1BB576"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Cooking.lua",
+                      "sha256":  "CFDF7C861C3973E5FEDFA210DCD52CBEE0C264D5E1F3DE2693E0796EC5EE79AA"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Enchanting.lua",
+                      "sha256":  "830968FCC003642EB8D4DE1A57197307520B4A5DA53D34824270CFF7E93C154D"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Engineering.lua",
+                      "sha256":  "B1E3484FC8B9381FE5D415E0C7F60E31EB0A58C3B745CA35B78D71FD27AFDDB7"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Firstaid.lua",
+                      "sha256":  "EB8904DB617B7B009C01D2C27E4F4CB40BF59158CABDCA3954FE25076A04DCCD"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Fishing.lua",
+                      "sha256":  "6F994B8C52446C4204CD95FC08DA33CD50FE8CCC9F395502521EF778C7FBB741"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Leatherworking.lua",
+                      "sha256":  "03460401EFB86BE96EAA356533E81AA6E65B8F120DA7A5C5D955D11A8D42A33E"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Mining.lua",
+                      "sha256":  "E08FFDEEF77EBF36F0D52D4208F81CE5532216053CD0A680D27F43D82BE0A3B0"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/Tailoring.lua",
+                      "sha256":  "AB65B12016E6DE2111BC07E8AE18A1D18A0EE53DB7088CFC06A3858AE6083FA1"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/koKR/RecipeScrollPrefixes.lua",
+                      "sha256":  "C12D36CF16A05114DFDA08CD390E5D2C35B3C2B687CDD243F3D516E23B2BC508"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Alchemy.lua",
+                      "sha256":  "6C1FE0C229324FD14412713409C4ECD94123D5CD03A07F78EDAA397C93876551"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Blacksmithing.lua",
+                      "sha256":  "91C751E8EE54632C8C247F5AC24366CEF968D50C6D5B0B2446FB00FBC909C38F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Cooking.lua",
+                      "sha256":  "16711A4ED863B3BBB4C30819D245008DBA8659C9727DE96AA005F8D78366375E"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Enchanting.lua",
+                      "sha256":  "AB371CBA54308100A73471A4D4595745DF0F6841CCE0A42E821A420AEE3FBDC8"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Engineering.lua",
+                      "sha256":  "17486FC33FC81D4B0810A4564838DC8AF8251324A4D400C62886CC1E485E6C50"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Firstaid.lua",
+                      "sha256":  "ECD153C55B303B04FEA0EAE3BC04FEE2282E10DAF75A5FA829192116350D0754"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Fishing.lua",
+                      "sha256":  "23DBBEBF966637F4FA257206671EC1D4137311CD40A7F799F86C402F8221422A"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Leatherworking.lua",
+                      "sha256":  "5B0586D8986DBBA94B1BD9B5F95F311F745A2A358E61973CB94596CFA2A3C5D8"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Mining.lua",
+                      "sha256":  "C062A2714C3959A3B053012A4AE128CECDB3671ADA4A39CC078D9FB84363DB8F"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/Tailoring.lua",
+                      "sha256":  "522920142A42F7AFAC57C5690C2E4EB5098778B4F46240C39B2D7C31C0D7E596"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ptBR/RecipeScrollPrefixes.lua",
+                      "sha256":  "EABDA37F6E575F5FE2ED4D44C61900C7F362434B06947E9C6338E388AED12CF7"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Alchemy.lua",
+                      "sha256":  "4FAE5FF6C2820A6E65AD92CF6754A740288A7164B6672F7358697CCEAA9319E1"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Blacksmithing.lua",
+                      "sha256":  "EEA7EB506686902BC4F5CD297ED244D7B10F0FC316B18D6F1885D2430F3AA464"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Cooking.lua",
+                      "sha256":  "F9BA9565019F91496D19CA9A3EF2F9B1A092C2B5ED57771B30ACDE552AA22C3E"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Enchanting.lua",
+                      "sha256":  "12AA2FFF6DFCA01B5393F1BB8907DFC6D75243E5F81F6DC9E8C49F91CE6F11B1"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Engineering.lua",
+                      "sha256":  "8EE3D0608E52122281F6F08C04A8B2F84F93AAECA6BDADABD21FF919FE5ED1F2"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Firstaid.lua",
+                      "sha256":  "365F8A2276277A5789E9804361B3F375D3A48BFDA7035CA7192067716CE35662"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Fishing.lua",
+                      "sha256":  "1C76ABA87F004503E7A06DFD62D8E37A405B646F1D6390BFDC18A80B9A4719B9"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Leatherworking.lua",
+                      "sha256":  "E0AEF7AFAF0C8B1B0D26D6A7AB0C953D00414D356F840B560FE75513866E376A"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Mining.lua",
+                      "sha256":  "E673555E74DAF9C25681676AD1970FABEB0914E1E93DED8BE2C25572B3AECF34"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/Tailoring.lua",
+                      "sha256":  "FC349F49316B8E6B14296218C2E1AB603377E8F97FBF43BFDF49437C0F9DF0D1"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/ruRU/RecipeScrollPrefixes.lua",
+                      "sha256":  "0E26B14957C5EF1D4ACB2D8AB19631151D1F6862EA449232014196483A8F3EA2"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Alchemy.lua",
+                      "sha256":  "98D7CD8F26C273F217A0D5EF74C52C5FB5F3ABD11F8CA22D9AB4AFE3CF4E3813"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Blacksmithing.lua",
+                      "sha256":  "931B5144F28C287F373875A49896F5BCF42365D47EB6AC26C9AAFBB112C32AB6"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Cooking.lua",
+                      "sha256":  "6FFAD20CA1274E6A5A02CE52754109784A789B97FD043785E086C8288FDE85BE"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Enchanting.lua",
+                      "sha256":  "F1B684D0F57E79A373FB7AEFEA877CF920658693A9EDB4CA4930460A315C77A9"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Engineering.lua",
+                      "sha256":  "771DC292B4A65F33B1E1C59D5A6B4AA2DD7A08519065A79466AC1EE6EB01F78B"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Firstaid.lua",
+                      "sha256":  "2931D76A64B5E85A3EB496ADEEDA7E1F3BB9DD3F2FF4971ED916B412CFC91A63"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Fishing.lua",
+                      "sha256":  "369A2AD49B88237891420C08E3EB561441DE87D9F43B7D0E0AB08766CC0124BC"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Leatherworking.lua",
+                      "sha256":  "CA18FE88148323A4D0209177EBEB4B3C1B90EF73C1C941217C0951455C5E5B21"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Mining.lua",
+                      "sha256":  "A92D5EFF444B087D466A2C2F7DE249E7A91C34A15B0AC950B77C3B229568B78E"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/Tailoring.lua",
+                      "sha256":  "425C18F079F40BF9CE380B75F27945A7478A18420EEF92EC3373B37A3295B29B"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhCN/RecipeScrollPrefixes.lua",
+                      "sha256":  "AF9864C4A67B7F7B4D429E41013D4C7ABD5E2B0D391B665E1240EC812D5671D0"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Alchemy.lua",
+                      "sha256":  "78407B2EBFAAECC8DF38D538246E832466FA65543471F3E4A38EFCC4606CB677"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Blacksmithing.lua",
+                      "sha256":  "5968978C917C858B0E17A40577DDDFA192BF6D9CF16B51E3E2C8092FFB589EC7"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Cooking.lua",
+                      "sha256":  "45C645906E895F562D59C683E0EF5E754047F77235C1553C7B9E05DA6DA9F054"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Enchanting.lua",
+                      "sha256":  "828C2CA5AF51BBA43BCD28BF3B0B24A76C7169589BBBFA0AFCDEC7A688CFB671"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Engineering.lua",
+                      "sha256":  "CCF975DC6F3A990DD77FA4D07765E199450718E7E8FE58CA7AA5654078103CF7"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Firstaid.lua",
+                      "sha256":  "C1B5FFF0CFD915C3C6F47BAB10FD21DA4923B8236D01F002B208E3331BD2132C"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Fishing.lua",
+                      "sha256":  "27319145281DFF947A23B6E72BF147BA3BCABC46AAB7F0BA084E0EEFA2BF5FC0"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Leatherworking.lua",
+                      "sha256":  "FDE4C0FB599BBA441162470C06F27E17C8DF66641A4464706497A53AEA485DFA"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Mining.lua",
+                      "sha256":  "A02E2C40A3BFFC18679466484C9F2FCDEEB803F6D12899EDB198F45D9927C188"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/Tailoring.lua",
+                      "sha256":  "7E0B91E59769DC12FE586357C66C8D840089BC29525CF9EF137C9D1E3B262EBD"
+                  },
+                  {
+                      "path":  "libs/LibProfessionDB-1.0/Data/Forever/zhTW/RecipeScrollPrefixes.lua",
+                      "sha256":  "993696B4F57E4051D3EF256FF1144904F4E48AFF1E58CF1D565C93F3FE08062A"
+                  }
+              ]
+}

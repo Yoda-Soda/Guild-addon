@@ -1,0 +1,25 @@
+{
+    "version":  "2.0.0",
+    "tasks":  [
+                  {
+                      "label":  "Validate library updater",
+                      "type":  "shell",
+                      "command":  "\u0026 {\n    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force\n    .\\tests\\library_update_spec.ps1\n}",
+                      "isBackground":  false,
+                      "problemMatcher":  [
+
+                                         ],
+                      "group":  "test"
+                  },
+                  {
+                      "label":  "Validate addon regressions",
+                      "type":  "shell",
+                      "command":  "\u0026 {\n    $ErrorActionPreference = \u0027Stop\u0027\n    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force\n    \u0026 .\\tests\\embedded_library_spec.ps1\n    \u0026 .\\tests\\library_update_spec.ps1\n    [System.IO.Directory]::SetCurrentDirectory((Get-Location).Path)\n    foreach ($test in @(\u0027tests/crafting_spec.lua\u0027, \u0027tests/guild_spec.lua\u0027)) {\n        $script = New-Object MoonSharp.Interpreter.Script\n        $script.Options.DebugPrint = [System.Action[string]] { param($message) Write-Host $message }\n        try { $script.DoFile($test, $null, $null) | Out-Null }\n        catch { Write-Output $_.Exception.InnerException.DecoratedMessage; throw }\n    }\n}",
+                      "isBackground":  false,
+                      "problemMatcher":  [
+
+                                         ],
+                      "group":  "test"
+                  }
+              ]
+}

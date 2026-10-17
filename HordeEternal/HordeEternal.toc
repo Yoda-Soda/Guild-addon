@@ -3,10 +3,15 @@
 ## Notes: Horde Eternal guild canvas prototype.
 ## Version: 0.1.0
 ## SavedVariables: HordeEternalDB
+## SavedVariablesPerCharacter: HordeEternalCharacterDB
 ## IconTexture: Interface\AddOns\HordeEternal\media\HordeEternalEmblem.tga
 
+embeds.xml
 Compat.lua
 Diagnostics.lua
+GuildState.lua
+Catalog.lua
+Sync.lua
 Core.lua
 Canvas.lua
 MinimapButton.lua

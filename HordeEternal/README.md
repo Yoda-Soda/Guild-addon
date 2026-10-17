@@ -1,0 +1,252 @@
+# Horde Eternal Crafting
+
+The Crafting tab opens on a profession directory. Select a profession or filter
+recipes globally. Recipe pages include icons, item effects, available material
+data, and cached guild crafters. Hovering a recipe also opens its native tooltip.
+The arrow controls make every result reachable, including catalogues larger than
+100 recipes. The window scales down to fit smaller game viewports.
+
+The profession directory groups matching profession names across built-in,
+Forever client, library, and cached skill-line IDs. Each group has one row and
+combined counts; selecting it includes recipes from all of its IDs. Saved recipe
+IDs and shared ownership data are unchanged.
+
+Rescan lives in the crafting toolbar. Hover for an explanation; clicking updates
+your learned recipes and publishes them when sharing is enabled. The chat icon
+beside a remote crafter opens an editable whisper request. It never sends the
+message automatically and does not overwrite an existing chat draft.
+
+## Full Recipe Catalogue
+
+Horde Eternal bundles [LibProfessionDB](https://www.curseforge.com/wow/addons/libprofessiondb)
+v1.9.1, LibStub, and the complete Forever core/locale data listed by that release.
+No separate ProfessionDB, Ace3, or VersionCheck installation is required. The
+standalone addon's version-check bootstrap is not included. Restart WoW after
+installing this update so the changed manifest and embedded files are loaded.
+
+If the coverage tooltip reports a missing library lookup or an unregistered
+LibProfessionDB instance, run `/hordeeternal library`. This read-only diagnostic
+reports readiness and recipe count when the embedded library is available.
+Only on failure does it also inspect standalone addon/dependency status. A
+missing standalone ProfessionDB addon is normal when the embedded copy is ready.
+The diagnostic never enables addons or changes settings. If the bundled payload
+is missing or fails to initialize, the browser falls back to observed recipes;
+Rescan does not download or repair library files.
+
+The header counts unique guild-known recipes, including your current character,
+against the available catalogue. Multiple crafters do not increase the recipe
+count. Guild coverage includes only received profiles. Online crafters appear
+first, alphabetically within each availability group. Offline crafters remain
+visible but dimmed, with whisper buttons disabled. Missing online status also
+disables requests; cached recipes alone never imply online presence. Roster
+updates refresh the ordering and controls. Hover the count for the data source.
+
+## Updating Libraries
+
+Updates are not automatic. The bundled snapshot changes when a maintainer imports
+and tests a newer release, then distributes an updated Horde Eternal package.
+Players receive library updates by updating Horde Eternal. Guild sync, crafting
+resets, and Rescan do not update third-party code or static recipe data. There is
+no in-game network downloader or automatic dependency-update job.
+
+[The import tool](../tools/Import-ProfessionDB.ps1) verifies the pinned archive
+SHA-256 before extracting anything. It copies upstream files unchanged, retains
+the MIT license and LibStub's public-domain notice, and generates
+[embeds.xml](embeds.xml) plus a [per-file integrity lock](libs/LibProfessionDB.lock.json).
+Load order is LibStub, library engine, Forever core data, then locale data, all
+before the catalogue consumer. Other game versions and the standalone bootstrap
+are excluded.
+
+### Update Command
+
+Close WoW before applying an update. Download a Forever-compatible archive from
+the [official release list](https://www.curseforge.com/wow/addons/libprofessiondb/files/all)
+and review its API, license, and client-build coverage. Calculate its SHA-256
+with `Get-FileHash -Algorithm SHA256`. A hash pins the bytes you reviewed; it does
+not independently prove that a download is trustworthy.
+
+Run from the repository root. These values reproduce the current v1.9.1 release;
+replace the archive path, hash, and release URL together for a newer release:
+
+```powershell
+$release = @{
+  ArchivePath = 'C:\Downloads\ProfessionDB.zip'
+  ExpectedSha256 = '909CB41720CF6BF6920F1C25C644F89B39AD63087F589C07737E7DA943C52379'
+  SourceUrl = 'https://www.curseforge.com/wow/addons/libprofessiondb/files/9095167'
+  Update = $true
+}
+.\tools\Import-ProfessionDB.ps1 @release -CheckOnly
+.\tools\Import-ProfessionDB.ps1 @release
+```
+
+If Windows blocks local scripts, use a temporary PowerShell process started with
+`powershell.exe -NoProfile -ExecutionPolicy Bypass` to run these commands. This
+does not change the machine or user execution policy.
+
+`-CheckOnly` stages and validates without changing the installed bundle or making
+a backup. `-Update` requires explicit hash and source URL; it checks existing
+vendor files against their recorded hashes before replacing anything. Local
+edits, missing files, unsupported manifests, changed licensing, or checksum
+mismatches abort the operation. Release version, library minor version, declared
+recipe count, data build, file hashes, and load order are read from the staged
+release and written to the lock automatically. No source-code edit is required
+for a release that follows the supported upstream format.
+
+Only the two owned library directories, their lock, and the embedded load
+manifest are replaced. Unrelated libraries and addon files are preserved;
+obsolete files in the replaced payload are removed. The previous files are saved
+under `%TEMP%\HordeEternal-library-backups`, and the command prints the exact
+backup path. Use `-BackupRoot C:\YourBackupFolder` for longer-term retention.
+Ordinary installation errors trigger rollback. Do not interrupt the command:
+a process termination or power failure may require restoring those backup paths
+manually. A reviewed older archive can also be reapplied with `-Update`.
+
+Package integrity is checked before and after applying. Lua syntax is also
+compiled without executing vendor code when MoonSharp is available; otherwise
+the command prints a warning. Supply `-MoonSharpPath` to point to a local test
+DLL. Changed upstream layouts or snapshots above the current 5,000-recipe limit
+are deliberately rejected for manual review.
+
+After updating, run the regression checks and verify `/hordeeternal library`
+after a full WoW restart. Review the generated dependency diff, update any
+release-specific documentation, and distribute the entire Horde Eternal folder
+to guild members. The updater does not publish releases or update their copies.
+
+```powershell
+.\tests\embedded_library_spec.ps1
+.\tests\library_update_spec.ps1 -ArchivePath C:\Downloads\ProfessionDB-v1.9.1.zip
+```
+
+The updater regression uses a synthetic release and temporary addon copies to
+test preview, replacement, rollback, backups, local-edit protection, obsolete
+file removal, and unrelated-file preservation. It never changes the real
+bundle. VS Code also provides the **Validate library updater** test task in
+[tasks.json](../.vscode/tasks.json); it uses the cached v1.9.1 archive when no
+archive path is supplied. Run the existing Lua crafting/guild suites before
+shipping. Do not hand-edit generated recipe files or mix game versions.
+
+## Character And Guild Data
+
+Crafting profiles and observed recipes use per-character saved variables. An alt
+never advertises another character's professions. Publishing requires a fresh,
+readable scan; a successful empty scan withdraws old profession claims, while a
+failed or incomplete scan cannot publish. Rescanning also invalidates previously
+queued profiles.
+
+Guild sync and remote-crafter display require a complete readable roster with the
+current character present. Cached profiles are removed when a verified roster
+no longer contains that member. An incomplete or restricted roster hides remote
+profiles and pauses communication without treating missing rows as departures.
+Changing or leaving guild clears the previous guild's remote profiles. Whisper
+actions recheck membership and online status even if an old recipe selection
+remains open. Presence uses the guarded ninth `GetGuildRosterInfo` return, as
+observed in the Forever Olympus roster reference; verify on the running client.
+
+## Crafting Reset
+
+Only **Podcast Clawson**, uniquely identified in the current guild roster, can
+use the normal reset command. Run:
+
+```text
+/hordeeternal resetcrafting
+/hordeeternal resetcrafting confirm
+```
+
+Confirm within 30 seconds. The command creates the next persistent crafting
+generation for this guild. Members clear their local crafting profile, remote
+crafter profiles, and observed recipe index when they adopt it, then rescan their
+own character. Minimap/window settings, other addon data, sharing preferences,
+and the bundled LibProfessionDB catalogue are not reset.
+
+Guild clients relay the latest generation to members who return later, even
+when Podcast Clawson is offline. The account also retains the generation so its
+other characters adopt it before publishing. Old-generation packets and queued
+transfers cannot restore the cleared data. Generation control messages are
+exchanged even when recipe sharing is disabled.
+
+This is a trusted-guild protocol, not cryptographic authorization: the stock
+command is owner-only, but a guild member with a modified addon could forge a
+relayed reset record. The owner's identity must remain uniquely resolvable in
+the guild roster. There is no server-side reset storage; offline catch-up needs
+an online guild peer retaining the newer generation. A queued or API-accepted
+announcement does not prove delivery to every client.
+
+**Upgrade every member and restart the game.** The manifest adds per-character
+storage and a new module. Protocol `HERC2` rejects old `HERC1` clients. The old
+account-wide crafting cache is discarded because its recipes cannot safely be
+assigned to a character; each character rebuilds its own cache on scanning.
+
+## Source And Compatibility
+
+- Library API inspected: [LibProfessionDB v1.9.1](https://www.curseforge.com/wow/addons/libprofessiondb/files/9095167),
+  LibStub major `LibProfessionDB-1.0`, minor 13. The release is MIT-licensed;
+  its [license notice](libs/LibProfessionDB-1.0/LICENSE) is retained. The import
+  records 150 byte-verified upstream files, including 149 Lua scripts.
+- That release advertises 2,511 Forever recipes from build `1.60.1.69977`.
+  This is an older snapshot than the user's reported client `1.60.1.70450`,
+  interface `16001`, project ID `18`. A catalogue count is not proof that every
+  entry is currently obtainable. Borrowed Vanilla availability flags are shown
+  as unconfirmed rather than silently hiding those recipes.
+- Read-only integration uses `GetGameVersion`, `GetMeta`, `IsReady`, `Count`,
+  and bounded `Iterate`. Wrong-game, partial, missing, and oversized data fall
+  back to observed recipes. Library data is not added to the shared learned list.
+- Display and whisper contracts were checked against Gethe's
+  [pinned Forever UI source](https://github.com/Gethe/wow-ui-source/tree/b401e0332adfbf0460d319b06d8ea29279a941f1),
+  build `1.60.1.70425`: `C_Item.GetItemInfo/GetItemIconByID`,
+  `C_TradeSkillUI.GetRecipeOutputItemData`, `C_Spell.GetSpellInfo/GetSpellLink`,
+  `C_TooltipInfo.GetHyperlink`, and `ChatFrameUtil.SendTellWithMessage(name, text)`.
+  The latter populates the chat editor; it does not send a whisper.
+- Item/spell load events refresh selected details. Missing or restricted fields
+  remain unavailable; item text and images are never invented.
+
+## Verification
+
+[The package check](../tests/embedded_library_spec.ps1) verifies manifest order,
+every imported file's checksum, the retained license, and the absence of a
+standalone dependency. With `-MoonSharpPath` (or the local cached test DLL), it
+also syntax-compiles every embedded Lua file without executing third-party code.
+Actual library initialization and the full catalogue still need an in-game
+check; mocked API tests do not prove that the embedded data loads in WoW.
+
+[The offline suite](../tests/crafting_spec.lua) exercises optional library loading,
+pagination, unique coverage counts, restricted data, draft preservation,
+profession navigation, item-load refresh, Rescan, tab fallbacks, viewport fitting,
+and guild transport. It has been run with MoonSharp 2.0.0 and mocked WoW APIs;
+this does not certify actual WoW rendering or secure-execution behavior.
+
+[Guild regression tests](../tests/guild_spec.lua) also exercise complete and
+restricted rosters, owner confirmation/expiry, crafting-only reset scope,
+peer-to-peer offline catch-up, generation persistence across alts, empty and
+failed scans, stale queued/partial transfers, and exclusion of departed members.
+Run both suites from the repository root with a Lua interpreter:
+
+```text
+lua tests/crafting_spec.lua
+lua tests/guild_spec.lua
+```
+
+The legacy guild enumeration contracts and offline-roster completeness still
+need confirmation on the running Forever build. The pinned UI source alone does
+not certify them. In-game checks still required:
+
+1. With standalone ProfessionDB disabled, restart WoW and open Crafting. Confirm
+  `/hordeeternal library` reports a ready library and the pinned snapshot's 2,511
+  recipes. Check the source label and repeat with a standalone copy if used.
+2. Browse several professions, search globally, and page through a large list.
+3. Check images, item effects, long names, and material names with a cold cache.
+4. Hover and click Rescan; confirm the tooltip and successful guild publication.
+5. Open a guild crafter's request; confirm the recipient and editable text before
+   sending. Verify an existing chat draft is preserved.
+6. Check the header, details, tooltips, and external tabs at your normal UI scale
+   and a smaller viewport, including while the client applies restrictions.
+7. Log between characters with different professions and one without professions;
+  confirm another guild client sees only each character's own learned recipes.
+8. Check that offline guild members remain in the verified roster and catalogue,
+  including with the guild UI's offline filter toggled. Remove a test member and
+  confirm their crafting entries disappear without removing offline members.
+  Log a known crafter out and back in: check online-first ordering, dimmed offline
+  rows, disabled whisper requests, and re-enabled requests after reconnection.
+9. On upgraded test clients, create a reset as Podcast Clawson and confirm other
+  characters cannot create one. Verify settings remain unchanged. Keep one peer
+  online, log the owner out, then log an older-generation character in and check
+  that it adopts the peer's generation and rebuilds only its own crafting data.
