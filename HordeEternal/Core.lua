@@ -95,6 +95,7 @@ frame:SetScript("OnEvent", function(self, event, loadedAddon)
             local scanned = addon.Catalog.Scan()
             addon.Sync.Start(scanned ~= nil)
             if addon.Members then addon.Members.Start() end
+            if addon.GuildMap then addon.GuildMap.Start() end
             addon.Print("Ready.")
         else
             addon.Print("Database unavailable; diagnostics remain available.")

@@ -32,7 +32,7 @@ local function Tooltip(owner, title, text)
 end
 
 local function Bare(name)
-    return name and (name:match("^[^-]+") or name) or ""
+    return name and addon.Compat.CharacterLabel(name) or ""
 end
 
 local function Fill(parent, red, green, blue, alpha)
@@ -249,7 +249,7 @@ function addon.CreateGuildView(page, header, subheader)
             local member = self.member
             local state = member.online == true and "Online" or member.online == false and "Offline" or "Online status unknown"
             local updated = member.updatedAt and member.updatedAt > 0 and date and date("%Y-%m-%d %H:%M", member.updatedAt) or "Unknown"
-            Tooltip(self, member.name, state .. "\n" .. (member.rank or "") .. "\n"
+            Tooltip(self, Bare(member.name), state .. "\n" .. (member.rank or "") .. "\n"
                 .. member.state .. (member.main and (": " .. Bare(member.main)) or "")
                 .. "\n" .. member.className .. " / " .. member.race .. "\n" .. member.spec
                 .. "\n" .. member.talents .. "\nLast reported: " .. updated
@@ -478,7 +478,8 @@ function addon.CreateGuildView(page, header, subheader)
                 row.name:SetText(Bare(member.name))
                 row.name:SetTextColor(style[1], style[2], style[3])
                 local presence = member.online == true and "Online" or member.online == false and "Offline" or "Status unknown"
-                row.presence:SetText(presence .. (member.level and (" / " .. member.level) or ""))
+                local identity = member.state == "Main" and "Main / " or member.state == "Alt" and "Alt / " or ""
+                row.presence:SetText(identity .. presence .. (member.level and (" / " .. member.level) or ""))
                 row.className:SetText(member.className)
                 row.race:SetText(member.race)
                 row.role:SetText(member.rank and member.rank ~= "" and member.rank or "Unknown")
@@ -486,7 +487,7 @@ function addon.CreateGuildView(page, header, subheader)
                 local points = {}
                 for spent in member.talents:gmatch(": (%d+)") do points[#points + 1] = spent end
                 row.report:SetText(#points > 0 and table.concat(points, " / ") or "-")
-                row.identity:SetText(member.state == "Alt" and ("Alt of " .. Bare(member.main)) or member.state)
+                row.identity:SetText(member.main and Bare(member.main) or "No main selected")
                 row.identity:SetTextColor(member.state == "Main" and 0.95 or 0.7, member.state == "Main" and 0.8 or 0.7,
                     member.state == "Main" and 0.35 or 0.65)
                 row.contact:SetText(member.discord ~= "" and member.discord or "-")

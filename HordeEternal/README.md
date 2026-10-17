@@ -19,10 +19,17 @@ The searchable directory lists every verified guild character, online first,
 with six fixed rows per page and no nested list scrolling. Aligned Character,
 Class/Race, Talents, Role, and Main/Nickname columns separate each character's information.
 Class-coloured names and standard class icons make the rows easy to scan. Each
-row shows **Main**, **Alt of Name Surname**, or **No main selected**, plus class,
+row identifies **Main** or **Alt** in the character's status line and shows the
+selected main's full **Name Surname** in the Main column, or **No main selected**.
+The main name has its own label rather than sharing space with an "Alt of"
+prefix. Rows also show class,
 reported race/spec, guild rank, and Discord server nickname. Hover
 a row for rank, availability, talent point distribution, and last-report time.
 The statistics filter does not hide unknown or alternate characters in this list.
+All visible character labels, tooltips, crafting requests, and receipt status
+messages omit realm suffixes while retaining first name and surname. Canonical
+realm-qualified identities remain unchanged for storage, membership, and sender
+validation; display formatting never merges their underlying identities.
 Click a column heading to sort the entire filtered list, then click again to
 reverse direction. A direction arrow marks the active heading, and sorting
 returns to page one. Role sorts by the guild's rank hierarchy, not alphabetically
@@ -109,6 +116,74 @@ facts until their owners publish. Local saved reports persist across sessions.
 **Update every guild client and fully restart WoW.** New modules were added to
 the manifest. Existing crafting clients continue to share crafting data, but
 only updated clients exchange the new member profiles.
+
+## Guild Map
+
+The **Map** tab shows this guild's online characters by roster-reported zone,
+using the client's own map artwork. It follows the Olympus reference's
+zone-count presentation, but has no multi-guild selector or cross-guild data.
+No external map library or coordinate-sharing protocol is required.
+
+- The world overview groups counts by continent. Click a count to drill down;
+  continent maps show zone counts, and zone maps show the zone's total.
+- Hover a count or zone row for the character names. Large tooltips show the
+  first twelve names plus the remaining count. Counts always mean characters,
+  not distinct people or accounts.
+- The primary map spans the tab's width. A compact three-location strip below
+  it shows continent totals at the top level and occupied zones when zoomed in.
+  Location rows are sorted by count; arrow controls make additional rows
+  reachable. Unmapped names remain available as text rather than guessed pins.
+- The toolbar includes parent map, world overview, your current zone, open
+  native world map, and refresh. Opening the native map is a user action.
+- **Guild markers** toggles this guild's count markers on both map views. It is
+  enabled by default and persists account-wide. On WoW's native map, select the
+  Horde Eternal emblem in the bottom-left and toggle **Guild characters** in
+  its filter popup. Both controls share one setting and stay synchronized.
+  Count markers keep a fixed
+  screen size while the map zoom changes. This does not alter other addons'
+  pins or the world's own map data.
+
+Locations are snapshots from `GetGuildRosterInfo`, not live player coordinates.
+Only confirmed online characters with a readable nonempty zone enter the counts.
+Offline and unknown-presence characters are excluded; unknown or unmapped zones
+are reported separately rather than assigned guessed coordinates. The Refresh
+control requests a new roster; map opening and travel also request updates,
+coalesced to at most once per ten seconds. Actual freshness depends on the game.
+
+Zone names are matched by a bounded walk of the client's direct-child map tree,
+not a dependency on a one-shot recursive result. Ambiguous names
+stay unplaced. The initial Azeroth map is used only when the client exposes it;
+otherwise the reader walks upward from the player's map. Unavailable metadata,
+restricted fields, or missing art produce an unavailable state, not a fabricated
+map. Continent totals are projected directly onto the highest two-continent
+overview; rectangles may cross the artwork edge if their centers remain visible.
+Zone pins use map-area centers, not the characters' exact positions. Closely
+placed zones can overlap; the location strip remains an alternative way to select one.
+
+The Map tab and native pins require completed main/server-nickname setup and a
+complete readable roster. Losing access removes pins and their cached frame
+payloads. Guild changes cannot mix location snapshots from different guilds.
+No map locations are written to SavedVariables or sent to other players.
+
+Implementation evidence: Olympus's read-only Map/Zones examples for the feature
+shape; the pinned build `1.60.1.70425`
+[map API declarations](https://github.com/Gethe/wow-ui-source/blob/b401e0332adfbf0460d319b06d8ea29279a941f1/Interface/AddOns/Blizzard_APIDocumentationGenerated/MapDocumentation.lua)
+and [map tile renderer](https://github.com/Gethe/wow-ui-source/blob/b401e0332adfbf0460d319b06d8ea29279a941f1/Interface/AddOns/Blizzard_MapCanvas/Blizzard_MapCanvasDetailLayer.lua)
+for `C_Map.GetMapInfo`, `GetMapChildrenInfo`, `GetMapRectOnMap`,
+`GetMapArtLayers`, and `GetMapArtLayerTextures`. No Blizzard source or example
+implementation is bundled. These sources predate the reported running build;
+offline tests do not certify the actual client's rendering or secure execution.
+
+**Fully restart WoW after this update** to discover the new map module. In-game
+checks: verify the artwork on world/continent/zone maps, tooltip names and counts,
+navigation, the native marker toggle and zoom sizing, and cold-cache behavior.
+Change zones and compare with the guild roster. Log a character out and confirm
+their count disappears. Test profile locking and guild leave/change; all markers
+must clear. Check normal and small UI scales, and coexistence with other map
+addons. Custom native-map overlays and the filter popup are hidden in gamepad
+mode to avoid interacting with that map's protected controls; the addon Map tab
+remains separate. Live gamepad behavior is unverified. No automated gameplay is
+performed.
 
 ## Crafting
 
@@ -351,7 +426,13 @@ Run both suites from the repository root with a Lua interpreter:
 lua tests/crafting_spec.lua
 lua tests/guild_spec.lua
 lua tests/members_spec.lua
+lua tests/map_spec.lua
 ```
+
+[Map regression tests](../tests/map_spec.lua) cover online-only guild-zone
+aggregation, profile/roster gates, restricted map data, ambiguous zone names,
+continent totals, native tile order and edge cropping, map navigation, pin
+tooltips, native overlays, zoom correction, and bounded roster requests.
 
 [Member regression tests](../tests/members_spec.lua) cover main replacement,
 alt association, default-main statistics, Discord clearing, guarded talent-group

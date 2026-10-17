@@ -146,6 +146,7 @@ function Guild.RefreshRoster()
                 and info[4] == math.floor(info[4]) and info[4] or nil,
             level = type(info[5]) == "number" and info[5] or nil,
             className = type(info[6]) == "string" and info[6] or nil,
+            zone = type(info[7]) == "string" and info[7] ~= "" and not info[7]:find("[%c|]") and info[7] or nil,
             classFile = type(info[12]) == "string" and info[12] or nil,
             online = online[name],
         }

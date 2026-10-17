@@ -197,6 +197,8 @@ assert(display.icon == "Interface\\Icons\\INV_Misc_QuestionMark" and display.des
 canaccessvalue = nil
 
 local whisperedName, whisperedText
+assert(addon.Compat.CharacterLabel("Other Crafter-BetaClassicBetaPvP2") == "Other Crafter")
+assert(addon.Compat.CharacterLabel("Other Crafter") == "Other Crafter" and addon.Compat.CharacterLabel("You") == "You")
 IsInGuild = function() return true end
 ChatFrameUtil = { SendTellWithMessage = function(name, text) whisperedName, whisperedText = name, text end }
 assert(addon.Compat.OpenCraftRequest(displayEntry, { name = "Crafter-Realm" }))
@@ -226,7 +228,7 @@ for _, name in ipairs({
     "SetScrollChild", "ClearAllPoints", "SetHighlightTexture", "SetJustifyV", "LockHighlight",
     "UnlockHighlight", "SetNormalFontObject", "SetID",
     "SetWidth", "SetScale", "SetNormalTexture", "SetPushedTexture", "SetDisabledTexture",
-    "SetEnabled", "SetVerticalScroll", "ClearFocus", "SetTextColor", "SetColorTexture",
+    "SetEnabled", "SetVerticalScroll", "ClearFocus", "SetTextColor", "SetColorTexture", "SetVertexColor",
 }) do
     methods[name] = function() end
 end
@@ -287,20 +289,23 @@ local published = 0
 addon.Print = function(message) printed = message end
 addon.Sync = { status = "Ready", Publish = function() published = published + 1 end }
 addon.Members = {
+    CanView = function() return true end,
     Settings = function() return { main = "", discord = "" } end,
     Self = function() return "Local Person-Realm" end,
     Rows = function() return {} end,
     Stats = function() return { total = 0, all = 0, mains = 0, unassigned = 0, classes = {}, races = {}, specs = {} } end,
 }
 assert(loadfile("HordeEternal/GuildView.lua"))("HordeEternal", addon)
+assert(loadfile("HordeEternal/GuildMap.lua"))("HordeEternal", addon)
 addon.db = nil
 assert(loadfile("HordeEternal/Canvas.lua"))("HordeEternal", addon)
 assert(type(addon.ToggleCanvas) == "function", "canvas must load before the database exists")
 addon.db = {}
 addon.ToggleCanvas()
 local canvas = frames[1]
-assert(canvas:IsShown() and #canvas.tabs == 2, "fresh database must allow full window construction")
+assert(canvas:IsShown() and #canvas.tabs == 3, "fresh database must allow full window construction")
 assert(canvas.tabs[1]:GetText() == "Guild" and canvas.tabs[2]:GetText() == "Crafting")
+assert(canvas.tabs[3]:GetText() == "Map" and canvas.map, "the single-guild map must be reachable through its own tab")
 assert(canvas.tabs[1].sizedText == "Guild" and canvas.tabs[2].sizedText == "Crafting", "resize must use tab labels")
 assert(addon.db.canvasTab == "crafting")
 assert(canvas.selectedTab == 2 and canvas.tabStyle == "mainline")
@@ -321,6 +326,8 @@ assert(canvas.selectedTab == 1)
 assert(canvas.guild and canvas.crafting.headerTotal:GetText() == "Guild overview")
 addon.RefreshCatalog()
 assert(canvas.crafting.headerTotal:GetText() == "Guild overview", "background crafting refreshes must not replace the Guild header")
+canvas.tabs[3].scripts.OnClick()
+assert(addon.db.canvasTab == "map" and canvas.selectedTab == 3)
 canvas.tabs[2].scripts.OnClick()
 assert(addon.db.canvasTab == "crafting")
 local unlockedOverview = addon.Catalog.Overview
@@ -339,7 +346,8 @@ assert(addon.db.canvasTab == "crafting", "completing profile setup must unlock t
 
 local scanButton
 for _, widget in ipairs(frames) do
-    assert(widget.template ~= "UICheckButtonTemplate" or widget == canvas.guild.main, "sharing must not require a checkbox")
+    assert(widget.template ~= "UICheckButtonTemplate" or widget == canvas.guild.main or widget == canvas.map.enabled,
+        "crafting sharing must not require a checkbox")
     if widget:GetText() == "Rescan" then scanButton = widget end
 end
 assert(scanButton and scanButton.scripts.OnClick, "Scan must have a click handler")
@@ -394,6 +402,7 @@ for _, row in ipairs(crafting.crafters) do
     if row.request.crafter.name == "Crafter-Realm" then request = row.request end
 end
 assert(request and request:IsShown())
+assert(request.parent.name:GetText() == "Crafter", "crafter rows must not show realm suffixes")
 assert(request.enabled and crafting.crafters[1].request.crafter.name == "Crafter-Realm")
 assert(crafting.crafters[3].request.crafter.name == "Absent Crafter-Realm"
     and not crafting.crafters[3].request.enabled and crafting.crafters[3].alpha == 0.5
@@ -474,7 +483,7 @@ for _, sharingEnabled in ipairs({ true, false }) do
     assert(loadfile("HordeEternal/Canvas.lua"))("HordeEternal", addon)
     addon.ToggleCanvas()
     canvas = frames[1]
-    assert(canvas:IsShown() and #canvas.tabs == 2 and canvas.tabs[1].isFallback)
+    assert(canvas:IsShown() and #canvas.tabs == 3 and canvas.tabs[1].isFallback)
     assert(addon.db.canvasTab == "guild", "saved tab selection must survive")
     assert(addon.db.catalog.shareEnabled == sharingEnabled, "UI construction must preserve sharing settings")
     canvas.tabs[2].scripts.OnClick()

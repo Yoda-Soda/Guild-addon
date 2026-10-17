@@ -360,7 +360,7 @@ local function StoreProfile(sender, payload, sourceUpdatedAt)
         updatedAt = sourceUpdatedAt > 0 and sourceUpdatedAt or time(),
         receivedAt = time(),
     }
-    Sync.status = "Received recipe profile from " .. sender
+    Sync.status = "Received recipe profile from " .. addon.Compat.CharacterLabel(sender)
     if addon.RefreshCatalog then
         addon.RefreshCatalog()
     end

@@ -28,6 +28,11 @@ function Compat.SafeText(value)
     return "<non-scalar>"
 end
 
+function Compat.CharacterLabel(name)
+    if not Compat.IsReadable(name) or type(name) ~= "string" or name == "" or name:find("[%c|]") then return "Unknown" end
+    return name:match("^[^-]+") or "Unknown"
+end
+
 local function Pack(...)
     return { count = select("#", ...), ... }
 end
@@ -133,6 +138,83 @@ function Compat.PlayerGuildFacts()
     end
     local spec = maximum == 0 and "No talents spent" or tied and "Hybrid" or winner
     return race, spec, table.concat(distribution, ", ")
+end
+
+local function MapNumber(value, minimum, maximum)
+    return type(value) == "number" and value == value and value >= minimum and value <= maximum
+end
+
+local function MapArray(source, maximum)
+    if not Compat.IsReadable(source) or type(source) ~= "table"
+        or (type(canaccesstable) == "function" and not canaccesstable(source)) then return nil end
+    local count = Compat.Value(function() return #source end)
+    if not MapNumber(count, 0, maximum) then return nil end
+    return count
+end
+
+local function MapDetails(source)
+    local id, name = Compat.Field(source, "mapID"), Compat.Field(source, "name")
+    local parent, mapType = Compat.Field(source, "parentMapID"), Compat.Field(source, "mapType")
+    if not MapNumber(id, 1, 1000000) or id ~= math.floor(id) or type(name) ~= "string" or name == ""
+        or #name > 120 or name:find("[%c|]") or not MapNumber(parent, 0, 1000000)
+        or not MapNumber(mapType, 0, 6) then return nil end
+    return { mapID = id, name = name, parentMapID = parent, mapType = mapType }
+end
+
+function Compat.MapInfo(mapID)
+    if not MapNumber(mapID, 1, 1000000) then return nil end
+    return MapDetails(Compat.Value(C_Map and C_Map.GetMapInfo, mapID))
+end
+
+function Compat.MapChildren(mapID)
+    local source, state = Compat.Value(C_Map and C_Map.GetMapChildrenInfo, mapID, nil, false)
+    if source == nil and state == "available" then return {} end
+    local count = MapArray(source, 2048)
+    if not count then return nil end
+    local children = {}
+    for index = 1, count do
+        local info = MapDetails(Compat.Field(source, index))
+        if not info then return nil end
+        children[#children + 1] = info
+    end
+    return children
+end
+
+function Compat.MapRect(mapID, parentID)
+    if mapID == parentID then return { x = 0.5, y = 0.5 } end
+    local values = Compat.Call(C_Map and C_Map.GetMapRectOnMap, mapID, parentID)
+    if not values then return nil end
+    local left, right, top, bottom = values[2], values[3], values[4], values[5]
+    for _, index in ipairs({ 2, 3, 4, 5 }) do if not MapNumber(values[index], -8, 8) then return nil end end
+    if right <= left or bottom <= top then return nil end
+    local x, y = (left + right) / 2, (top + bottom) / 2
+    if not MapNumber(x, 0, 1) or not MapNumber(y, 0, 1) then return nil end
+    return { x = x, y = y }
+end
+
+function Compat.MapArt(mapID)
+    local layers = Compat.Value(C_Map and C_Map.GetMapArtLayers, mapID)
+    local layer = Compat.Field(layers, 1)
+    local width, height = Compat.Field(layer, "layerWidth"), Compat.Field(layer, "layerHeight")
+    local tileWidth, tileHeight = Compat.Field(layer, "tileWidth"), Compat.Field(layer, "tileHeight")
+    if not MapNumber(width, 1, 16384) or not MapNumber(height, 1, 16384)
+        or not MapNumber(tileWidth, 1, 4096) or not MapNumber(tileHeight, 1, 4096) then return nil end
+    local columns, rows = math.ceil(width / tileWidth), math.ceil(height / tileHeight)
+    if columns * rows > 64 then return nil end
+    local textures = Compat.Value(C_Map and C_Map.GetMapArtLayerTextures, mapID, 1)
+    if MapArray(textures, 64) ~= columns * rows then return nil end
+    local tiles = {}
+    for row = 0, rows - 1 do
+        for column = 0, columns - 1 do
+            local fileID = Compat.Field(textures, row * columns + column + 1)
+            if not MapNumber(fileID, 1, 2147483647) then return nil end
+            local visibleWidth, visibleHeight = math.min(tileWidth, width - column * tileWidth), math.min(tileHeight, height - row * tileHeight)
+            tiles[#tiles + 1] = { fileID = fileID, x = column * tileWidth / width, y = row * tileHeight / height,
+                width = visibleWidth / width, height = visibleHeight / height,
+                u = visibleWidth / tileWidth, v = visibleHeight / tileHeight }
+        end
+    end
+    return { width = width, height = height, tiles = tiles }
 end
 
 function Compat.IsPlayerName(name)

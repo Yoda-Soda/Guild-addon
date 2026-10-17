@@ -12,6 +12,7 @@ Diagnostics.lua
 GuildState.lua
 Catalog.lua
 Members.lua
+GuildMap.lua
 Sync.lua
 Core.lua
 GuildView.lua

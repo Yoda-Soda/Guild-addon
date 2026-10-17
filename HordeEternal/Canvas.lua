@@ -323,13 +323,13 @@ local function CreateCanvas()
                 row.request:SetDisabledTexture("Interface\\ChatFrame\\UI-ChatIcon-Chat-Up")
                 row.request:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
                 row.request:SetScript("OnEnter", function(self)
-                    TextTooltip(self, "Whisper " .. self.crafter.name,
+                    TextTooltip(self, "Whisper " .. addon.Compat.CharacterLabel(self.crafter.name),
                         "Opens an editable crafting request. Nothing is sent automatically.")
                 end)
                 row.request:SetScript("OnLeave", HideTooltip)
                 row.request:SetScript("OnClick", function(self)
                     local opened, reason = addon.Compat.OpenCraftRequest(self.entry, self.crafter)
-                    status:SetText(opened and ("Whisper draft opened for " .. self.crafter.name .. ".") or reason)
+                    status:SetText(opened and ("Whisper draft opened for " .. addon.Compat.CharacterLabel(self.crafter.name) .. ".") or reason)
                     if not opened then addon.Print(reason) end
                 end)
                 crafterRows[index] = row
@@ -337,7 +337,7 @@ local function CreateCanvas()
             row:ClearAllPoints()
             row:SetPoint("TOPLEFT", detailContent, "TOPLEFT", 0, -offset)
             row:SetPoint("TOPRIGHT", detailContent, "TOPRIGHT", -4, -offset)
-            row.name:SetText(crafter.name)
+            row.name:SetText(addon.Compat.CharacterLabel(crafter.name))
             local presence = crafter.isOnline == true and "Online"
                 or crafter.isOnline == false and "Offline" or "Status unavailable"
             row.age:SetText(presence .. " - Scanned " .. FormatAge(crafter.updatedAt))
@@ -482,7 +482,7 @@ local function CreateCanvas()
         for _ in pairs(addon.Catalog.RemoteProfiles()) do
             remoteCount = remoteCount + 1
         end
-        if addon.db.canvasTab ~= "guild" or not frame.guild then
+        if (addon.db.canvasTab ~= "guild" or not frame.guild) and (addon.db.canvasTab ~= "map" or not frame.map) then
             headerTotal:SetText(known .. " / " .. total .. " guild recipes")
             headerSub:SetText("Guild-known / " .. (addon.Catalog.hasLibrary and "catalogue" or "observed recipes")
                 .. "  -  " .. remoteCount .. " guild profiles")
@@ -563,15 +563,24 @@ local function CreateCanvas()
 
     if addon.CreateGuildView then frame.guild = addon.CreateGuildView(guildPage, headerTotal, headerSub) end
 
+    local mapPage
+    if addon.CreateGuildMapView then
+        mapPage = CreateFrame("Frame", nil, pageHost)
+        mapPage:SetAllPoints(pageHost)
+        frame.map = addon.CreateGuildMapView(mapPage, headerTotal, headerSub)
+    end
+
     ShowDetail(nil)
     RefreshResults()
 
     local pages = { guild = guildPage, crafting = craftingPage }
+    if mapPage then pages.map = mapPage end
     local tabs = {}
     local definitions = {
         { key = "guild", label = "Guild" },
         { key = "crafting", label = "Crafting" },
     }
+    if mapPage then definitions[#definitions + 1] = { key = "map", label = "Map" } end
     local friendsTab = _G.FriendsFrameTab1
     local useOldTabs = type(friendsTab) == "table" and friendsTab.LeftActive == nil
         or (type(friendsTab) ~= "table" and PanelTemplates_AnchorTabs == nil)
@@ -612,6 +621,7 @@ local function CreateCanvas()
         end
         addon.db.canvasTab = key
         if key == "guild" and frame.guild then frame.guild.Refresh()
+        elseif key == "map" and frame.map then frame.map.Refresh()
         elseif key == "crafting" then RefreshResults() end
     end
 
@@ -621,6 +631,7 @@ local function CreateCanvas()
                 RefreshResults()
                 SelectTab("guild")
             else frame.guild.Refresh() end
+            if addon.GuildMap then addon.GuildMap.Refresh() end
         end
     end
 

@@ -178,6 +178,8 @@ assert(addon.Members.Settings().main == player and addon.Members.Settings().disc
 assert(view.body.shown and not view.locked.shown, "saving a main and server nickname must unlock information")
 assert(view.coverage:GetText():find("1 counted", 1, true)
     and view.statRows[1].statName == "Shaman" and view.statRows[1].statCount == 1)
+assert(view.rows[1].identity:GetText() == "Main Person" and view.rows[1].presence:GetText():find("Main /", 1, true),
+    "the selected main must show first name and surname without realm or a competing prefix")
 assert(view.statRows[1].count:GetText() == "1 (100.0%)")
 view.everyone.scripts.OnClick()
 assert(not view.mains:GetChecked() and view.everyone:GetChecked() and view.coverage:GetText():find("2 counted", 1, true))
@@ -198,7 +200,7 @@ view.filter:SetText("Unknown Person")
 view.filter.scripts.OnTextChanged()
 assert(view.page == 1 and view.rows[1].member.name == "Unknown Person-Realm" and not view.rows[2].shown)
 view.rows[1].scripts.OnEnter(view.rows[1])
-assert(GameTooltip:GetText() == "Unknown Person-Realm")
+assert(GameTooltip:GetText() == "Unknown Person")
 ready = false
 view.Refresh()
 assert(not view.save.enabled and not view.main.enabled and not view.rows[1].shown)
