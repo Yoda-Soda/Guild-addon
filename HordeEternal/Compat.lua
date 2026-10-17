@@ -82,6 +82,59 @@ function Compat.AddOnStatus(name)
     return name .. ": " .. status
 end
 
+function Compat.PlayerGuildFacts()
+    local race = Compat.Value(UnitRace, "player")
+    if type(race) ~= "string" or #race > 40 or race:find("[%c|]") then race = nil end
+    local function Field(source, key)
+        return Compat.Field(source, key)
+    end
+    local function Count(source)
+        if not Compat.IsReadable(source) or type(source) ~= "table"
+            or (type(canaccesstable) == "function" and not canaccesstable(source)) then return nil end
+        return Compat.Value(function() return #source end)
+    end
+    local configID = Compat.Value(C_ClassTalents and C_ClassTalents.GetActiveConfigID)
+    if type(configID) ~= "number" then return race end
+    if Compat.Value(C_Traits and C_Traits.ConfigHasStagedChanges, configID) ~= false then return race end
+    local config = Compat.Value(C_Traits and C_Traits.GetConfigInfo, configID)
+    local trees = Field(config, "treeIDs")
+    local treeID = Field(trees, 1)
+    if type(treeID) ~= "number" or Count(trees) ~= 1 then return race end
+    local displays = Compat.Value(C_Traits and C_Traits.GetGroupDisplayInfoByTreeID, treeID)
+    local count = Count(displays)
+    if type(count) ~= "number" or count < 1 or count > 4 then return race end
+    local ids, names = {}, {}
+    for index = 1, count do
+        local display = Field(displays, index)
+        local id, name = Field(display, "groupID"), Field(display, "displayName")
+        if index > 4 or type(id) ~= "number" or names[id] or type(name) ~= "string"
+            or #name > 60 or name == "" or name:find("[%c|]") then return race end
+        ids[#ids + 1], names[id] = id, name
+    end
+    if #ids == 0 then return race end
+    local currency = Compat.Value(C_Traits and C_Traits.GetGroupCurrencyInfo, configID, ids)
+    if Count(currency) ~= #ids then return race end
+    local points, seen = {}, {}
+    for index = 1, #ids do
+        local group = Field(currency, index)
+        local id = Field(group, "traitNodeGroupID")
+        local values = Field(group, "currencyInfos")
+        local spent = Field(Field(values, 1), "spent")
+        if not names[id] or seen[id] or type(spent) ~= "number" or spent < 0 or spent > 100
+            or spent ~= math.floor(spent) or Count(values) ~= 1 then return race end
+        seen[id], points[id] = true, spent
+    end
+    local maximum, winner, tied, distribution = 0, nil, false, {}
+    for _, id in ipairs(ids) do
+        local spent = points[id]
+        distribution[#distribution + 1] = names[id] .. ": " .. spent
+        if spent > maximum then maximum, winner, tied = spent, names[id], false
+        elseif spent == maximum then tied = true end
+    end
+    local spec = maximum == 0 and "No talents spent" or tied and "Hybrid" or winner
+    return race, spec, table.concat(distribution, ", ")
+end
+
 function Compat.IsPlayerName(name)
     if not Compat.IsReadable(name) or type(name) ~= "string" then return false end
     local identity = Compat.Call(UnitFullName, "player")

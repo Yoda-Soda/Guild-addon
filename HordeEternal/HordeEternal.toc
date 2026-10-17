@@ -11,7 +11,9 @@ Compat.lua
 Diagnostics.lua
 GuildState.lua
 Catalog.lua
+Members.lua
 Sync.lua
 Core.lua
+GuildView.lua
 Canvas.lua
 MinimapButton.lua

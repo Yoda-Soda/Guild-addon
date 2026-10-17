@@ -170,17 +170,87 @@ function Catalog.LibraryReport()
     return lines
 end
 
+local sharedFields = { remoteProfiles = true, recipeIndex = true, generation = true, resetIssuer = true }
+
+local function MergeProfiles(target, source)
+    local count, recipeCount = 0, 0
+    for _, profile in pairs(target) do
+        count = count + 1
+        if type(profile) == "table" and type(profile.recipes) == "table" then recipeCount = recipeCount + #profile.recipes end
+    end
+    for name, profile in pairs(source) do
+        if type(name) == "string" and type(profile) == "table" and type(profile.recipes) == "table" and #profile.recipes <= 1200 then
+            local previous = target[name]
+            local previousCount = type(previous) == "table" and type(previous.recipes) == "table" and #previous.recipes or 0
+            if (previous or count < 100) and recipeCount - previousCount + #profile.recipes <= 20000
+                and (not previous or (tonumber(profile.updatedAt) or 0) >= (tonumber(previous.updatedAt) or 0)) then
+                if not previous then count = count + 1 end
+                recipeCount = recipeCount - previousCount + #profile.recipes
+                target[name] = profile
+            end
+        end
+    end
+end
+
 function Catalog.Initialize()
     local storage = addon.characterDB or addon.db
     if type(storage.catalog) ~= "table" then
         storage.catalog = { localProfile = nil, remoteProfiles = {}, shareEnabled = true }
     end
     local database = storage.catalog
+    setmetatable(database, nil)
+    local scope = addon.characterDB and addon.GuildState and addon.GuildState.key
+    if scope then
+        if type(addon.db.craftingGuilds) ~= "table" then addon.db.craftingGuilds = {} end
+        local shared = addon.db.craftingGuilds[scope]
+        if type(shared) ~= "table" then
+            shared = {
+                remoteProfiles = {}, recipeIndex = {}, generation = database.guildKey == scope and database.generation or 1,
+                resetIssuer = database.guildKey == scope and database.resetIssuer or nil,
+            }
+            addon.db.craftingGuilds[scope] = shared
+        end
+        if type(shared.remoteProfiles) ~= "table" then shared.remoteProfiles = {} end
+        if type(shared.recipeIndex) ~= "table" then shared.recipeIndex = {} end
+        if type(shared.generation) ~= "number" then shared.generation = 1 end
+        local localGeneration = database.localGeneration or database.generation or 1
+        if database.sharedCraftingVersion ~= 1 and database.guildKey == scope and localGeneration == shared.generation then
+            if type(database.remoteProfiles) == "table" then MergeProfiles(shared.remoteProfiles, database.remoteProfiles) end
+            if type(database.recipeIndex) == "table" then
+                local count = 0
+                for _ in pairs(shared.recipeIndex) do count = count + 1 end
+                for key, recipe in pairs(database.recipeIndex) do
+                    if not shared.recipeIndex[key] and count < MAX_RECIPE_IDS then
+                        shared.recipeIndex[key] = recipe
+                        count = count + 1
+                    end
+                end
+            end
+        end
+        if localGeneration ~= shared.generation then
+            database.localProfile = nil
+            Catalog.scannedThisSession = false
+        end
+        database.localGeneration, database.guildKey, database.sharedCraftingVersion = shared.generation, scope, 1
+        for key in pairs(sharedFields) do database[key] = nil end
+        local character = database
+        database = setmetatable({}, {
+            __index = function(_, key)
+                if sharedFields[key] then return shared[key] end
+                return character[key]
+            end,
+            __newindex = function(_, key, value)
+                if sharedFields[key] then shared[key] = value else character[key] = value end
+            end,
+        })
+    end
     if type(database.remoteProfiles) ~= "table" then
         database.remoteProfiles = {}
     end
-    for name in pairs(database.remoteProfiles) do
-        if addon.Compat.IsPlayerName(name) then database.remoteProfiles[name] = nil end
+    if not scope then
+        for name in pairs(database.remoteProfiles) do
+            if addon.Compat.IsPlayerName(name) then database.remoteProfiles[name] = nil end
+        end
     end
     if type(database.recipeIndex) ~= "table" then
         database.recipeIndex = {}
@@ -202,7 +272,7 @@ function Catalog.RemoteProfiles()
     if not addon.GuildState.IsReady() then return {} end
     local visible = {}
     for name, profile in pairs(profiles) do
-        if addon.GuildState.Resolve(name) then visible[name] = profile end
+        if addon.GuildState.Resolve(name) and not addon.Compat.IsPlayerName(name) then visible[name] = profile end
     end
     return visible
 end
@@ -349,6 +419,14 @@ function Catalog.Scan()
         professions = professionCount,
     }
     Catalog.scannedThisSession = unavailableCount == 0
+    if Catalog.scannedThisSession and addon.characterDB and addon.GuildState and addon.GuildState.IsReady() then
+        for _, name in pairs(addon.GuildState.members) do
+            if addon.Compat.IsPlayerName(name) then
+                MergeProfiles(database.remoteProfiles, { [name] = database.localProfile })
+                break
+            end
+        end
+    end
     return recipeCount, learnedCount, nil, unavailableCount
 end
 

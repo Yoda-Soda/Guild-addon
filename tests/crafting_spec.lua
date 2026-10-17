@@ -226,7 +226,7 @@ for _, name in ipairs({
     "SetScrollChild", "ClearAllPoints", "SetHighlightTexture", "SetJustifyV", "LockHighlight",
     "UnlockHighlight", "SetNormalFontObject", "SetID",
     "SetWidth", "SetScale", "SetNormalTexture", "SetPushedTexture", "SetDisabledTexture",
-    "SetEnabled", "SetVerticalScroll", "ClearFocus",
+    "SetEnabled", "SetVerticalScroll", "ClearFocus", "SetTextColor", "SetColorTexture",
 }) do
     methods[name] = function() end
 end
@@ -245,6 +245,8 @@ function methods:GetHeight() return self.height or 768 end
 function methods:SetScale(scale) self.scale = scale end
 function methods:SetAlpha(alpha) self.alpha = alpha end
 function methods:SetEnabled(enabled) self.enabled = enabled end
+function methods:Enable() self.enabled = true end
+function methods:Disable() self.enabled = false end
 function methods:SetTexture(texture) self.texture = texture end
 function methods:SetScript(event, callback) self.scripts[event] = callback end
 function methods:SetChecked(checked) self.checked = checked end
@@ -284,6 +286,13 @@ local printed
 local published = 0
 addon.Print = function(message) printed = message end
 addon.Sync = { status = "Ready", Publish = function() published = published + 1 end }
+addon.Members = {
+    Settings = function() return { main = "", discord = "" } end,
+    Self = function() return "Local Person-Realm" end,
+    Rows = function() return {} end,
+    Stats = function() return { total = 0, all = 0, mains = 0, unassigned = 0, classes = {}, races = {}, specs = {} } end,
+}
+assert(loadfile("HordeEternal/GuildView.lua"))("HordeEternal", addon)
 addon.db = nil
 assert(loadfile("HordeEternal/Canvas.lua"))("HordeEternal", addon)
 assert(type(addon.ToggleCanvas) == "function", "canvas must load before the database exists")
@@ -309,12 +318,28 @@ assert(frames[2].point[1] == "BOTTOMRIGHT" and frames[2].point[5] == 6, "no empt
 canvas.tabs[1].scripts.OnClick()
 assert(addon.db.canvasTab == "guild")
 assert(canvas.selectedTab == 1)
+assert(canvas.guild and canvas.crafting.headerTotal:GetText() == "Guild overview")
+addon.RefreshCatalog()
+assert(canvas.crafting.headerTotal:GetText() == "Guild overview", "background crafting refreshes must not replace the Guild header")
 canvas.tabs[2].scripts.OnClick()
 assert(addon.db.canvasTab == "crafting")
+local unlockedOverview = addon.Catalog.Overview
+addon.Catalog.Overview = function() error("locked crafting must not read or render recipe information") end
+addon.Members.CanView = function() return false end
+addon.RefreshGuild()
+assert(addon.db.canvasTab == "guild" and canvas.guild.locked.shown and not canvas.guild.body.shown)
+assert(canvas.crafting.headerTotal:GetText() == "Guild profile", "the setup lock must not expose guild counts in the shared header")
+canvas.tabs[2].scripts.OnClick()
+assert(addon.db.canvasTab == "guild", "Crafting must stay inaccessible until main and server nickname are saved")
+addon.Catalog.Overview = unlockedOverview
+addon.Members.CanView = function() return true end
+addon.RefreshGuild()
+canvas.tabs[2].scripts.OnClick()
+assert(addon.db.canvasTab == "crafting", "completing profile setup must unlock the Crafting tab")
 
 local scanButton
 for _, widget in ipairs(frames) do
-    assert(widget.template ~= "UICheckButtonTemplate", "sharing must not require a checkbox")
+    assert(widget.template ~= "UICheckButtonTemplate" or widget == canvas.guild.main, "sharing must not require a checkbox")
     if widget:GetText() == "Rescan" then scanButton = widget end
 end
 assert(scanButton and scanButton.scripts.OnClick, "Scan must have a click handler")
@@ -437,6 +462,7 @@ assert(not canvas:IsShown())
 addon.ToggleCanvas()
 assert(canvas:IsShown() and frames[1] == canvas)
 print("PASS: profession home, paginated search, item-load refresh, whisper buttons, Rescan, and small viewport fit")
+addon.Members = nil
 
 for _, sharingEnabled in ipairs({ true, false }) do
     nativeTabs = false
@@ -534,22 +560,25 @@ assert(addon.Compat.IsPlayerName("Podcast Clawson-ForeverRealm"))
 assert(not addon.Compat.IsPlayerName("Podcast Clawson-OtherRealm"))
 assert(not addon.Compat.IsPlayerName("Podcast"), "a shared first name must not match the local player")
 assert(not addon.Compat.IsPlayerName("Podcast Othername"), "different surnames must remain different crafters")
+local sharedCrafting = addon.Catalog.Initialize()
+local ownCached = sharedCrafting.remoteProfiles["Podcast Clawson-ForeverRealm"]
 for _, sender in ipairs({ "Podcast Clawson", "Podcast Clawson-ForeverRealm" }) do
     addon.Sync.Receive("HERC2", sent[1], "GUILD", sender)
     addon.Sync.Receive("HERC2", sent[2], "GUILD", sender)
-    assert(addon.characterDB.catalog.remoteProfiles[sender] == nil, "own profile echoes must not enter the remote cache")
+    assert(sharedCrafting.remoteProfiles[sender] == (sender == "Podcast Clawson-ForeverRealm" and ownCached or nil),
+        "own echoes must not alter the named character cache")
 end
 assert(#timers == 0, "own requests must not schedule redundant replies")
 addon.Sync.Receive("HERC2", sent[2], "GUILD", "Podcast Clawson-OtherRealm")
-assert(addon.characterDB.catalog.remoteProfiles["Podcast Clawson-OtherRealm"], "another realm's crafter must still sync")
-addon.characterDB.catalog.remoteProfiles["Podcast Clawson"] = addon.characterDB.catalog.localProfile
-addon.characterDB.catalog.remoteProfiles["Podcast Clawson-ForeverRealm"] = addon.characterDB.catalog.localProfile
+assert(sharedCrafting.remoteProfiles["Podcast Clawson-OtherRealm"], "another realm's crafter must still sync")
+sharedCrafting.remoteProfiles["Podcast Clawson"] = addon.characterDB.catalog.localProfile
+sharedCrafting.remoteProfiles["Podcast Clawson-ForeverRealm"] = addon.characterDB.catalog.localProfile
 local deduplicated = addon.Catalog.Search("wizard")
 assert(#deduplicated == 1 and #deduplicated[1].crafters == 2,
-    "cached own profiles must be removed while retaining the other crafter")
-assert(addon.characterDB.catalog.remoteProfiles["Podcast Clawson"] == nil
-    and addon.characterDB.catalog.remoteProfiles["Podcast Clawson-ForeverRealm"] == nil)
-addon.characterDB.catalog.remoteProfiles["Podcast Clawson-OtherRealm"] = nil
+    "cached own profiles must be hidden while retaining the other crafter")
+assert(addon.Catalog.RemoteProfiles()["Podcast Clawson"] == nil
+    and addon.Catalog.RemoteProfiles()["Podcast Clawson-ForeverRealm"] == nil)
+sharedCrafting.remoteProfiles["Podcast Clawson-OtherRealm"] = nil
 deduplicated = addon.Catalog.Search("wizard")
 assert(#deduplicated[1].crafters == 1 and deduplicated[1].crafters[1].name == "You"
     and deduplicated[1].crafters[1].isLocal, "the current player must appear once as You")

@@ -1,6 +1,6 @@
 local _, addon = ...
 
-local Guild = { ready = false, serial = 0, members = {}, aliases = {}, online = {} }
+local Guild = { ready = false, serial = 0, members = {}, aliases = {}, online = {}, details = {} }
 addon.GuildState = Guild
 local OWNER = "Podcast Clawson"
 local MAX_MEMBERS = 1000
@@ -9,8 +9,10 @@ local listener
 local function Invalidate()
     Guild.ready = false
     Guild.members, Guild.aliases, Guild.online = {}, {}, {}
+    Guild.details = {}
     Guild.serial = Guild.serial + 1
     if addon.Sync and addon.Sync.Invalidate then addon.Sync.Invalidate() end
+    if addon.Members and addon.Members.Invalidate then addon.Members.Invalidate() end
 end
 
 local function CurrentContext()
@@ -79,6 +81,14 @@ function Guild.Authority()
     return Guild.Resolve(OWNER)
 end
 
+function Guild.Rows()
+    if not Guild.IsReady() then return {} end
+    local rows = {}
+    for _, detail in pairs(Guild.details) do rows[#rows + 1] = detail end
+    table.sort(rows, function(left, right) return left.name:lower() < right.name:lower() end)
+    return rows
+end
+
 function Guild.CanReset()
     if not Guild.IsReady() then return false end
     local authority = Guild.Authority()
@@ -95,8 +105,11 @@ function Guild.AcceptGeneration(generation, issuer)
     local authority = Guild.Authority()
     if not authority or Guild.Resolve(issuer) ~= authority then return false end
     local database = addon.Catalog.Initialize()
-    database.localProfile, database.remoteProfiles, database.recipeIndex = nil, {}, {}
-    database.generation, database.resetIssuer = generation, authority
+    database.localProfile = nil
+    database.remoteProfiles = {}
+    database.recipeIndex = {}
+    database.generation = generation
+    database.resetIssuer = authority
     addon.Catalog.scannedThisSession = false
     addon.db.craftingGenerations = addon.db.craftingGenerations or {}
     addon.db.craftingGenerations[Guild.key] = { generation = generation, issuer = authority }
@@ -112,7 +125,7 @@ function Guild.RefreshRoster()
         Invalidate()
         return false
     end
-    local members, aliases, online, selfPresent = {}, {}, {}, false
+    local members, aliases, online, details, selfPresent = {}, {}, {}, {}, false
     local function AddAlias(alias, canonical)
         alias = alias:lower()
         if aliases[alias] == nil then aliases[alias] = canonical
@@ -127,6 +140,15 @@ function Guild.RefreshRoster()
         end
         members[name:lower()] = name
         if type(info[10]) == "boolean" then online[name] = info[10] end
+        details[name] = {
+            name = name, rank = type(info[3]) == "string" and info[3] or nil,
+            rankIndex = type(info[4]) == "number" and info[4] >= 0 and info[4] <= 100
+                and info[4] == math.floor(info[4]) and info[4] or nil,
+            level = type(info[5]) == "number" and info[5] or nil,
+            className = type(info[6]) == "string" and info[6] or nil,
+            classFile = type(info[12]) == "string" and info[12] or nil,
+            online = online[name],
+        }
         AddAlias(name, name)
         AddAlias(name:match("^(.*)%-[^%-]+$") or name, name)
         if addon.Compat.IsPlayerName(name) then selfPresent = true end
@@ -137,6 +159,7 @@ function Guild.RefreshRoster()
         return false
     end
     Guild.members, Guild.aliases, Guild.online, Guild.ready = members, aliases, online, true
+    Guild.details = details
     local database = addon.Catalog.Initialize()
     local generations = addon.db.craftingGenerations
     local saved = type(generations) == "table" and generations[Guild.key]
@@ -145,6 +168,8 @@ function Guild.RefreshRoster()
         if not Guild.Resolve(name) then database.remoteProfiles[name] = nil end
     end
     if addon.RefreshCatalog then addon.RefreshCatalog() end
+    if addon.Members then addon.Members.RosterReady() end
+    if addon.RefreshGuild then addon.RefreshGuild() end
     return true
 end
 
@@ -163,6 +188,7 @@ function Guild.Start()
                 addon.Sync.RosterReady()
             end
             if addon.RefreshCatalog then addon.RefreshCatalog() end
+            if addon.RefreshGuild then addon.RefreshGuild() end
         end)
     end
     Guild.CheckContext()

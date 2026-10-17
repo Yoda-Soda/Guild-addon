@@ -75,7 +75,17 @@ local function ClearQueue()
 end
 
 function Sync.Invalidate()
+    local retained = {}
+    if addon.GuildState and addon.GuildState.ready then
+        for _, job in ipairs(queue) do
+            if job.prefix == "HEGM1" and job.scope == addon.GuildState.key then
+                job.generation, job.serial = addon.GuildState.Generation(), addon.GuildState.serial
+                retained[#retained + 1] = job
+            end
+        end
+    end
     ClearQueue()
+    for _, job in ipairs(retained) do queue[#queue + 1] = job end
     queueSerial = queueSerial + 1
     queueRunning = false
     assemblies, lastRequestBySender, receiveWindows = {}, {}, {}
@@ -95,7 +105,8 @@ local function GuildReady()
     return true
 end
 
-local function CommunicationReady()
+local function CommunicationReady(prefix)
+    prefix = prefix or PREFIX
     if not C_ChatInfo or type(C_ChatInfo.RegisterAddonMessagePrefix) ~= "function"
         or type(C_ChatInfo.IsAddonMessagePrefixRegistered) ~= "function"
         or type(C_ChatInfo.SendAddonMessage) ~= "function"
@@ -103,10 +114,10 @@ local function CommunicationReady()
         Sync.status = "Guild message APIs unavailable"
         return false
     end
-    if addon.Compat.Value(C_ChatInfo.IsAddonMessagePrefixRegistered, PREFIX) ~= true then
-        addon.Compat.Call(C_ChatInfo.RegisterAddonMessagePrefix, PREFIX)
+    if addon.Compat.Value(C_ChatInfo.IsAddonMessagePrefixRegistered, prefix) ~= true then
+        addon.Compat.Call(C_ChatInfo.RegisterAddonMessagePrefix, prefix)
     end
-    if addon.Compat.Value(C_ChatInfo.IsAddonMessagePrefixRegistered, PREFIX) ~= true then
+    if addon.Compat.Value(C_ChatInfo.IsAddonMessagePrefixRegistered, prefix) ~= true then
         Sync.status = "Guild message prefix registration failed"
         return false
     end
@@ -117,15 +128,16 @@ local function SendOne(job)
     if not GuildReady() then return false end
     if job.scope ~= addon.GuildState.key or job.generation ~= addon.GuildState.Generation()
         or job.serial ~= addon.GuildState.serial then return false end
+    if job.prefix == "HEGM1" and addon.Members and job.memberVersion ~= addon.Members.wireVersion then return true end
     if not job.control and (not addon.Catalog.scannedThisSession
         or job.profile ~= addon.Catalog.Initialize().localProfile) then
         Sync.status = "Discarded a queued profile superseded by a rescan"
         return true
     end
-    if not CommunicationReady() then
+    if not CommunicationReady(job.prefix) then
         return false
     end
-    local results, state = addon.Compat.Call(C_ChatInfo.SendAddonMessage, PREFIX, job.message, "GUILD")
+    local results, state = addon.Compat.Call(C_ChatInfo.SendAddonMessage, job.prefix or PREFIX, job.message, "GUILD")
     if not results then
         Sync.status = "Guild send " .. state
         return false
@@ -168,18 +180,29 @@ local function Pump()
     end)
 end
 
-local function Queue(message, control)
+local function Queue(message, control, prefix)
     if type(message) ~= "string" or #message > MAX_MESSAGE_SIZE or #queue >= MAX_QUEUE then
         Sync.status = "Guild sync queue full or message too large"
         return false
     end
     queue[#queue + 1] = {
-        message = message, control = control,
+        message = message, control = control, prefix = prefix,
+        memberVersion = prefix == "HEGM1" and addon.Members and addon.Members.wireVersion or nil,
         scope = addon.GuildState.key, generation = addon.GuildState.Generation(),
         serial = addon.GuildState.serial,
         profile = not control and addon.Catalog.Initialize().localProfile or nil,
     }
     Pump()
+    return true
+end
+
+function Sync.QueueMembers(messages)
+    if not GuildReady() or not CommunicationReady("HEGM1") or type(messages) ~= "table"
+        or #messages < 1 or #messages > 9 or #queue + #messages > MAX_QUEUE then return false end
+    for _, message in ipairs(messages) do
+        if type(message) ~= "string" or #message > MAX_MESSAGE_SIZE then return false end
+    end
+    for _, message in ipairs(messages) do Queue(message, true, "HEGM1") end
     return true
 end
 
@@ -323,6 +346,8 @@ local function StoreProfile(sender, payload, sourceUpdatedAt)
         end
     end
     local previous = remoteProfiles[sender]
+    if type(previous) == "table" and type(previous.updatedAt) == "number" and sourceUpdatedAt > 0
+        and previous.updatedAt > sourceUpdatedAt then return false end
     local previousCount = type(previous) == "table" and type(previous.recipes) == "table"
         and #previous.recipes or 0
     if (previous == nil and profileCount >= MAX_REMOTE_PROFILES)
@@ -391,6 +416,10 @@ local function ReceiveProfile(sender, transferID, sourceUpdatedAt, part, total, 
 end
 
 function Sync.Receive(prefix, message, channel, sender)
+    if addon.Compat.IsReadable(prefix) and prefix == "HEGM1" and addon.Members then
+        addon.Members.Receive(prefix, message, channel, sender)
+        return
+    end
     if not addon.Compat.IsReadable(prefix) or not addon.Compat.IsReadable(message)
         or not addon.Compat.IsReadable(channel) or not addon.Compat.IsReadable(sender)
         or prefix ~= PREFIX or channel ~= "GUILD" or type(message) ~= "string"

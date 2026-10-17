@@ -147,11 +147,6 @@ local function CreateCanvas()
     local craftingPage = CreateFrame("Frame", nil, pageHost)
     craftingPage:SetAllPoints(pageHost)
 
-    local guildInfo = CreateInset(guildPage)
-    guildInfo:SetPoint("TOPLEFT", guildPage, "TOPLEFT", 0, 0)
-    guildInfo:SetPoint("TOPRIGHT", guildPage, "TOPRIGHT", 0, 0)
-    guildInfo:SetHeight(112)
-
     local listBox = CreateInset(craftingPage)
     listBox:SetPoint("TOPLEFT", craftingPage, "TOPLEFT", 0, -32)
     listBox:SetPoint("BOTTOMRIGHT", craftingPage, "BOTTOMRIGHT", 0, 34)
@@ -362,6 +357,16 @@ local function CreateCanvas()
     end
 
     RefreshResults = function(resetScroll)
+        if addon.Members and addon.Members.CanView and not addon.Members.CanView() then
+            selectedEntry = nil
+            for _, row in ipairs(resultRows) do row.entry, row.profession = nil, nil; row:Hide() end
+            ShowDetail(nil)
+            if addon.db.canvasTab == "crafting" then
+                headerTotal:SetText("Guild profile")
+                headerSub:SetText("Main character and Discord server nickname required")
+            end
+            return
+        end
         local query = search:GetText() or ""
         local professions, known, total = addon.Catalog.Overview()
         local home = selectedProfession == nil and query == ""
@@ -477,9 +482,11 @@ local function CreateCanvas()
         for _ in pairs(addon.Catalog.RemoteProfiles()) do
             remoteCount = remoteCount + 1
         end
-        headerTotal:SetText(known .. " / " .. total .. " guild recipes")
-        headerSub:SetText("Guild-known / " .. (addon.Catalog.hasLibrary and "catalogue" or "observed recipes")
-            .. "  -  " .. remoteCount .. " guild profiles")
+        if addon.db.canvasTab ~= "guild" or not frame.guild then
+            headerTotal:SetText(known .. " / " .. total .. " guild recipes")
+            headerSub:SetText("Guild-known / " .. (addon.Catalog.hasLibrary and "catalogue" or "observed recipes")
+                .. "  -  " .. remoteCount .. " guild profiles")
+        end
         status:SetText(addon.Sync.status)
     end
 
@@ -554,17 +561,7 @@ local function CreateCanvas()
         addon.Compat.Call(frame.RegisterEvent, frame, event)
     end
 
-    local guildTitle = guildInfo:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    guildTitle:SetPoint("TOPLEFT", guildInfo, "TOPLEFT", 8, -8)
-    guildTitle:SetText("AT REASONABLE HOURS")
-    guildTitle:SetJustifyH("LEFT")
-
-    local guildText = guildInfo:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    guildText:SetPoint("TOPLEFT", guildTitle, "BOTTOMLEFT", 0, -4)
-    guildText:SetPoint("RIGHT", guildInfo, "RIGHT", -8, 0)
-    guildText:SetText("Organized groups around New Zealand evenings.")
-    guildText:SetJustifyH("LEFT")
-    guildText:SetJustifyV("TOP")
+    if addon.CreateGuildView then frame.guild = addon.CreateGuildView(guildPage, headerTotal, headerSub) end
 
     ShowDetail(nil)
     RefreshResults()
@@ -583,6 +580,7 @@ local function CreateCanvas()
         or { "PanelTabButtonTemplate", "CharacterFrameTabButtonTemplate", "TabButtonTemplate" }
 
     local function SelectTab(key)
+        if addon.Members and addon.Members.CanView and not addon.Members.CanView() then key = "guild" end
         if not pages[key] then
             return
         end
@@ -613,6 +611,17 @@ local function CreateCanvas()
             end
         end
         addon.db.canvasTab = key
+        if key == "guild" and frame.guild then frame.guild.Refresh()
+        elseif key == "crafting" then RefreshResults() end
+    end
+
+    if frame.guild then
+        addon.RefreshGuild = function()
+            if addon.Members and addon.Members.CanView and not addon.Members.CanView() then
+                RefreshResults()
+                SelectTab("guild")
+            else frame.guild.Refresh() end
+        end
     end
 
     for index, definition in ipairs(definitions) do

@@ -22,6 +22,11 @@ local invalidations = 0
 addon.Sync = { Invalidate = function() invalidations = invalidations + 1 end }
 assert(addon.GuildState.RefreshRoster())
 assert(addon.GuildState.Resolve("Other Crafter") == roster[2])
+local rosterRows = addon.GuildState.Rows()
+assert(#rosterRows == 2 and rosterRows[1].name == roster[2]
+    and rosterRows[1].classFile == "MAGE" and rosterRows[1].level == 60
+    and rosterRows[1].rank == "Member" and rosterRows[1].rankIndex == 5,
+    "the verified roster must retain member information for guild statistics")
 assert(addon.GuildState.CanReset(), "only the configured local owner can reset")
 assert(not addon.GuildState.Resolve("Outsider"))
 local database = addon.Catalog.Initialize()
@@ -49,6 +54,7 @@ database.remoteProfiles[roster[2]] = { recipes = {} }
 database.remoteProfiles["Departed Member-ForeverRealm"] = { recipes = {} }
 unavailableRow = 2
 assert(not addon.GuildState.RefreshRoster())
+assert(#addon.GuildState.Rows() == 0, "an unreadable roster must not expose stale statistics")
 assert(addon.GuildState.IsOnline(roster[1]) == nil, "invalidating the roster must discard cached presence")
 assert(database.remoteProfiles["Departed Member-ForeverRealm"], "partial rosters must not delete profiles")
 assert(next(addon.Catalog.RemoteProfiles()) == nil, "unverified membership must not display crafters")
@@ -73,10 +79,11 @@ playerFirst, playerLast = "Other", "Crafter"
 assert(addon.GuildState.RefreshRoster() and not addon.GuildState.CanReset())
 guildName = "Another Guild"
 assert(addon.GuildState.RefreshRoster())
+database = addon.Catalog.Initialize()
 assert(next(database.remoteProfiles) == nil, "changing guild must clear the previous guild's profiles")
 database.remoteProfiles[roster[1]] = { recipes = {} }
 inGuild = false
-assert(not addon.GuildState.IsReady() and next(database.remoteProfiles) == nil)
+assert(not addon.GuildState.IsReady() and next(addon.Catalog.Initialize().remoteProfiles) == nil)
 assert(invalidations > 0)
 print("PASS: complete guild rosters, departure cleanup, context changes, and unique owner authorization")
 
@@ -159,6 +166,7 @@ end
 
 local account = {
     schemaVersion = 1, minimapPos = 42, minimapPositionVersion = 1, canvasTab = "guild",
+    memberGuilds = { preserved = { main = "Podcast Clawson", discord = "test.handle" } },
     futureTool = { preserved = true }, catalog = { localProfile = { recipes = { { recipeID = 999 } } } },
 }
 local owner = NewClient("Podcast", "Clawson", { 1001 }, account)
@@ -182,17 +190,22 @@ owner.addon.Sync.Publish()
 owner.addon.Sync.ResetCrafting(false)
 local beforeReset = #owner.sent
 assert(owner.addon.Sync.ResetCrafting(true))
+assert(owner.addon.db.craftingGuilds["Horde Eternal@ForeverRealm"].resetIssuer == roster[1],
+    "reset issuer missing after reset: shared=" .. tostring(owner.addon.db.craftingGuilds["Horde Eternal@ForeverRealm"].resetIssuer)
+        .. " raw=" .. tostring(rawget(owner.addon.characterDB.catalog, "resetIssuer")))
 Flush(owner)
 assert(owner.addon.GuildState.Generation() == 2)
 assert(account.minimapPos == 42 and account.canvasTab == "guild" and account.futureTool.preserved,
     "crafting resets must preserve other addon settings and tools")
+assert(account.memberGuilds.preserved.discord == "test.handle", "crafting resets must preserve guild member profiles")
 for index = beforeReset + 1, #owner.sent do
     assert(owner.sent[index]:find("|Horde Eternal@ForeverRealm|2|", 1, true), "old queued messages must not survive a reset")
 end
 Deliver(Latest(owner, "H"), owner, peer)
-assert(peer.addon.GuildState.Generation() == 2)
+assert(peer.addon.GuildState.Generation() == 2,
+    "peer generation " .. peer.addon.GuildState.Generation() .. " after " .. Latest(owner, "H"))
 Deliver(oldOwnerProfile, owner, peer)
-assert(peer.addon.characterDB.catalog.remoteProfiles[roster[1]] == nil, "old-generation packets must not restore cleared profiles")
+assert(peer.addon.Catalog.Initialize().remoteProfiles[roster[1]] == nil, "old-generation packets must not restore cleared profiles")
 Deliver(Latest(returning, "H"), returning, peer)
 Flush(peer)
 Deliver(Latest(peer, "H"), peer, returning)
@@ -217,39 +230,83 @@ Flush(owner)
 Deliver(Latest(owner, "H"), owner, peer)
 Activate(peer)
 peer.addon.Sync.Receive("HERC2", partPrefix .. "2|2|Recipe 1001~Recipe 1001", "GUILD", roster[1])
-assert(peer.addon.characterDB.catalog.remoteProfiles[roster[1]] == nil, "old partial transfers must not survive reset")
+assert(peer.addon.Catalog.Initialize().remoteProfiles[roster[1]] == nil, "old partial transfers must not survive reset")
 partPrefix = "2|P|Horde Eternal@ForeverRealm|3|8-1|1131|"
 peer.addon.Sync.Receive("HERC2", partPrefix .. "2|2|Recipe 1001~Recipe 1001", "GUILD", roster[1])
 peer.addon.Sync.Receive("HERC2", partPrefix .. "2|2|Recipe 1001~Recipe 1001", "GUILD", roster[1])
 peer.addon.Sync.Receive("HERC2", partPrefix .. "1|2|1001~171~Alchemy~", "GUILD", roster[1])
-assert(#peer.addon.characterDB.catalog.remoteProfiles[roster[1]].recipes == 1,
+assert(#peer.addon.Catalog.Initialize().remoteProfiles[roster[1]].recipes == 1,
     "valid reordered chunks and duplicate chunks must assemble once")
+peer.addon.Sync.Receive("HERC2", "2|P|Horde Eternal@ForeverRealm|3|9-1|1130|1|1|9998~171~Alchemy~Old item~Old recipe", "GUILD", roster[1])
+assert(peer.addon.Catalog.Initialize().remoteProfiles[roster[1]].recipes[1].recipeID == 1001,
+    "an older profile arriving late must not replace newer shared crafting data")
 peer.ids = {}
 assert(peer.addon.Catalog.Scan() == 0 and peer.addon.Sync.Publish())
 Flush(peer)
 Deliver(Latest(owner, "H"), owner, returning)
 Deliver(Latest(peer, "P"), peer, returning)
-assert(#returning.addon.characterDB.catalog.remoteProfiles[roster[2]].recipes == 0,
+assert(#returning.addon.Catalog.Initialize().remoteProfiles[roster[2]].recipes == 0,
     "empty current profiles must withdraw old profession claims")
 Activate(peer)
 peer.ids = nil
 assert(peer.addon.Catalog.Scan() == nil and not peer.addon.Sync.Publish(), "failed scans must not publish cached claims")
 local mainProfile = owner.addon.characterDB.catalog.localProfile
+Activate(owner)
+Deliver(Latest(peer, "P"), peer, owner)
+local sharedProfiles = owner.addon.Catalog.Initialize().remoteProfiles
+local sharedIndex = owner.addon.Catalog.Initialize().recipeIndex
 local alt = NewClient("Alt", "Character", {}, owner.addon.db)
 Flush(alt)
 assert(alt.addon.GuildState.Generation() == 3, "an alt must inherit its account's known guild generation")
 assert(#alt.addon.characterDB.catalog.localProfile.recipes == 0 and owner.addon.characterDB.catalog.localProfile == mainProfile,
     "an empty alt must not inherit or overwrite the main character's recipes")
+assert(alt.addon.Catalog.Initialize().remoteProfiles == sharedProfiles
+    and alt.addon.Catalog.Initialize().recipeIndex == sharedIndex,
+    "alts in the same guild must inherit the newest guild cache immediately")
+assert(alt.addon.Catalog.RemoteProfiles()[roster[1]].recipes[1].recipeID == 1001,
+    "the previous character must be shown as its own cached crafter, not as the alt's learned recipes")
+assert(alt.addon.Catalog.RemoteProfiles()[roster[2]] and alt.addon.Catalog.RemoteProfiles()[roster[4]] == nil,
+    "remote guild knowledge must survive switching characters without showing self duplicates")
+assert(rawget(alt.addon.characterDB.catalog, "remoteProfiles") == nil
+    and owner.addon.db.craftingGuilds["Horde Eternal@ForeverRealm"].remoteProfiles == sharedProfiles,
+    "shared guild data must persist only in account storage, not duplicated in character saved variables")
 local failedAlt = NewClient("Alt", "Character", nil, owner.addon.db, alt.addon.characterDB)
 Flush(failedAlt)
 for _, message in ipairs(failedAlt.sent) do assert(message:sub(1, 4) ~= "2|P|", "an unavailable alt scan must send no recipe profile") end
+local function SavedCopy(value)
+    if type(value) ~= "table" then return value end
+    local copy = {}
+    for key, entry in pairs(value) do copy[key] = SavedCopy(entry) end
+    return copy
+end
+local savedAccount = SavedCopy(owner.addon.db)
+local reloadedAlt = NewClient("Alt", "Character", {}, savedAccount, SavedCopy(alt.addon.characterDB))
+assert(reloadedAlt.addon.Catalog.RemoteProfiles()[roster[1]].recipes[1].recipeID == 1001,
+    "the shared cache must survive saving and reloading without runtime metatables")
+local legacyCharacter = { schemaVersion = 1, catalog = {
+    guildKey = "Horde Eternal@ForeverRealm", generation = 3,
+    remoteProfiles = { [roster[2]] = { updatedAt = 1500, recipes = { { recipeID = 5001, itemName = "Migrated recipe" } } } },
+    recipeIndex = { ["5002"] = { recipeID = 5002, itemName = "Migrated definition", skillLineID = 171 } },
+} }
+local migratedAlt = NewClient("Alt", "Character", {}, savedAccount, legacyCharacter)
+assert(migratedAlt.addon.Catalog.RemoteProfiles()[roster[2]].recipes[1].recipeID == 5001
+    and migratedAlt.addon.Catalog.Initialize().recipeIndex["5002"], "same-generation character caches must migrate into shared guild storage")
+local staleCharacter = { schemaVersion = 1, catalog = {
+    guildKey = "Horde Eternal@ForeverRealm", generation = 2,
+    localProfile = { recipes = { { recipeID = 9999 } } },
+    remoteProfiles = { [roster[2]] = { updatedAt = 9999, recipes = { { recipeID = 9999 } } } },
+} }
+local staleAlt = NewClient("Alt", "Character", nil, savedAccount, staleCharacter)
+assert(staleAlt.addon.characterDB.catalog.localProfile == nil and not staleAlt.addon.Sync.Publish()
+    and staleAlt.addon.Catalog.RemoteProfiles()[roster[2]].recipes[1].recipeID == 5001,
+    "a stale character must not resurrect pre-reset local or guild recipe data")
 Activate(returning)
 table.remove(roster, 2)
 assert(returning.addon.GuildState.RefreshRoster())
-assert(returning.addon.characterDB.catalog.remoteProfiles["Other Crafter-ForeverRealm"] == nil,
+assert(returning.addon.Catalog.Initialize().remoteProfiles["Other Crafter-ForeverRealm"] == nil,
     "a departed member's profile must be pruned")
 Deliver(Latest(peer, "P"), peer, returning)
-assert(returning.addon.characterDB.catalog.remoteProfiles["Other Crafter-ForeverRealm"] == nil,
+assert(returning.addon.Catalog.Initialize().remoteProfiles["Other Crafter-ForeverRealm"] == nil,
     "departed members must not be able to restore their profile")
 local opened, reason = returning.addon.Compat.OpenCraftRequest({}, { name = "Other Crafter-ForeverRealm" })
 assert(not opened and reason:find("current guild roster", 1, true), "stale crafter buttons must recheck membership")
