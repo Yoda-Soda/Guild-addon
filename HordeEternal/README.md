@@ -171,6 +171,24 @@ overview; rectangles may cross the artwork edge if their centers remain visible.
 Zone pins use map-area centers, not the characters' exact positions. Closely
 placed zones can overlap; the location strip remains an alternative way to select one.
 
+When a character's reported location has no position on the current map, its
+location-strip entry remains visible instead of disappearing during drill-down.
+For example, a Kalimdor total that includes Darkspear Island still exposes that
+location and its character names when the continent opens, even if the client
+cannot project the BG onto Kalimdor. Such entries show **Map position unavailable**
+and contribute to the **unplotted** count. A uniquely resolved map remains clickable
+and opens its own artwork when available. Unresolved or ambiguous names remain
+listed without guessing a map ID; detached instance maps remain available in the
+strip, while locations verified on another continent are excluded. Continent
+tooltips on both map views also show each character's reported zone.
+
+This is roster-reported location, not a new BG presence protocol, proof of a
+particular match, or exact player coordinates. The change needs only `/reload`.
+Live check: with one guildmate in Darkspear Island and one in a Kalimdor zone,
+compare the world count, continent pin plus location-strip counts, character
+tooltips, and opening the BG artwork. Confirm logging the guildmate out removes
+the BG entry; unavailable metadata/art must remain honest unavailable states.
+
 The Map tab and native pins require completed main/server-nickname setup and a
 complete readable roster. Losing access removes pins and their cached frame
 payloads. Guild changes cannot mix location snapshots from different guilds.

@@ -48,24 +48,37 @@ function Map.Index()
     return index
 end
 
+local function MapScope(info, mapID, index)
+    local seen = {}
+    for _ = 1, 12 do
+        if not info or seen[info.mapID] then break end
+        if info.mapID == mapID then return true, false end
+        if info.parentMapID == 0 then return false, info.mapID ~= index.root end
+        seen[info.mapID] = true
+        info = index.maps[info.parentMapID] or addon.Compat.MapInfo(info.parentMapID)
+    end
+    return false, true
+end
+
 function Map.Markers(summary, mapID, index)
-    local markers, byID = {}, {}
+    local markers, byID, unplaced = {}, {}, {}
     local shown = index and index.maps[mapID]
-    if not shown then return markers end
+    if not shown then return markers, summary.zones end
     for _, zone in ipairs(summary.zones) do
         local id = index.names[zone.name]
         if type(id) == "number" then
             local info = index.maps[id]
+            local inScope, detached = MapScope(info, mapID, index)
             local seen = {}
-            if shown.mapType <= 1 or mapID == index.root then
+            if inScope and (shown.mapType <= 1 or mapID == index.root) then
                 for _ = 1, 12 do
                     if not info or seen[info.mapID] or info.mapType <= 2 then break end
                     seen[info.mapID] = true
                     info = index.maps[info.parentMapID] or addon.Compat.MapInfo(info.parentMapID)
                 end
             end
-            if info then
-                local position = addon.Compat.MapRect(info.mapID, mapID)
+            if inScope or detached then
+                local position = inScope and info and addon.Compat.MapRect(info.mapID, mapID)
                 if position then
                     local marker = byID[info.mapID]
                     if not marker then
@@ -75,12 +88,19 @@ function Map.Markers(summary, mapID, index)
                     end
                     marker.count = marker.count + zone.count
                     for _, character in ipairs(zone.characters) do marker.characters[#marker.characters + 1] = character end
+                else
+                    unplaced[#unplaced + 1] = {
+                        mapID = id, name = zone.name, count = zone.count,
+                        characters = zone.characters, unplaced = true,
+                    }
                 end
             end
+        else
+            unplaced[#unplaced + 1] = zone
         end
     end
     table.sort(markers, function(left, right) return left.name:lower() < right.name:lower() end)
-    return markers
+    return markers, unplaced
 end
 
 function Map.Summary()
@@ -120,9 +140,13 @@ local function ShowTooltip(owner, location)
     GameTooltip:SetText(location.name)
     GameTooltip:AddLine(location.count .. " guild characters", 1, 0.82, 0)
     local names = {}
-    for _, character in ipairs(location.characters) do names[#names + 1] = addon.Compat.CharacterLabel(character.name) end
+    for _, character in ipairs(location.characters) do
+        local zone = character.zone
+        names[#names + 1] = addon.Compat.CharacterLabel(character.name)
+            .. (type(zone) == "string" and zone ~= location.name and (" - " .. zone) or "")
+    end
     table.sort(names)
-    for index = 1, math.min(12, #names) do GameTooltip:AddLine(names[index], 1, 1, 1) end
+    for index = 1, math.min(12, #names) do GameTooltip:AddLine(names[index], 1, 1, 1, true) end
     if #names > 12 then GameTooltip:AddLine("+" .. (#names - 12) .. " more characters", 0.7, 0.7, 0.7) end
     GameTooltip:Show()
 end
@@ -444,7 +468,8 @@ function addon.CreateGuildMapView(page, header, subheader)
         title:SetText(info and info.name or "Guild map unavailable")
         back:SetEnabled(info ~= nil and info.parentMapID > 0)
         local art = info and addon.Compat.MapArt(view.mapID)
-        local markers = info and index and Map.Markers(summary, view.mapID, index) or {}
+        local markers, unplaced = {}, summary.zones
+        if info and index then markers, unplaced = Map.Markers(summary, view.mapID, index) end
         if art and index then
             local scale = math.min(MAP_WIDTH / art.width, MAP_HEIGHT / art.height)
             local width, height = art.width * scale, art.height * scale
@@ -467,18 +492,13 @@ function addon.CreateGuildMapView(page, header, subheader)
             unavailable:SetText("Map artwork or readable map data unavailable")
             unavailable:Show()
         end
-        local mapped = 0
-        for _, zone in ipairs(summary.zones) do if index and type(index.names[zone.name]) == "number" then mapped = mapped + zone.count end end
+        local unplotted = 0
+        for _, zone in ipairs(unplaced) do unplotted = unplotted + zone.count end
         caption:SetText(summary.online .. " online / " .. summary.located .. " located / " .. summary.unknown .. " unknown"
-            .. (summary.located > mapped and (" / " .. (summary.located - mapped) .. " unmapped") or ""))
-        local locations = markers
-        if info and index and (view.mapID == index.root or info.mapType <= 1) then
-            locations = {}
-            for _, marker in ipairs(markers) do locations[#locations + 1] = marker end
-            for _, zone in ipairs(summary.zones) do
-                if type(index.names[zone.name]) ~= "number" then locations[#locations + 1] = zone end
-            end
-        elseif #markers == 0 then locations = summary.zones end
+            .. (unplotted > 0 and (" / " .. unplotted .. " unplotted") or ""))
+        local locations = {}
+        for _, marker in ipairs(markers) do locations[#locations + 1] = marker end
+        for _, zone in ipairs(unplaced) do locations[#locations + 1] = zone end
         table.sort(locations, function(left, right)
             if left.count ~= right.count then return left.count > right.count end
             return left.name:lower() < right.name:lower()
@@ -495,7 +515,8 @@ function addon.CreateGuildMapView(page, header, subheader)
                 row.name:SetText(zone.name)
                 row.count:SetText(tostring(zone.count))
                 local detail = row.mapID and addon.Compat.MapInfo(row.mapID)
-                row.state:SetText(detail and (detail.mapType == 2 and "Continent" or "Zone") or "Map position unavailable")
+                row.state:SetText(not zone.unplaced and detail and (detail.mapType == 2 and "Continent" or "Zone")
+                    or "Map position unavailable")
                 row:Show()
             end
         end

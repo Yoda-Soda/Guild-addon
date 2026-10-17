@@ -75,6 +75,38 @@ assert(#twoContinentMarkers == 2 and twoContinentMarkers[1].count == 1 and twoCo
 table.remove(characters)
 C_Map.GetMapChildrenInfo = singleContinentChildren
 rectangles["12:947"] = { 0.1, 0.5, 0.2, 0.8 }
+maps[5001] = { mapID = 5001, name = "Darkspear Island", parentMapID = 12, mapType = 3 }
+local function BattlegroundChildren(id, kind, recursive)
+    if id == 947 then return { maps[12], maps[13] } end
+    if id == 12 then return { maps[85], maps[10], maps[5001] } end
+    if id == 13 then return { maps[90] } end
+    return singleContinentChildren(id, kind, recursive)
+end
+C_Map.GetMapChildrenInfo = BattlegroundChildren
+local battlegroundIndex = addon.GuildMap.Index()
+characters[#characters + 1] = { name = "BG Character-Realm", zone = "Darkspear Island", online = true }
+local battlegroundSummary = addon.GuildMap.Summary()
+local worldMarkers = addon.GuildMap.Markers(battlegroundSummary, 947, battlegroundIndex)
+local continentMarkers, unplaced = addon.GuildMap.Markers(battlegroundSummary, 12, battlegroundIndex)
+local plotted = 0
+for _, marker in ipairs(continentMarkers) do plotted = plotted + marker.count end
+assert(worldMarkers[1].count == 4 and plotted == 3 and #unplaced == 1 and unplaced[1].count == 1
+    and unplaced[1].name == "Darkspear Island" and unplaced[1].mapID == 5001,
+    "every character counted on the continent must remain represented when its BG has no continent projection")
+characters[#characters + 1] = { name = "Other Continent", zone = "Undercity", online = true }
+rectangles["90:12"] = { 0.3, 0.5, 0.3, 0.5 }
+continentMarkers, unplaced = addon.GuildMap.Markers(addon.GuildMap.Summary(), 12, battlegroundIndex)
+assert(#continentMarkers == 2 and #unplaced == 1, "another continent must not be projected or mixed into this continent's location strip")
+rectangles["90:12"] = nil
+maps[5001].parentMapID = 0
+local detachedIndex = addon.GuildMap.Index()
+local _, detached = addon.GuildMap.Markers(addon.GuildMap.Summary(), 85, detachedIndex)
+assert(#detached == 1 and detached[1].mapID == 5001, "detached instance maps must remain listed without a fabricated world pin")
+maps[5001].parentMapID = 12
+table.remove(characters)
+table.remove(characters)
+C_Map.GetMapChildrenInfo = singleContinentChildren
+print("PASS: continent drill-down preserves unplottable BG locations and characters without inventing world positions")
 local art = addon.Compat.MapArt(12)
 assert(#art.tiles == 4 and art.tiles[2].fileID == 102 and art.tiles[3].fileID == 103
     and art.tiles[4].u == 488 / 512 and art.tiles[4].v == 188 / 512, "map tiles must preserve native order and crop edge tiles")
@@ -186,6 +218,43 @@ configured = true
 view.Refresh()
 assert(view.canvas.shown)
 print("PASS: map artwork rendering, count tooltips, continent/zone navigation, native-map action, and profile-lock clearing")
+
+local regularCharacters, regularIndex = characters, addon.GuildMap.index
+characters = {
+    { name = "Local Character", zone = "Orgrimmar", online = true },
+    { name = "BG Character-Realm", zone = "Darkspear Island", online = true },
+}
+addon.GuildMap.index = battlegroundIndex
+view.world.scripts.OnClick()
+assert(view.pins[1].location.count == 2)
+GameTooltip.lines = {}
+view.pins[1].scripts.OnEnter(view.pins[1])
+assert(table.concat(GameTooltip.lines, "\n"):find("BG Character - Darkspear Island", 1, true),
+    "continent tooltips must show each character's reported zone, not just a combined continent total")
+view.pins[1].scripts.OnClick(view.pins[1])
+local battlegroundRow
+for _, row in ipairs(view.zoneRows) do
+    if row.shown and row.location.name == "Darkspear Island" then battlegroundRow = row end
+end
+assert(view.mapID == 12 and battlegroundRow and battlegroundRow.count.text == "1"
+    and battlegroundRow.state.text == "Map position unavailable" and view.caption.text:find("1 unplotted", 1, true),
+    "Kalimdor must show the BG location even while another guild character has a normal map pin")
+battlegroundRow.scripts.OnEnter(battlegroundRow)
+assert(GameTooltip.text == "Darkspear Island" and GameTooltip.line == "BG Character")
+battlegroundRow.scripts.OnClick(battlegroundRow)
+assert(view.mapID == 5001 and view.canvas.shown and view.tiles[1].texture == 101
+    and view.pins[1].location.count == 1, "selecting the reported BG location must open its native map artwork")
+view.native.scripts.OnClick()
+assert(opened == 5001)
+view.back.scripts.OnClick()
+characters[2].online = false
+view.Refresh()
+for _, row in ipairs(view.zoneRows) do
+    assert(not row.shown or row.location.name ~= "Darkspear Island", "offline characters must not leave a stale BG entry")
+end
+characters, addon.GuildMap.index = regularCharacters, regularIndex
+view.world.scripts.OnClick()
+print("PASS: Darkspear Island remains visible, names are discoverable, BG artwork opens, and offline entries clear")
 
 local worldCanvas = Widget()
 worldCanvas:SetSize(1000, 700)

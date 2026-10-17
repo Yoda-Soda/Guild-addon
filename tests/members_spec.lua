@@ -162,6 +162,13 @@ addon.Members.Capture()
 local header, subheader = Widget(), Widget()
 local view = addon.CreateGuildView(Widget(), header, subheader)
 assert(not view.editor.shown and #view.rows == 6, "profile editing must not occupy the member workspace or require nested list scrolling")
+assert(view.profile:GetText() == "Edit" and view.profile.width == 64 and view.profile.height == 24
+    and view.profile.point[1] == "TOPRIGHT" and view.profile.icon == nil,
+    "profile editing must use a compact labelled Edit button instead of cog artwork")
+view.profile.scripts.OnEnter(view.profile)
+assert(GameTooltip:GetText() == "Edit guild profile", "the Edit button must preserve its profile tooltip")
+view.profile.scripts.OnLeave(view.profile)
+assert(not GameTooltip.shown, "leaving the Edit button must hide the tooltip")
 view.profile.scripts.OnClick()
 assert(view.editor.shown and view.shade.shown, "the profile dialog must cover the directory with an input-blocking shade")
 for index, row in ipairs(view.rows) do
