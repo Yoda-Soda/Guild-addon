@@ -241,7 +241,13 @@ peer.addon.Sync.Receive("HERC2", "2|P|Horde Eternal@ForeverRealm|3|9-1|1130|1|1|
 assert(peer.addon.Catalog.Initialize().remoteProfiles[roster[1]].recipes[1].recipeID == 1001,
     "an older profile arriving late must not replace newer shared crafting data")
 peer.ids = {}
-assert(peer.addon.Catalog.Scan() == 0 and peer.addon.Sync.Publish())
+assert(peer.addon.Catalog.Scan() == 0 and not peer.addon.Sync.Publish(),
+    "an empty context must not erase recipes scanned from a different profession window")
+local learnedRecipeInfo = C_TradeSkillUI.GetRecipeInfo
+peer.ids = { 2001 }
+C_TradeSkillUI.GetRecipeInfo = function(id) return { recipeID = id, name = "Recipe " .. id, learned = false } end
+assert(peer.addon.Catalog.Scan() == 1 and peer.addon.Sync.Publish())
+C_TradeSkillUI.GetRecipeInfo = learnedRecipeInfo
 Flush(peer)
 Deliver(Latest(owner, "H"), owner, returning)
 Deliver(Latest(peer, "P"), peer, returning)
@@ -283,6 +289,23 @@ local savedAccount = SavedCopy(owner.addon.db)
 local reloadedAlt = NewClient("Alt", "Character", {}, savedAccount, SavedCopy(alt.addon.characterDB))
 assert(reloadedAlt.addon.Catalog.RemoteProfiles()[roster[1]].recipes[1].recipeID == 1001,
     "the shared cache must survive saving and reloading without runtime metatables")
+local savedOnlyAccount = SavedCopy(owner.addon.db)
+savedOnlyAccount.craftingGuilds["Horde Eternal@ForeverRealm"].remoteProfiles[roster[1]] = nil
+local savedOnlyMain = NewClient("Podcast", "Clawson", nil, savedOnlyAccount, SavedCopy(owner.addon.characterDB))
+assert(savedOnlyMain.addon.characterDB.catalog.localProfile.recipes[1].recipeID == 1001
+    and not savedOnlyMain.addon.Sync.Publish(), "an unavailable fresh scan must retain the saved character profile without publishing it")
+local savedOnlyAlt = NewClient("Alt", "Character", {}, savedOnlyMain.addon.db)
+local savedResults = savedOnlyAlt.addon.Catalog.Search("Recipe 1001")
+assert(#savedResults == 1 and #savedResults[1].crafters == 1 and savedResults[1].crafters[1].name == roster[1],
+    "an alt must see a complete saved crafter profile even when the main's login scan APIs are unavailable")
+assert(savedOnlyAlt.addon.characterDB.catalog.localProfile.learned == 0 and not savedResults[1].crafters[1].isLocal,
+    "recovering a saved crafter must not give the alt that character's learned recipes")
+local incompleteAccount, incompleteCharacter = SavedCopy(owner.addon.db), SavedCopy(owner.addon.characterDB)
+incompleteAccount.craftingGuilds["Horde Eternal@ForeverRealm"].remoteProfiles[roster[1]] = nil
+incompleteCharacter.catalog.localProfile.unavailable = 1
+local incompleteMain = NewClient("Podcast", "Clawson", nil, incompleteAccount, incompleteCharacter)
+assert(incompleteMain.addon.Catalog.Initialize().remoteProfiles[roster[1]] == nil,
+    "an incomplete saved scan must not become an account-wide crafting claim")
 local legacyCharacter = { schemaVersion = 1, catalog = {
     guildKey = "Horde Eternal@ForeverRealm", generation = 3,
     remoteProfiles = { [roster[2]] = { updatedAt = 1500, recipes = { { recipeID = 5001, itemName = "Migrated recipe" } } } },

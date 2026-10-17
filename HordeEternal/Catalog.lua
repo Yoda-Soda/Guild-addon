@@ -266,6 +266,20 @@ function Catalog.Initialize()
     return database
 end
 
+function Catalog.CacheLocalProfile()
+    if not addon.characterDB or not addon.GuildState or not addon.GuildState.IsReady() then return false end
+    local database = Catalog.Initialize()
+    local profile = database.localProfile
+    if type(profile) ~= "table" or profile.unavailable ~= 0 or type(profile.recipes) ~= "table" then return false end
+    for _, name in pairs(addon.GuildState.members) do
+        if addon.Compat.IsPlayerName(name) then
+            MergeProfiles(database.remoteProfiles, { [name] = profile })
+            return database.remoteProfiles[name] == profile
+        end
+    end
+    return false
+end
+
 function Catalog.RemoteProfiles()
     local profiles = Catalog.Initialize().remoteProfiles
     if not addon.GuildState then return profiles end
@@ -281,6 +295,10 @@ local function RecipeCandidates(api)
     local candidates, professionNames = {}, {}
     local professionCount = 0
     local hasRecipeList = false
+    local base = Call(api.GetBaseProfessionInfo)
+    local currentID, currentName = Field(base, "professionID"), Field(base, "professionName")
+    if type(currentID) ~= "number" or currentID <= 0 then currentID = nil end
+    if currentID and type(currentName) == "string" then professionNames[currentID] = currentName end
     local function AddRecipe(recipeSpellID, skillLineID)
         if addon.Compat.IsReadable(recipeSpellID) and type(recipeSpellID) == "number"
             and recipeSpellID > 0 and not candidates[recipeSpellID] then
@@ -297,19 +315,18 @@ local function RecipeCandidates(api)
                 break
             end
             if type(skillLineID) == "number" and addon.Compat.IsReadable(skillLineID) then
-                professionCount = professionCount + 1
                 local info = Call(api.GetProfessionInfoBySkillLineID, skillLineID)
                 local professionID = Field(info, "professionID")
                 local professionName = Field(info, "professionName")
-                if type(professionName) == "string" then
-                    professionNames[skillLineID] = professionName
-                end
-                if type(professionID) == "number" and type(api.GetProfessionSpells) == "function" then
-                    local spells = Call(api.GetProfessionSpells, professionID, skillLineID)
-                    if IsReadableTable(spells) then
-                        hasRecipeList = true
-                        for _, spellID in ipairs(spells) do
-                            AddRecipe(spellID, skillLineID)
+                if not currentID or skillLineID == currentID or professionID == currentID
+                    or Field(info, "parentProfessionID") == currentID or professionName == currentName then
+                    professionCount = professionCount + 1
+                    if type(professionName) == "string" then professionNames[skillLineID] = professionName end
+                    if type(professionID) == "number" and type(api.GetProfessionSpells) == "function" then
+                        local spells = Call(api.GetProfessionSpells, professionID, skillLineID)
+                        if IsReadableTable(spells) then
+                            hasRecipeList = true
+                            for _, spellID in ipairs(spells) do AddRecipe(spellID, skillLineID) end
                         end
                     end
                 end
@@ -322,7 +339,7 @@ local function RecipeCandidates(api)
         if IsReadableTable(allRecipeIDs) then
             hasRecipeList = true
             for _, recipeSpellID in ipairs(allRecipeIDs) do
-                AddRecipe(recipeSpellID, nil)
+                AddRecipe(recipeSpellID, currentID)
             end
         end
     end
@@ -336,6 +353,8 @@ function Catalog.Scan()
     if type(api) ~= "table" or type(api.GetRecipeInfo) ~= "function" then
         return nil, nil, "profession recipe APIs missing"
     end
+    local owned, ownershipReason = addon.Compat.OwnRecipeSource(false)
+    if not owned then return nil, nil, ownershipReason end
 
     local candidates, professionNames, professionCount, hasRecipeList = RecipeCandidates(api)
     local recipeIDs = {}
@@ -351,7 +370,7 @@ function Catalog.Scan()
         return nil, nil, "recipe list exceeds scan limit"
     end
 
-    local recipes, observed = {}, {}
+    local recipes, observed, learnedStates = {}, {}, {}
     local learnedCount = 0
     local unavailableCount = 0
     for _, recipeSpellID in ipairs(recipeIDs) do
@@ -384,6 +403,7 @@ function Catalog.Scan()
                             itemLink = type(hyperlink) == "string" and hyperlink or nil,
                         }
                         observed[tostring(recipeID)] = recipe
+                        learnedStates[tostring(recipeID)] = learned
                         if learned then
                             recipes[#recipes + 1] = recipe
                             learnedCount = learnedCount + 1
@@ -402,6 +422,23 @@ function Catalog.Scan()
 
     local now = Call(time) or 0
     local database = Catalog.Initialize()
+    local merged = {}
+    local previous = database.localProfile
+    if type(previous) == "table" and type(previous.recipes) == "table" then
+        for index, recipe in ipairs(previous.recipes) do
+            if index > MAX_RECIPE_IDS then break end
+            if type(recipe) == "table" and type(recipe.recipeID) == "number"
+                and learnedStates[tostring(recipe.recipeID)] == nil then
+                local professionLearned = addon.Compat.Value(api.IsRecipeProfessionLearned, recipe.recipeID)
+                if professionLearned ~= false then merged[tostring(recipe.recipeID)] = recipe end
+            end
+        end
+    end
+    for _, recipe in ipairs(recipes) do merged[tostring(recipe.recipeID)] = recipe end
+    recipes = {}
+    for _, recipe in pairs(merged) do recipes[#recipes + 1] = recipe end
+    if #recipes > MAX_RECIPE_IDS then return nil, nil, "learned recipe cache exceeds scan limit" end
+    table.sort(recipes, function(left, right) return left.recipeID < right.recipeID end)
     local indexed = 0
     for _ in pairs(database.recipeIndex) do indexed = indexed + 1 end
     for key, recipe in pairs(observed) do
@@ -414,20 +451,59 @@ function Catalog.Scan()
         recipes = recipes,
         updatedAt = now,
         scanned = recipeCount,
-        learned = learnedCount,
+        learned = #recipes,
         unavailable = unavailableCount,
         professions = professionCount,
     }
-    Catalog.scannedThisSession = unavailableCount == 0
-    if Catalog.scannedThisSession and addon.characterDB and addon.GuildState and addon.GuildState.IsReady() then
-        for _, name in pairs(addon.GuildState.members) do
-            if addon.Compat.IsPlayerName(name) then
-                MergeProfiles(database.remoteProfiles, { [name] = database.localProfile })
-                break
-            end
-        end
-    end
+    Catalog.scannedThisSession = unavailableCount == 0 and (recipeCount > 0 or #recipes == 0)
+    if Catalog.scannedThisSession then Catalog.CacheLocalProfile() end
     return recipeCount, learnedCount, nil, unavailableCount
+end
+
+function Catalog.Start()
+    if Catalog.listener then return end
+    local listener = CreateFrame("Frame")
+    Catalog.listener = listener
+    local pending, windowOpen, serial = nil, false, 0
+    local function Cancel()
+        pending, serial = nil, serial + 1
+    end
+    local function Schedule(attempt)
+        if pending or not C_Timer or type(C_Timer.After) ~= "function" then return end
+        local ticket, scheduledSerial = {}, serial
+        pending = ticket
+        C_Timer.After(attempt == 1 and 0.6 or 1.2, function()
+            if pending ~= ticket or serial ~= scheduledSerial then return end
+            pending = nil
+            if not addon.initialized then return end
+            local owned, reason = addon.Compat.OwnRecipeSource(true)
+            if not owned then
+                if reason == "profession data is loading" and windowOpen and attempt < 3 then Schedule(attempt + 1) end
+                return
+            end
+            local scanned = Catalog.Scan()
+            if scanned ~= nil and Catalog.scannedThisSession then
+                if addon.RefreshCatalog then addon.RefreshCatalog() end
+                if Catalog.Initialize().shareEnabled and addon.Sync then addon.Sync.Publish() end
+            elseif windowOpen and attempt < 3 then Schedule(attempt + 1) end
+        end)
+    end
+    for _, event in ipairs({ "TRADE_SKILL_SHOW", "TRADE_SKILL_CLOSE", "TRADE_SKILL_DATA_SOURCE_CHANGING",
+        "TRADE_SKILL_DATA_SOURCE_CHANGED", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_DETAILS_UPDATE",
+        "NEW_RECIPE_LEARNED", "SKILL_LINES_CHANGED" }) do
+        addon.Compat.Call(listener.RegisterEvent, listener, event)
+    end
+    listener:SetScript("OnEvent", function(_, event)
+        if not addon.Compat.IsReadable(event) or not addon.initialized then return end
+        if event == "TRADE_SKILL_CLOSE" then windowOpen = false; Cancel(); return end
+        if event == "TRADE_SKILL_DATA_SOURCE_CHANGING" then Cancel(); return end
+        if event == "TRADE_SKILL_SHOW" or event == "TRADE_SKILL_DATA_SOURCE_CHANGED" then
+            windowOpen = true
+            Cancel()
+            Catalog.scannedThisSession = false
+            Schedule(1)
+        elseif event == "SKILL_LINES_CHANGED" or event == "NEW_RECIPE_LEARNED" or windowOpen then Schedule(1) end
+    end)
 end
 
 local function Entries(includeUnlearned)
@@ -504,8 +580,9 @@ end
 local function ProfessionGroups(entries)
     local professions, byID, byName = {}, {}, {}
     local function AddProfession(id, name, icon, gathering, alias)
-        if type(id) ~= "number" or byID[id] then return end
+        if type(id) ~= "number" or byID[id] ~= nil then return end
         name = type(name) == "string" and name ~= "" and name or "Profession"
+        if name:upper():find("[DNT]", 1, true) then byID[id] = false; return end
         local nameKey = name ~= "Profession" and name:lower() or nil
         local profession = nameKey and byName[nameKey]
         if not profession then
@@ -540,11 +617,11 @@ local function ProfessionGroups(entries)
     return byID, professions
 end
 
-local function FilterEntries(query, skillLineID, includeUnlearned)
+local function FilterEntries(query, skillLineID, includeUnlearned, hideUnusable)
     local needle = type(query) == "string" and query:lower() or ""
-    local results = {}
+    local results, watchedItems, pendingItems = {}, {}, {}
     local entries = Entries(includeUnlearned)
-    local byID = skillLineID and ProfessionGroups(entries)
+    local byID = ProfessionGroups(entries)
     for _, entry in pairs(entries) do
         table.sort(entry.crafters, function(left, right)
             if (left.isOnline == true) ~= (right.isOnline == true) then return left.isOnline == true end
@@ -552,9 +629,16 @@ local function FilterEntries(query, skillLineID, includeUnlearned)
         end)
         local searchable = (entry.itemName .. " " .. (entry.recipeName or "")
             .. " " .. entry.professionName .. " " .. (entry.effect or "")):lower()
-        if (not skillLineID or (byID[skillLineID] and byID[entry.skillLineID] == byID[skillLineID]))
+        if byID[entry.skillLineID]
+            and (not skillLineID or (byID[skillLineID] and byID[entry.skillLineID] == byID[skillLineID]))
             and (needle == "" or searchable:find(needle, 1, true)) then
-            results[#results + 1] = entry
+            if hideUnusable then
+                local itemID, pending
+                entry.usable, entry.usageReason, itemID, pending = addon.Compat.RecipeUsability(entry)
+                if itemID then watchedItems[itemID] = true end
+                if itemID and pending then pendingItems[itemID] = true end
+            end
+            if entry.usable ~= false then results[#results + 1] = entry end
         end
     end
     table.sort(results, function(left, right)
@@ -566,7 +650,7 @@ local function FilterEntries(query, skillLineID, includeUnlearned)
         end
         return left.recipeID < right.recipeID
     end)
-    return results
+    return results, watchedItems, pendingItems
 end
 
 function Catalog.Search(query)
@@ -578,8 +662,8 @@ function Catalog.Search(query)
     return results, truncated
 end
 
-function Catalog.Browse(query, skillLineID, page)
-    local results = FilterEntries(query, skillLineID, true)
+function Catalog.Browse(query, skillLineID, page, hideUnusable)
+    local results, watchedItems, pendingItems = FilterEntries(query, skillLineID, true, hideUnusable)
     local total = #results
     local pages = math.max(1, math.ceil(total / PAGE_SIZE))
     page = math.max(1, math.min(pages, math.floor(tonumber(page) or 1)))
@@ -587,7 +671,7 @@ function Catalog.Browse(query, skillLineID, page)
     for index = (page - 1) * PAGE_SIZE + 1, math.min(total, page * PAGE_SIZE) do
         visible[#visible + 1] = results[index]
     end
-    return visible, total, pages, page
+    return visible, total, pages, page, watchedItems, pendingItems
 end
 
 function Catalog.Overview()
@@ -596,11 +680,13 @@ function Catalog.Overview()
     local known, total = 0, 0
     for _, entry in pairs(entries) do
         local profession = byID[entry.skillLineID]
-        total = total + 1
-        profession.total = profession.total + 1
-        if #entry.crafters > 0 then
-            known = known + 1
-            profession.known = profession.known + 1
+        if profession then
+            total = total + 1
+            profession.total = profession.total + 1
+            if #entry.crafters > 0 then
+                known = known + 1
+                profession.known = profession.known + 1
+            end
         end
     end
     table.sort(professions, function(left, right) return left.name:lower() < right.name:lower() end)

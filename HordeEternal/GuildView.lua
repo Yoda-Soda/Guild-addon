@@ -1,6 +1,8 @@
 local _, addon = ...
 
 local PAGE_SIZE = 6
+local DISCORD_ICON = "Interface\\AddOns\\HordeEternal\\media\\Discord.tga"
+local MAIN_ICON = "Interface\\TargetingFrame\\UI-RaidTargetingIcon_1"
 local CLASS_STYLE = {
     WARRIOR = { 0.78, 0.61, 0.43, 0, 0.25, 0, 0.25 },
     MAGE = { 0.41, 0.80, 0.94, 0.25, 0.5, 0, 0.25 },
@@ -29,6 +31,14 @@ local function Tooltip(owner, title, text)
     GameTooltip:SetText(title)
     if text then GameTooltip:AddLine(text, 1, 1, 1, true) end
     GameTooltip:Show()
+end
+
+local function Icon(parent, path, size, x, y)
+    local texture = parent:CreateTexture(nil, "ARTWORK")
+    texture:SetTexture(path)
+    texture:SetSize(size, size)
+    texture:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)
+    return texture
 end
 
 local function Bare(name)
@@ -230,20 +240,26 @@ function addon.CreateGuildView(page, header, subheader)
         local row = CreateFrame("Button", nil, content)
         row:SetSize(680, 39)
         row:SetPoint("TOPLEFT", content, "TOPLEFT", 0, -(index - 1) * 39)
-        Fill(row, 0, 0, 0, index % 2 == 0 and 0.27 or 0.12)
+        row.background = Fill(row, 0, 0, 0, index % 2 == 0 and 0.27 or 0.12)
         row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
         row.icon = row:CreateTexture(nil, "ARTWORK")
         row.icon:SetSize(20, 20)
         row.icon:SetPoint("TOPLEFT", row, "TOPLEFT", 5, -8)
         row.name = Label(row, "", 31, -5, 162, "GameFontNormalSmall")
-        row.presence = Label(row, "", 31, -22, 162)
+        row.presence = Label(row, "", 43, -22, 150)
+        row.mainIcon = Icon(row, MAIN_ICON, 12, 525, -5)
+        row.statusDot = row:CreateTexture(nil, "ARTWORK")
+        row.statusDot:SetSize(7, 7)
+        row.statusDot:SetPoint("TOPLEFT", row, "TOPLEFT", 31, -25)
+        row.statusDot:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
         row.className = Label(row, "", 199, -5, 108)
         row.race = Label(row, "", 199, -22, 108)
         row.spec = Label(row, "", 315, -5, 102)
         row.report = Label(row, "", 315, -22, 102)
         row.role = Label(row, "", 425, -5, 92)
-        row.identity = Label(row, "", 525, -5, 144)
-        row.contact = Label(row, "", 525, -22, 144)
+        row.identity = Label(row, "", 541, -5, 128)
+        row.contact = Label(row, "", 541, -22, 128)
+        row.discordIcon = Icon(row, DISCORD_ICON, 12, 525, -22)
         for _, label in ipairs({ row.presence, row.race, row.report, row.contact }) do label:SetTextColor(0.65, 0.65, 0.61) end
         row:SetScript("OnEnter", function(self)
             local member = self.member
@@ -253,7 +269,8 @@ function addon.CreateGuildView(page, header, subheader)
                 .. member.state .. (member.main and (": " .. Bare(member.main)) or "")
                 .. "\n" .. member.className .. " / " .. member.race .. "\n" .. member.spec
                 .. "\n" .. member.talents .. "\nLast reported: " .. updated
-                .. "\nDiscord server nickname: " .. (member.discord ~= "" and member.discord or "Not shared"))
+                .. "\n" .. (member.discord ~= "" and ("|T" .. DISCORD_ICON .. ":12:12|t ") or "")
+                .. "Discord server nickname: " .. (member.discord ~= "" and member.discord or "Not shared"))
         end)
         row:SetScript("OnLeave", HideTooltip)
         view.rows[index] = row
@@ -305,16 +322,19 @@ function addon.CreateGuildView(page, header, subheader)
     Label(editor, "Your guild profile", 22, -20, 350, "GameFontNormal")
     local editorName = Label(editor, "", 24, -49, 372, "GameFontHighlight")
     local current = Label(editor, "", 24, -72, 372)
+    local currentMainIcon = Icon(editor, MAIN_ICON, 12, 24, -72)
     current:SetTextColor(0.7, 0.7, 0.65)
     local main = CreateFrame("CheckButton", nil, editor, "UICheckButtonTemplate")
     main:SetSize(24, 24)
     main:SetPoint("TOPLEFT", editor, "TOPLEFT", 22, -93)
-    Label(editor, "This character is my main", 50, -99, 330)
+    Icon(editor, MAIN_ICON, 13, 50, -98)
+    Label(editor, "This character is my main", 68, -99, 312)
     main:SetScript("OnEnter", function(self)
         Tooltip(self, "Main character", "Shared with this guild. Selecting this character replaces your previous main on this WoW account.")
     end)
     main:SetScript("OnLeave", HideTooltip)
-    Label(editor, "Discord server nickname (shared with guild)", 24, -128, 374)
+    Icon(editor, DISCORD_ICON, 12, 24, -128)
+    Label(editor, "Discord server nickname (shared with guild)", 42, -128, 356)
     local discord = CreateFrame("EditBox", nil, editor, "InputBoxTemplate")
     discord:SetSize(288, 24)
     discord:SetPoint("TOPLEFT", editor, "TOPLEFT", 28, -148)
@@ -392,7 +412,17 @@ function addon.CreateGuildView(page, header, subheader)
         status:SetText(formMessage)
         editorName:SetText(Bare(name))
         current:SetText("Main: " .. (settings and settings.main ~= "" and Bare(settings.main) or "No main selected"))
-        profileSummary:SetText(Bare(name) .. (settings and settings.main == name and " / Main" or ""))
+        current:ClearAllPoints()
+        if settings and settings.main ~= "" then
+            currentMainIcon:Show()
+            current:SetPoint("TOPLEFT", editor, "TOPLEFT", 42, -72)
+            current:SetWidth(354)
+        else
+            currentMainIcon:Hide()
+            current:SetPoint("TOPLEFT", editor, "TOPLEFT", 24, -72)
+            current:SetWidth(372)
+        end
+        profileSummary:SetText(Bare(name) .. (settings and settings.main == name and ("  |T" .. MAIN_ICON .. ":12:12|t") or ""))
         mains:SetChecked(view.mainsOnly)
         everyone:SetChecked(not view.mainsOnly)
         coverage:SetText(stats.total .. " counted / " .. stats.all .. " characters")
@@ -488,11 +518,51 @@ function addon.CreateGuildView(page, header, subheader)
                 for spent in member.talents:gmatch(": (%d+)") do points[#points + 1] = spent end
                 row.report:SetText(#points > 0 and table.concat(points, " / ") or "-")
                 row.identity:SetText(member.main and Bare(member.main) or "No main selected")
+                row.identity:ClearAllPoints()
+                if member.main then
+                    row.mainIcon:Show()
+                    row.identity:SetPoint("TOPLEFT", row, "TOPLEFT", 541, -5)
+                    row.identity:SetWidth(128)
+                else
+                    row.mainIcon:Hide()
+                    row.identity:SetPoint("TOPLEFT", row, "TOPLEFT", 525, -5)
+                    row.identity:SetWidth(144)
+                end
                 row.identity:SetTextColor(member.state == "Main" and 0.95 or 0.7, member.state == "Main" and 0.8 or 0.7,
                     member.state == "Main" and 0.35 or 0.65)
                 row.contact:SetText(member.discord ~= "" and member.discord or "-")
+                row.contact:ClearAllPoints()
+                if member.discord ~= "" then
+                    row.discordIcon:Show()
+                    row.contact:SetPoint("TOPLEFT", row, "TOPLEFT", 541, -22)
+                    row.contact:SetWidth(128)
+                else
+                    row.discordIcon:Hide()
+                    row.contact:SetPoint("TOPLEFT", row, "TOPLEFT", 525, -22)
+                    row.contact:SetWidth(144)
+                end
                 ClassIcon(row.icon, member.classFile)
-                row:SetAlpha(member.online == true and 1 or 0.75)
+                addon.Compat.Call(row.icon.SetDesaturated, row.icon, false)
+                row:SetAlpha(1)
+                if member.online == true then
+                    row.background:SetColorTexture(0.025, 0.065, 0.035, index % 2 == 0 and 0.52 or 0.38)
+                    row.statusDot:SetVertexColor(0.35, 0.9, 0.45, 1)
+                    row.presence:SetTextColor(0.5, 0.85, 0.56)
+                elseif member.online == false then
+                    row.background:SetColorTexture(0.19, 0.19, 0.19, index % 2 == 0 and 0.72 or 0.58)
+                    row.statusDot:SetVertexColor(0.55, 0.55, 0.55, 1)
+                    row.presence:SetTextColor(0.64, 0.64, 0.64)
+                    row.name:SetTextColor(0.7, 0.7, 0.7)
+                    row.identity:SetTextColor(0.68, 0.68, 0.68)
+                else
+                    row.background:SetColorTexture(0.1, 0.085, 0.045, index % 2 == 0 and 0.45 or 0.3)
+                    row.statusDot:SetVertexColor(0.9, 0.7, 0.3, 1)
+                    row.presence:SetTextColor(0.83, 0.72, 0.43)
+                end
+                for _, text in ipairs({ row.className, row.role, row.spec }) do
+                    if member.online == false then text:SetTextColor(0.65, 0.65, 0.65)
+                    else text:SetTextColor(0.9, 0.89, 0.84) end
+                end
                 row:Show()
             else row:Hide() end
         end

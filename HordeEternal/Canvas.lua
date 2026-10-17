@@ -155,7 +155,7 @@ local function CreateCanvas()
     backButton:SetPoint("TOPLEFT", craftingPage, "TOPLEFT", 4, -2)
     local breadcrumb = craftingPage:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     breadcrumb:SetPoint("TOPLEFT", craftingPage, "TOPLEFT", 38, -8)
-    breadcrumb:SetPoint("TOPRIGHT", craftingPage, "TOPRIGHT", -92, -8)
+    breadcrumb:SetPoint("TOPRIGHT", craftingPage, "TOPRIGHT", -244, -8)
     breadcrumb:SetJustifyH("LEFT")
     breadcrumb:SetWordWrap(false)
 
@@ -180,6 +180,23 @@ local function CreateCanvas()
             "Refresh your learned recipes and share them with the guild when sharing is enabled.\n\nThis does not scan other players or teach new recipes.")
     end)
     scanButton:SetScript("OnLeave", HideTooltip)
+
+    local hideUnusable = CreateFrame("CheckButton", nil, craftingPage, "UICheckButtonTemplate")
+    hideUnusable:SetSize(24, 24)
+    hideUnusable:SetPoint("TOPRIGHT", craftingPage, "TOPRIGHT", -210, -3)
+    hideUnusable:SetHitRectInsets(0, -120, 0, 0)
+    hideUnusable:SetChecked(addon.db.hideUnusableRecipes == true)
+    local usabilityLabel = hideUnusable:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    usabilityLabel:SetPoint("LEFT", hideUnusable, "RIGHT", 0, 0)
+    usabilityLabel:SetWidth(120)
+    usabilityLabel:SetJustifyH("LEFT")
+    usabilityLabel:SetWordWrap(false)
+    usabilityLabel:SetText("Hide unusable")
+    hideUnusable:SetScript("OnEnter", function(self)
+        TextTooltip(self, "Hide unusable items",
+            "Hide items with unmet level, profession, or equipment requirements for this character.\n\nUnknown requirements remain visible. This does not filter by who can craft the recipe.")
+    end)
+    hideUnusable:SetScript("OnLeave", HideTooltip)
 
     local resultsScroll = CreateFrame("ScrollFrame", nil, listBox, "UIPanelScrollFrameTemplate")
     resultsScroll:SetPoint("TOPLEFT", listBox, "TOPLEFT", 10, -46)
@@ -255,6 +272,20 @@ local function CreateCanvas()
     local selectedEntry, selectedDisplay, selectedProfession
     local currentPage, pageCount = 1, 1
     local RefreshResults
+    local watchedItems, requestedItems = {}, {}
+    local refreshPending = false
+    local function QueueFilterRefresh()
+        if refreshPending then return end
+        if C_Timer and type(C_Timer.After) == "function" then
+            refreshPending = true
+            if not addon.Compat.Call(C_Timer.After, 0.1, function()
+                refreshPending = false
+                if frame:IsShown() and craftingPage:IsShown() then RefreshResults() end
+            end) then refreshPending = false end
+        else
+            RefreshResults()
+        end
+    end
 
     local function ShowDetail(entry, requestData)
         local changed = not selectedEntry or not entry or selectedEntry.key ~= entry.key
@@ -276,6 +307,8 @@ local function CreateCanvas()
         detailIcon:Show()
         detailTitle:SetText(display.name)
         local text = entry.professionName .. "\n\n" .. display.description
+        local _, usageReason = addon.Compat.RecipeUsability(entry)
+        text = text .. "\n\n" .. usageReason
         if entry.availability then text = text .. "\n\n" .. entry.availability end
         local materials = {}
         for itemID in pairs(entry.reagents or {}) do materials[#materials + 1] = itemID end
@@ -371,6 +404,8 @@ local function CreateCanvas()
         local professions, known, total = addon.Catalog.Overview()
         local home = selectedProfession == nil and query == ""
         local results, matchCount
+        local pendingItems = {}
+        watchedItems = {}
         if home then
             results, matchCount, pageCount, currentPage = professions, #professions, 1, 1
             breadcrumb:SetText("Professions")
@@ -378,7 +413,8 @@ local function CreateCanvas()
             backButton:Hide()
             listBox:SetPoint("BOTTOMRIGHT", craftingPage, "BOTTOMRIGHT", 0, 34)
         else
-            results, matchCount, pageCount, currentPage = addon.Catalog.Browse(query, selectedProfession, currentPage)
+            results, matchCount, pageCount, currentPage, watchedItems, pendingItems =
+                addon.Catalog.Browse(query, selectedProfession, currentPage, hideUnusable:GetChecked() == true)
             local title = "All recipes"
             for _, profession in ipairs(professions) do
                 if profession.id == selectedProfession then title = profession.name end
@@ -391,7 +427,7 @@ local function CreateCanvas()
         local contentWidth = home and 670 or 398
         resultsContent:SetWidth(contentWidth)
         if query == "" then placeholder:Show() else placeholder:Hide() end
-        empty:SetText("No recipes catalogued.")
+        empty:SetText(hideUnusable:GetChecked() and "No matching recipes." or "No recipes catalogued.")
         if #results == 0 then empty:Show() else empty:Hide() end
         for index, entry in ipairs(results) do
             local row = resultRows[index]
@@ -448,7 +484,8 @@ local function CreateCanvas()
                 local display = addon.Compat.RecipeDisplay(entry)
                 row.icon:SetTexture(display.icon)
                 row.label:SetText(display.name)
-                row.detail:SetText(#entry.crafters > 0 and (#entry.crafters .. " crafter(s)") or "No known guild crafter")
+                row.detail:SetText(hideUnusable:GetChecked() and entry.usable == nil and entry.usageReason
+                    or (#entry.crafters > 0 and (#entry.crafters .. " crafter(s)") or "No known guild crafter"))
             end
             row:Show()
         end
@@ -488,8 +525,24 @@ local function CreateCanvas()
                 .. "  -  " .. remoteCount .. " guild profiles")
         end
         status:SetText(addon.Sync.status)
+        if C_Timer and type(C_Timer.After) == "function" then
+            local requested = 0
+            for itemID in pairs(pendingItems) do
+                if not requestedItems[itemID] then
+                    requestedItems[itemID] = true
+                    addon.Compat.Call(C_Item and C_Item.RequestLoadItemDataByID, itemID)
+                    requested = requested + 1
+                    if requested >= 8 then break end
+                end
+            end
+        end
     end
 
+    hideUnusable:SetScript("OnClick", function(self)
+        addon.db.hideUnusableRecipes = self:GetChecked() == true
+        requestedItems, currentPage = {}, 1
+        RefreshResults(true)
+    end)
     search:SetScript("OnTextChanged", function()
         currentPage = 1
         RefreshResults(true)
@@ -531,11 +584,12 @@ local function CreateCanvas()
 
     frame.crafting = {
         search = search, backButton = backButton, rows = resultRows, detail = detail,
+        hideUnusable = hideUnusable, detailText = detailText,
         crafters = crafterRows, nextButton = nextButton, previousButton = previousButton,
         pageLabel = pageLabel, headerTotal = headerTotal, status = status,
     }
 
-    frame:SetScript("OnShow", function() RefreshResults() end)
+    frame:SetScript("OnShow", function() requestedItems = {}; RefreshResults() end)
     frame:SetScript("OnHide", HideTooltip)
     frame:SetScript("OnEvent", function(_, event, dataID)
         if event == "UI_SCALE_CHANGED" or event == "DISPLAY_SIZE_CHANGED" then
@@ -543,6 +597,13 @@ local function CreateCanvas()
         elseif event == "ADDON_LOADED" then
             addon.Catalog.RefreshLibrary(true)
             if frame:IsShown() then RefreshResults() end
+        elseif frame:IsShown() and craftingPage:IsShown() and hideUnusable:GetChecked()
+            and (event == "PLAYER_LEVEL_UP" or event == "SKILL_LINES_CHANGED" or event == "SPELLS_CHANGED"
+                or event == "UPDATE_FACTION" or event == "PLAYER_EQUIPMENT_CHANGED" or event == "TOOLTIP_DATA_UPDATE"
+                or event == "SPELL_DATA_LOAD_RESULT" or event == "SPELL_TEXT_UPDATE"
+                or ((event == "ITEM_DATA_LOAD_RESULT" or event == "GET_ITEM_INFO_RECEIVED")
+                    and addon.Compat.IsReadable(dataID) and type(dataID) == "number" and watchedItems[dataID])) then
+            QueueFilterRefresh()
         elseif frame:IsShown() and craftingPage:IsShown() and selectedEntry and selectedDisplay
             and addon.Compat.IsReadable(dataID) and type(dataID) == "number"
             and (dataID == selectedDisplay.itemID or dataID == selectedDisplay.recipeID
@@ -557,7 +618,9 @@ local function CreateCanvas()
         end
     end)
     for _, event in ipairs({ "ITEM_DATA_LOAD_RESULT", "SPELL_DATA_LOAD_RESULT", "SPELL_TEXT_UPDATE",
-        "ADDON_LOADED", "UI_SCALE_CHANGED", "DISPLAY_SIZE_CHANGED" }) do
+        "ADDON_LOADED", "UI_SCALE_CHANGED", "DISPLAY_SIZE_CHANGED", "GET_ITEM_INFO_RECEIVED",
+        "PLAYER_LEVEL_UP", "SKILL_LINES_CHANGED", "SPELLS_CHANGED", "UPDATE_FACTION",
+        "PLAYER_EQUIPMENT_CHANGED", "TOOLTIP_DATA_UPDATE" }) do
         addon.Compat.Call(frame.RegisterEvent, frame, event)
     end
 

@@ -37,6 +37,29 @@ professions, known, catalogued = addon.Catalog.Overview()
 assert(known == 1 and catalogued == 2, "multiple crafters must not inflate guild recipe counts")
 assert(#addon.Catalog.Search("wizard")[1].crafters == 2)
 addon.db.catalog.remoteProfiles = {}
+local originalScanAPI, originalScanDatabase = C_TradeSkillUI, addon.db
+addon.db = {}
+local openProfession, unlearnedRecipe = 333, false
+local professionRecipes = { [333] = { 25124 }, [171] = { 2330 } }
+C_TradeSkillUI = {
+    GetAllRecipeIDs = function() return professionRecipes[openProfession] end,
+    GetRecipeInfo = function(id)
+        return { recipeID = id, name = id == 25124 and "Minor Wizard Oil" or "Minor Healing Potion",
+            learned = not (id == 25124 and unlearnedRecipe) }
+    end,
+    GetTradeSkillLineForRecipe = function(id) return id == 25124 and 333 or 171 end,
+    GetTradeSkillDisplayName = function(id) return id == 333 and "Enchanting" or "Alchemy" end,
+}
+assert(addon.Catalog.Scan() == 1 and #addon.Catalog.Search("Wizard") == 1)
+openProfession = 171
+assert(addon.Catalog.Scan() == 1)
+assert(#addon.Catalog.Search("Wizard") == 1 and #addon.Catalog.Search("Potion") == 1,
+    "opening and scanning a second profession must preserve the first profession's learned recipes")
+openProfession, unlearnedRecipe = 333, true
+addon.Catalog.Scan()
+assert(#addon.Catalog.Search("Wizard") == 0 and #addon.Catalog.Search("Potion") == 1,
+    "explicitly unlearned recipes must be removed without deleting another profession")
+C_TradeSkillUI, addon.db = originalScanAPI, originalScanDatabase
 for recipeID = 100001, 100121 do
     addon.db.catalog.recipeIndex[tostring(recipeID)] = {
         recipeID = recipeID, skillLineID = 171, itemName = "Pagination " .. recipeID, professionName = "Alchemy",
@@ -119,22 +142,26 @@ assert(addon.Catalog.RefreshLibrary(), "late-loaded library data must become ava
 local originalDatabase = addon.db
 addon.db = {}
 local groupedDatabase = addon.Catalog.Initialize()
-local clientProfessions = { [900333] = "Enchanting", [900171] = "Alchemy", [900182] = "Herbalism", [900777] = "Runecarving" }
-C_TradeSkillUI.GetAllProfessionTradeSkillLines = function() return { 900333, 900171, 900182, 900777 } end
+local clientProfessions = { [900333] = "Enchanting", [900171] = "Alchemy", [900182] = "Herbalism",
+    [900777] = "Runecarving", [900888] = "Test Professions [DNT]" }
+C_TradeSkillUI.GetAllProfessionTradeSkillLines = function() return { 900333, 900171, 900182, 900777, 900888 } end
 C_TradeSkillUI.GetProfessionInfoBySkillLineID = function(id) return { professionName = clientProfessions[id] } end
 groupedDatabase.localProfile = { recipes = {
     { recipeID = 54321, skillLineID = 900333, professionName = "Enchanting", itemName = "Library Enchant" },
+    { recipeID = 54326, skillLineID = 900888, professionName = "Test Professions [DNT]", itemName = "Test Crafted Item" },
 } }
 groupedDatabase.recipeIndex = {
     ["54322"] = { recipeID = 54322, skillLineID = 900333, professionName = "Enchanting", itemName = "Client Enchant" },
     ["54323"] = { recipeID = 54323, skillLineID = 333, professionName = "Enchanting", itemName = "Older Enchant" },
     ["54324"] = { recipeID = 54324, skillLineID = 900171, professionName = "Alchemy", itemName = "Client Potion" },
+    ["54325"] = { recipeID = 54325, skillLineID = 900888, professionName = "Profession", itemName = "Test Catalogue Item" },
 }
 professions, known, catalogued = addon.Catalog.Overview()
 assert(#professions == 13 and known == 1 and catalogued == 4,
     "base, client, and library IDs must share profession rows without hiding distinct professions")
 local professionNames = {}
 for _, profession in ipairs(professions) do
+    assert(not profession.name:find("[DNT]", 1, true), "internal test professions must not appear in the directory")
     assert(not professionNames[profession.name], "duplicate profession name")
     professionNames[profession.name] = true
     if profession.name == "Enchanting" then
@@ -148,6 +175,10 @@ browse, total = addon.Catalog.Browse("", 333)
 assert(total == 3 and #browse == 3, "the merged profession must open recipes from every ID")
 browse, total = addon.Catalog.Browse("", 900333)
 assert(total == 3, "client ID filters must resolve to the same profession")
+assert(#addon.Catalog.Browse("Test Catalogue") == 0 and #addon.Catalog.Browse("", 900888) == 0
+    and #addon.Catalog.Search("Test Crafted") == 0, "DNT recipes must not leak into global or profession-filtered results")
+assert(#groupedDatabase.localProfile.recipes == 2 and groupedDatabase.recipeIndex["54325"],
+    "hiding test professions must not delete saved ownership or recipe definitions")
 assert(groupedDatabase.localProfile.recipes[1].skillLineID == 900333
     and groupedDatabase.recipeIndex["54322"].skillLineID == 900333, "grouping must not rewrite saved recipe ownership")
 LibStub = nil
@@ -196,6 +227,69 @@ display = addon.Compat.RecipeDisplay(displayEntry, true)
 assert(display.icon == "Interface\\Icons\\INV_Misc_QuestionMark" and display.description == "Spell effect")
 canaccessvalue = nil
 
+local savedItemInfo, savedTooltip, savedLevel, savedEnum = C_Item.GetItemInfo, C_TooltipInfo.GetHyperlink, UnitLevel, Enum
+local requiredLevel, playerLevel, meetsSkill = 40, 20, false
+Enum = { TooltipDataLineType = { ItemName = 22, EquipSlot = 21, UsageRequirement = 43, ErrorLine = 41 } }
+UnitLevel = function(unit) assert(unit == "player"); return playerLevel end
+C_Item.GetItemInfo = function() return "Engineering Gadget", "item:20744", 1, 60, requiredLevel end
+C_TooltipInfo.GetHyperlink = function()
+    return { lines = {
+        { type = 22, leftText = "Engineering Gadget" },
+        { type = 43, leftText = "Requires Engineering (200)", leftColor = { r = 1, g = meetsSkill and 1 or 0.1, b = meetsSkill and 1 or 0.1 } },
+    } }
+end
+local usable, requirement = addon.Compat.RecipeUsability(displayEntry)
+assert(usable == false and requirement == "Requires level 40", "minimum use level must not be confused with item level")
+playerLevel = 60
+usable, requirement = addon.Compat.RecipeUsability(displayEntry)
+assert(usable == false and requirement == "Requires Engineering (200)", "unmet use-skill requirements must exclude an item")
+meetsSkill = true
+assert(addon.Compat.RecipeUsability(displayEntry) == true, "met requirements must permit an item, regardless of crafting profession")
+C_TooltipInfo.GetHyperlink = function() return { lines = {
+    { type = 22, leftText = "Armor" },
+    { type = 21, leftText = "Chest", rightText = "Plate", leftColor = { r = 1, g = 1, b = 1 }, rightColor = { r = 1, g = 0.1, b = 0.1 } },
+} } end
+assert(addon.Compat.RecipeUsability(displayEntry) == false, "unusable equipment proficiency on the right must also be checked")
+canaccessvalue = function(value) return value ~= hidden end
+C_TooltipInfo.GetHyperlink = function() return { lines = {
+    { type = 22, leftText = "Gadget" }, { type = 43, leftText = "Requires Engineering", leftColor = { r = 1, g = hidden, b = 0.1 } },
+} } end
+assert(addon.Compat.RecipeUsability(displayEntry) == nil, "unreadable requirement colors are unknown, not usable")
+C_Item.GetItemInfo = function() return "Gadget", "item:20744", 1, 60, 0, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, hidden end
+assert(addon.Compat.RecipeUsability(displayEntry) == nil, "late restricted item tuple fields must not be ignored")
+canaccessvalue = nil
+C_Item.GetItemInfo = function() return "Gadget", "item:20744", 1, 60, 0 end
+local inaccessibleLine = { type = 22, leftText = "Gadget" }
+canaccesstable = function(value) return value ~= inaccessibleLine end
+C_TooltipInfo.GetHyperlink = function() return { lines = { inaccessibleLine } } end
+assert(addon.Compat.RecipeUsability(displayEntry) == nil, "an inaccessible nested tooltip line must never establish usability")
+canaccesstable = nil
+C_Item.GetItemInfo = function() return nil end
+local _, _, pendingID, pending = addon.Compat.RecipeUsability(displayEntry)
+assert(pendingID == 20744 and pending, "uncached item data must remain pending")
+C_Item.GetItemInfo, C_TooltipInfo.GetHyperlink, UnitLevel, Enum = savedItemInfo, savedTooltip, savedLevel, savedEnum
+local savedUsability = addon.Compat.RecipeUsability
+local unfilteredCount = select(2, addon.Catalog.Browse("wizard", nil, 1))
+local ownedCount = #addon.Catalog.Search("wizard")
+assert(unfilteredCount > 0 and ownedCount > 0)
+addon.Compat.RecipeUsability = function() return false end
+assert(select(2, addon.Catalog.Browse("wizard", nil, 1, true)) == 0, "the browser must hide confirmed unusable results")
+assert(#addon.Catalog.Search("wizard") == ownedCount, "UI filtering must not change ownership or unfiltered searches")
+addon.Compat.RecipeUsability = function() return nil, "Requirements unknown" end
+assert(select(2, addon.Catalog.Browse("wizard", nil, 1, true)) == unfilteredCount, "unknown requirements must remain visible")
+for recipeID = 900001, 900121 do
+    addon.db.catalog.recipeIndex[tostring(recipeID)] = {
+        recipeID = recipeID, skillLineID = 171, itemName = "Usability fixture " .. recipeID, professionName = "Alchemy",
+    }
+end
+addon.Compat.RecipeUsability = function(entry) return entry.recipeID % 2 == 0 end
+local filtered, filteredCount, filteredPages, filteredPage = addon.Catalog.Browse("Usability fixture", 171, 2, true)
+assert(#filtered == 10 and filteredCount == 60 and filteredPages == 2 and filteredPage == 2,
+    "requirements must be filtered before pagination and result counts")
+for recipeID = 900001, 900121 do addon.db.catalog.recipeIndex[tostring(recipeID)] = nil end
+addon.Compat.RecipeUsability = savedUsability
+print("PASS: character item requirements, level versus item level, use-profession gates, equipment, pending and restricted data")
+
 local whisperedName, whisperedText
 assert(addon.Compat.CharacterLabel("Other Crafter-BetaClassicBetaPvP2") == "Other Crafter")
 assert(addon.Compat.CharacterLabel("Other Crafter") == "Other Crafter" and addon.Compat.CharacterLabel("You") == "You")
@@ -227,7 +321,7 @@ for _, name in ipairs({
     "SetHeight", "SetAutoFocus", "SetTextInsets", "SetMaxLetters", "RegisterForClicks",
     "SetScrollChild", "ClearAllPoints", "SetHighlightTexture", "SetJustifyV", "LockHighlight",
     "UnlockHighlight", "SetNormalFontObject", "SetID",
-    "SetWidth", "SetScale", "SetNormalTexture", "SetPushedTexture", "SetDisabledTexture",
+    "SetWidth", "SetScale", "SetNormalTexture", "SetPushedTexture", "SetDisabledTexture", "SetHitRectInsets",
     "SetEnabled", "SetVerticalScroll", "ClearFocus", "SetTextColor", "SetColorTexture", "SetVertexColor",
 }) do
     methods[name] = function() end
@@ -346,7 +440,8 @@ assert(addon.db.canvasTab == "crafting", "completing profile setup must unlock t
 
 local scanButton
 for _, widget in ipairs(frames) do
-    assert(widget.template ~= "UICheckButtonTemplate" or widget == canvas.guild.main or widget == canvas.map.enabled,
+    assert(widget.template ~= "UICheckButtonTemplate" or widget == canvas.guild.main or widget == canvas.map.enabled
+        or widget == canvas.crafting.hideUnusable,
         "crafting sharing must not require a checkbox")
     if widget:GetText() == "Rescan" then scanButton = widget end
 end
@@ -464,6 +559,78 @@ crafting.search:SetText("100121")
 crafting.search.scripts.OnTextChanged()
 assert(crafting.rows[1].entry.recipeID == 100121 and crafting.pageLabel:GetText():find("1 / 1", 1, true))
 crafting.backButton.scripts.OnClick()
+local previousItem, previousTooltip, previousUnitLevel, previousEnum, previousTimer = C_Item, C_TooltipInfo, UnitLevel, Enum, C_Timer
+local filterLevel, hasEngineering, loadedItems, filterTimers, loadRequests = 20, false, {}, {}, {}
+Enum = { TooltipDataLineType = { ItemName = 22, EquipSlot = 21, UsageRequirement = 43, ErrorLine = 41 } }
+UnitLevel = function() return filterLevel end
+C_Timer = { After = function(delay, callback) assert(delay == 0.1); filterTimers[#filterTimers + 1] = callback end }
+for index = 1, 15 do
+    local recipeID, itemID = 910000 + index, 880000 + index
+    addon.db.catalog.recipeIndex[tostring(recipeID)] = {
+        recipeID = recipeID, itemID = itemID, skillLineID = 171,
+        itemName = string.format("Requirement fixture %02d", index), professionName = "Alchemy",
+    }
+    loadedItems[itemID] = index <= 2
+end
+C_Item = {
+    GetItemInfo = function(itemID)
+        if not loadedItems[itemID] then return nil end
+        return string.format("Requirement fixture %02d", itemID - 880000), "item:" .. itemID, 1, 99,
+            (itemID == 880001 or itemID == 880004) and 40 or 0
+    end,
+    RequestLoadItemDataByID = function(itemID) loadRequests[#loadRequests + 1] = itemID end,
+}
+C_TooltipInfo = { GetHyperlink = function(link)
+    local itemID = tonumber(link:match("item:(%d+)"))
+    local lines = { { type = 22, leftText = "Requirement fixture" } }
+    if itemID == 880002 then
+        lines[2] = { type = 43, leftText = "Requires Engineering (200)",
+            leftColor = { r = 1, g = hasEngineering and 1 or 0.1, b = hasEngineering and 1 or 0.1 } }
+    end
+    return { lines = lines }
+end }
+crafting.search:SetText("Requirement fixture")
+crafting.search.scripts.OnTextChanged()
+assert(crafting.pageLabel:GetText():find("15 recipes", 1, true), "unfiltered mode must include unmet requirements")
+local usabilityFilter = crafting.hideUnusable
+assert(usabilityFilter.parent == scanButton.parent and usabilityFilter.point[4] == -210,
+    "the checkbox must sit in the top toolbar with space for the breadcrumb and Rescan")
+usabilityFilter.scripts.OnEnter(usabilityFilter)
+assert(GameTooltip:GetText() == "Hide unusable items")
+usabilityFilter:SetChecked(true)
+loadRequests = {}
+usabilityFilter.scripts.OnClick(usabilityFilter)
+assert(addon.db.hideUnusableRecipes == true and crafting.pageLabel:GetText():find("13 recipes", 1, true),
+    "the saved filter must remove unmet level and Engineering requirements")
+assert(crafting.rows[1].entry.recipeID == 910003 and crafting.rows[1].detail:GetText() == "Requirements unknown"
+    and crafting.detailText:GetText():find("Requirements unknown", 1, true), "pending items must remain visible as unknown")
+assert(#loadRequests > 0 and #loadRequests <= 9, "a refresh must bound filter loads to eight plus the selected item's existing detail load")
+loadedItems[880004] = true
+canvas.scripts.OnEvent(canvas, "ITEM_DATA_LOAD_RESULT", 880004, true)
+canvas.scripts.OnEvent(canvas, "GET_ITEM_INFO_RECEIVED", 880004, true)
+assert(#filterTimers == 1, "item-ready events must coalesce, including for an unselected item")
+local update = table.remove(filterTimers, 1)
+update()
+assert(crafting.pageLabel:GetText():find("12 recipes", 1, true), "newly loaded unmet requirements must remove the unselected item")
+filterLevel, hasEngineering = 60, true
+for itemID = 880001, 880015 do loadedItems[itemID] = true end
+canvas.scripts.OnEvent(canvas, "PLAYER_LEVEL_UP", 60)
+canvas.scripts.OnEvent(canvas, "SKILL_LINES_CHANGED")
+canvas.scripts.OnEvent(canvas, "TOOLTIP_DATA_UPDATE")
+assert(#filterTimers == 1)
+table.remove(filterTimers, 1)()
+assert(crafting.pageLabel:GetText():find("15 recipes", 1, true), "level and profession changes must restore newly usable items")
+filterLevel, hasEngineering = 20, false
+canvas.scripts.OnShow()
+assert(usabilityFilter:GetChecked() and crafting.pageLabel:GetText():find("12 recipes", 1, true),
+    "reopening must preserve the setting but re-evaluate the current character, not reuse old eligibility")
+usabilityFilter:SetChecked(false)
+usabilityFilter.scripts.OnClick(usabilityFilter)
+assert(addon.db.hideUnusableRecipes == false and crafting.pageLabel:GetText():find("15 recipes", 1, true))
+for recipeID = 910001, 910015 do addon.db.catalog.recipeIndex[tostring(recipeID)] = nil end
+C_Item, C_TooltipInfo, UnitLevel, Enum, C_Timer = previousItem, previousTooltip, previousUnitLevel, previousEnum, previousTimer
+crafting.backButton.scripts.OnClick()
+print("PASS: saved top-toolbar usability filter, unknown labels, bounded loading, unselected-item refresh, and current-character level/skill updates")
 ChatFrameUtil = nil
 addon.GuildState = nil
 addon.ToggleCanvas()

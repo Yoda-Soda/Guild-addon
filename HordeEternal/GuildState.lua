@@ -168,6 +168,7 @@ function Guild.RefreshRoster()
     for name in pairs(database.remoteProfiles) do
         if not Guild.Resolve(name) then database.remoteProfiles[name] = nil end
     end
+    addon.Catalog.CacheLocalProfile()
     if addon.RefreshCatalog then addon.RefreshCatalog() end
     if addon.Members then addon.Members.RosterReady() end
     if addon.RefreshGuild then addon.RefreshGuild() end

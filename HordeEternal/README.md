@@ -19,6 +19,17 @@ The searchable directory lists every verified guild character, online first,
 with six fixed rows per page and no nested list scrolling. Aligned Character,
 Class/Race, Talents, Role, and Main/Nickname columns separate each character's information.
 Class-coloured names and standard class icons make the rows easy to scan. Each
+online character has a green status dot and explicit Online text. Offline rows
+use a gray band and muted text while class icons stay coloured; unknown presence uses
+amber and Status unknown instead of implying the character is offline. Text
+labels remain available independently of colour, and reconnecting characters
+restore their online styling immediately on roster refresh. Each
+Main/Discord cell has a gold star beside the referenced main's full name,
+including on alt rows that reference that main. Main/Alt status remains explicit
+under the character name. The guild-leader crown is not used for main characters.
+The Discord mark appears beside each
+shared server nickname and in the profile editor; it is hidden when no nickname
+is available. Class icons stay intact and coloured. Each
 row identifies **Main** or **Alt** in the character's status line and shows the
 selected main's full **Name Surname** in the Main column, or **No main selected**.
 The main name has its own label rather than sharing space with an "Alt of"
@@ -198,10 +209,67 @@ Forever client, library, and cached skill-line IDs. Each group has one row and
 combined counts; selecting it includes recipes from all of its IDs. Saved recipe
 IDs and shared ownership data are unchanged.
 
+Professions explicitly labelled `[DNT]` by the client are internal test entries.
+They and their recipes are excluded from the visible directory, recipe search,
+and coverage counts. Saved definitions/ownership are not deleted, and legitimate
+additional professions remain visible.
+
 Rescan lives in the crafting toolbar. Hover for an explanation; clicking updates
 your learned recipes and publishes them when sharing is enabled. The chat icon
 beside a remote crafter opens an editable whisper request. It never sends the
 message automatically and does not overwrite an existing chat draft.
+
+The **Hide unusable** checkbox in the top crafting toolbar hides confirmed unmet
+item-use requirements for the logged-in character, including minimum level,
+required professions such as Engineering, and equipment proficiency. It is not a
+filter for the profession that makes the item. Filtering happens before search
+result counts and pagination; the profession directory and guild coverage totals
+remain unfiltered. The account-wide checkbox preference persists, but eligibility
+is always re-evaluated for the current character, never copied from a guildmate.
+
+Checks use guarded `C_Item.GetItemInfo` minimum-use level (not item level),
+`UnitLevel("player")`, and structured `C_TooltipInfo.GetHyperlink` requirement and
+equipment lines. The pinned [tooltip declarations](https://github.com/Gethe/wow-ui-source/blob/b401e0332adfbf0460d319b06d8ea29279a941f1/Interface/AddOns/Blizzard_APIDocumentationGenerated/TooltipInfoSharedDocumentation.lua)
+define `UsageRequirement`, `EquipSlot`, and `ErrorLine`; their live tooltip colors
+still need verification on the running build. Missing, restricted, pending, or
+non-item output requirements remain visible as unknown rather than being assumed
+usable or discarded. Details show the requirement status. Item loads are bounded
+and completion events coalesce; level, skill, and tooltip changes refresh the
+filtered results while Crafting is visible. No recipe ownership or shared profile
+is changed, and no item is equipped or used.
+
+### Automatic Profession Capture
+
+The addon attempts a background scan at login. If the client exposes readable
+known-profession lists and recipe details without a window, it can collect them
+then. Some Forever profession data is only available after opening the relevant
+profession; the pinned declarations do not guarantee complete closed-window
+discovery. The addon does not cast profession spells, open windows, clear filters,
+or change the selected profession on your behalf.
+
+When a profession is opened, its data source changes, its recipe list becomes
+ready, or a recipe is learned, a short debounced scan captures the readable data
+automatically. Related events coalesce. Loading failures retry at most three
+times; closing or changing the source cancels older delayed scans. Linked,
+guild, NPC-crafting, loading, or unreadable sources cannot be adopted as this
+character's learned recipes. Automatic capture requires readable own-source
+checks. Successful scans refresh the browser and queue sharing when enabled.
+
+Learned recipes accumulate across professions for the current character. Opening
+Alchemy after Enchanting no longer replaces Enchanting's recipes. A scan updates
+only recipe IDs whose learned state was actually read. Explicitly unlearned
+recipes, or a readable API confirmation that the recipe's profession is no longer
+learned, withdraw those claims; unobserved recipes remain cached. An empty window
+does not mean all other professions were unlearned. The combined profile survives
+relogging and is the one shared with guildmates. It remains character-owned and
+never borrows learned recipes from another alt or from LibProfessionDB.
+
+The event/source checks follow the pinned build `1.60.1.70425`
+[trade-skill declarations](https://github.com/Gethe/wow-ui-source/blob/b401e0332adfbf0460d319b06d8ea29279a941f1/Interface/AddOns/Blizzard_APIDocumentationGenerated/TradeSkillUIDocumentation.lua)
+and [profession frame](https://github.com/Gethe/wow-ui-source/blob/b401e0332adfbf0460d319b06d8ea29279a941f1/Interface/AddOns/Blizzard_Professions/Blizzard_ProfessionsFrame.lua).
+They still require live verification on the running client. For context-limited
+professions, open each profession normally once; clicking Rescan is no longer
+required. Existing lost recipes cannot be invented and must be observed again.
 
 ## Full Recipe Catalogue
 
@@ -321,8 +389,8 @@ Switching to an alt in the same guild immediately reuses the latest cache, even
 if the previous character is now offline. That character appears as a separate
 named crafter; the current character appears once as **You**. An alt
 never advertises another character's professions. Publishing requires a fresh,
-readable scan; a successful empty scan withdraws old profession claims, while a
-failed or incomplete scan cannot publish. Rescanning also invalidates previously
+readable scan; explicit unlearned updates withdraw old claims, while a failed,
+incomplete, or empty-context scan cannot discard other professions. Rescanning also invalidates previously
 queued profiles.
 
 Same-generation caches from the previous per-character format migrate when that
@@ -332,6 +400,15 @@ affected characters must rescan. Network profiles with an older nonzero source
 timestamp cannot replace newer data in the same generation. The library snapshot
 is unchanged. Data sharing is within the same WoW SavedVariables account/profile,
 not across unrelated accounts or game installations.
+
+After a complete readable roster identifies the current character, its complete
+saved learned profile is also restored to its named account cache if needed.
+This works even when recipe APIs are not ready for a fresh login scan. Incomplete
+saved scans and pre-reset data are not promoted, and a restored saved profile
+still cannot be published as a fresh scan. Other characters see the original
+character as a cached crafter, never as their own learned ownership. When
+recovering a previously missing named profile, log into its owner once with the
+updated addon before switching back to the alt.
 
 Guild sync and remote-crafter display require a complete readable roster with the
 current character present. Cached profiles are removed when a verified roster
@@ -380,6 +457,19 @@ assigned to a character; each character rebuilds its own cache on scanning.
 
 ## Source And Compatibility
 
+The replacement [Discord source image](../discord2.png) and original
+[Discord image](../discord.png) are preserved unchanged.
+[The conversion tool](../tools/Convert-DiscordIcon.ps1) creates the packaged
+`media/Discord.tga` from `discord2.png`: a 64x64, uncompressed 32-bit BGRA texture
+retaining the source blue/white colours and alpha instead of forcing a white
+silhouette. The converter checks the saved pixel bytes and verifies that the blue
+background and white logo survive. Re-run the tool after
+changing the source image. The main-character gold star uses WoW's existing
+`Interface\TargetingFrame\UI-RaidTargetingIcon_1` texture; no extra star asset is
+needed. It marks the addon-declared main and does not set an actual raid target
+marker or imply a guild rank. Restart WoW after first adding the new
+texture and verify both marks at normal/small UI scales.
+
 - Library API inspected: [LibProfessionDB v1.9.1](https://www.curseforge.com/wow/addons/libprofessiondb/files/9095167),
   LibStub major `LibProfessionDB-1.0`, minor 13. The release is MIT-licensed;
   its [license notice](libs/LibProfessionDB-1.0/LICENSE) is retained. The import
@@ -427,7 +517,13 @@ lua tests/crafting_spec.lua
 lua tests/guild_spec.lua
 lua tests/members_spec.lua
 lua tests/map_spec.lua
+lua tests/scanning_spec.lua
 ```
+
+[Scan regression tests](../tests/scanning_spec.lua) cover sequential profession
+capture, automatic opening/list updates, bounded loading retries, delayed-scan
+cancellation, linked/guild/restricted source rejection, sharing opt-out,
+background-capable clients, explicit profession unlearning, and reload retention.
 
 [Map regression tests](../tests/map_spec.lua) cover online-only guild-zone
 aggregation, profile/roster gates, restricted map data, ambiguous zone names,
@@ -460,6 +556,11 @@ not certify them. In-game checks still required:
 2. Browse several professions, search globally, and page through a large list.
 3. Check images, item effects, long names, and material names with a cold cache.
 4. Hover and click Rescan; confirm the tooltip and successful guild publication.
+  Open Enchanting, then Alchemy (or another pair) without clicking Rescan. Verify
+  both sets of learned recipes remain visible locally, on an alt, and on another
+  upgraded guild client. Repeat with a cold cache, a rapid switch/close, and a
+  linked profession. Check whether a fresh login can read those professions
+  without opening windows; do not infer that capability from the mock tests.
 5. Open a guild crafter's request; confirm the recipient and editable text before
    sending. Verify an existing chat draft is preserved.
 6. Check the header, details, tooltips, and external tabs at your normal UI scale

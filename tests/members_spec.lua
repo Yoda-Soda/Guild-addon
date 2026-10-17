@@ -130,6 +130,9 @@ function methods:SetSize(width, height) self.width, self.height = width, height 
 function methods:SetWidth(width) self.width = width end
 function methods:SetHeight(height) self.height = height end
 function methods:SetColorTexture(...) self.color = { ... } end
+function methods:SetTextColor(...) self.textColor = { ... } end
+function methods:SetVertexColor(...) self.vertexColor = { ... } end
+function methods:SetDesaturated(desaturated) self.desaturated = desaturated end
 function methods:SetTexCoord(...) self.coordinates = { ... } end
 function methods:SetTexture(texture) self.texture = texture end
 function methods:SetScript(event, callback) self.scripts[event] = callback end
@@ -147,6 +150,12 @@ function methods:CreateTexture() return Widget() end
 CreateFrame = function() return Widget() end
 GameTooltip = Widget()
 assert(loadfile("HordeEternal/GuildView.lua"))("HordeEternal", addon)
+local discordFile = assert(io.open("HordeEternal/media/Discord.tga", "rb"))
+local discordBytes = discordFile:read("*a")
+discordFile:close()
+assert(#discordBytes == 16402 and discordBytes:byte(3) == 2 and discordBytes:byte(13) == 64
+    and discordBytes:byte(15) == 64 and discordBytes:byte(17) == 32 and discordBytes:byte(18) == 40,
+    "the supplied Discord artwork must be packaged as a 64px alpha-enabled TGA")
 addon.db.canvasTab = "guild"
 player = "Main Person-Realm"
 addon.Members.Capture()
@@ -180,6 +189,33 @@ assert(view.coverage:GetText():find("1 counted", 1, true)
     and view.statRows[1].statName == "Shaman" and view.statRows[1].statCount == 1)
 assert(view.rows[1].identity:GetText() == "Main Person" and view.rows[1].presence:GetText():find("Main /", 1, true),
     "the selected main must show first name and surname without realm or a competing prefix")
+assert(view.rows[1].mainIcon.shown and view.rows[1].mainIcon.texture == "Interface\\TargetingFrame\\UI-RaidTargetingIcon_1"
+    and view.rows[1].identity.point[4] > view.rows[1].mainIcon.point[4] + view.rows[1].mainIcon.width
+    and view.rows[1].mainIcon.point[4] == view.rows[1].discordIcon.point[4]
+    and view.rows[1].mainIcon.point[5] == view.rows[1].identity.point[5],
+    "the Main/Discord column must pair a gold star, not the guild-leader crown, with the main name")
+assert(view.rows[1].discordIcon.shown and view.rows[1].discordIcon.texture == "Interface\\AddOns\\HordeEternal\\media\\Discord.tga"
+    and view.rows[1].contact:GetText() == "my.discord"
+    and view.rows[1].discordIcon.point[4] + view.rows[1].discordIcon.width < view.rows[1].contact.point[4],
+    "shared server nicknames need the supplied Discord icon without covering the text")
+assert(view.rows[2].discordIcon.shown and view.rows[2].mainIcon.shown and view.rows[2].identity:GetText() == "Main Person"
+    and view.rows[2].presence:GetText():find("Alt /", 1, true),
+    "an alt's Main/Discord column must mark its referenced main name, while still identifying the character as an alt")
+assert(view.rows[1].statusDot.vertexColor[2] == 0.9 and view.rows[1].background.color[2] > view.rows[1].background.color[1],
+    "online characters must have an unmistakable green presence indicator")
+assert(view.rows[2].presence:GetText():find("Status unknown", 1, true)
+    and view.rows[2].statusDot.vertexColor[1] == 0.9, "unknown status must be amber, not styled as offline")
+roster[1].online = false
+view.Refresh()
+assert(view.rows[1].presence:GetText():find("Offline", 1, true) and not view.rows[1].icon.desaturated
+    and view.rows[1].background.color[1] == view.rows[1].background.color[2]
+    and view.rows[1].name.textColor[1] == view.rows[1].name.textColor[2],
+    "offline characters must have gray rows and muted names while keeping class icons in colour")
+roster[1].online = true
+view.Refresh()
+assert(not view.rows[1].icon.desaturated and view.rows[1].statusDot.vertexColor[2] == 0.9
+    and view.rows[1].name.textColor[1] ~= view.rows[1].name.textColor[2],
+    "a reconnecting character must restore class colour and online styling on the reused row")
 assert(view.statRows[1].count:GetText() == "1 (100.0%)")
 view.everyone.scripts.OnClick()
 assert(not view.mains:GetChecked() and view.everyone:GetChecked() and view.coverage:GetText():find("2 counted", 1, true))
@@ -189,6 +225,8 @@ assert(view.statRows[1].label.point[4] + view.statRows[1].label.width < view.sta
 assert(view.directoryCount:GetText():find("characters", 1, true) and not view.directoryCount:GetText():find("members", 1, true))
 for index = 1, 53 do roster[#roster + 1] = { name = "Roster Person " .. index .. "-Realm", className = "Mage" } end
 view.Refresh()
+assert(not view.rows[2].discordIcon.shown and not view.rows[2].mainIcon.shown,
+    "a row reused for an unconfigured character must hide the nickname and main icons")
 assert(view.nextPage.enabled and not view.previous.enabled)
 view.nextPage.scripts.OnClick()
 assert(view.page == 2 and view.previous.enabled)

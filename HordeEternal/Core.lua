@@ -94,6 +94,7 @@ frame:SetScript("OnEvent", function(self, event, loadedAddon)
             if addon.GuildState then addon.GuildState.Start() end
             local scanned = addon.Catalog.Scan()
             addon.Sync.Start(scanned ~= nil)
+            addon.Catalog.Start()
             if addon.Members then addon.Members.Start() end
             if addon.GuildMap then addon.GuildMap.Start() end
             addon.Print("Ready.")

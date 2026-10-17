@@ -87,6 +87,22 @@ function Compat.AddOnStatus(name)
     return name .. ": " .. status
 end
 
+function Compat.OwnRecipeSource(strict)
+    local api = C_TradeSkillUI
+    if type(api) ~= "table" then return false, "profession recipe APIs missing" end
+    for _, name in ipairs({ "IsTradeSkillLinked", "IsTradeSkillGuild", "IsNPCCrafting", "IsDataSourceChanging" }) do
+        local callback = api[name]
+        if type(callback) == "function" then
+            local value, state = Compat.Value(callback)
+            if state ~= "available" or type(value) ~= "boolean" then return false, "profession source unavailable" end
+            if value then return false, name == "IsDataSourceChanging" and "profession data is loading" or "not this character's profession" end
+        elseif strict and (name == "IsTradeSkillLinked" or name == "IsTradeSkillGuild") then
+            return false, "profession ownership checks unavailable"
+        end
+    end
+    return true
+end
+
 function Compat.PlayerGuildFacts()
     local race = Compat.Value(UnitRace, "player")
     if type(race) ~= "string" or #race > 40 or race:find("[%c|]") then race = nil end
@@ -310,6 +326,73 @@ function Compat.RecipeDisplay(entry, withDetails)
         end
     end
     return display
+end
+
+function Compat.RecipeUsability(entry)
+    local itemID = entry.itemID
+    if not itemID and type(entry.itemLink) == "string" then
+        itemID = tonumber(entry.itemLink:match("item:(%d+)"))
+    end
+    if not itemID then
+        local output = Compat.Value(C_TradeSkillUI and C_TradeSkillUI.GetRecipeOutputItemData,
+            entry.recipeSpellID or entry.recipeID)
+        local link = Compat.Field(output, "hyperlink")
+        if type(link) == "string" then itemID = tonumber(link:match("item:(%d+)")) end
+    end
+    if type(itemID) ~= "number" or itemID <= 0 then return nil, "Requirements unknown" end
+    local info, state = Compat.Call(C_Item and C_Item.GetItemInfo, itemID)
+    if not info or type(info[2]) ~= "string" or type(info[6]) ~= "number" or info[6] < 0 then
+        return nil, "Requirements unknown", itemID, state == "available" and info and info[2] == nil
+    end
+    local level = Compat.Value(UnitLevel, "player")
+    if type(level) ~= "number" or level < 1 then return nil, "Requirements unknown" end
+    if level < info[6] then return false, "Requires level " .. info[6], itemID end
+    local types = Compat.Field(Enum, "TooltipDataLineType")
+    local requirement, equipment = Compat.Field(types, "UsageRequirement"), Compat.Field(types, "EquipSlot")
+    local itemName, errorLine = Compat.Field(types, "ItemName"), Compat.Field(types, "ErrorLine")
+    if type(requirement) ~= "number" or type(equipment) ~= "number"
+        or type(itemName) ~= "number" or type(errorLine) ~= "number" then
+        return nil, "Requirements unknown"
+    end
+    local tooltip, tooltipState = Compat.Value(C_TooltipInfo and C_TooltipInfo.GetHyperlink, "item:" .. itemID)
+    if tooltip == nil then return nil, "Requirements unknown", itemID, tooltipState == "available" end
+    local lines = Compat.Field(tooltip, "lines")
+    if not Compat.Field(lines, 1) then return nil, "Requirements unknown" end
+    local count = Compat.Value(function() return #lines end)
+    if type(count) ~= "number" or count < 1 or count > 80 then return nil, "Requirements unknown" end
+    local named = false
+    for index = 1, count do
+        local line = Compat.Field(lines, index)
+        if type(line) ~= "table" or (type(canaccesstable) == "function" and not canaccesstable(line)) then
+            return nil, "Requirements unknown"
+        end
+        local values = Compat.Call(function()
+            return line.type, line.leftColor, line.rightColor, line.leftText, line.rightText
+        end)
+        if not values or type(values[2]) ~= "number" then return nil, "Requirements unknown" end
+        local lineType = values[2]
+        if lineType == itemName then named = type(values[5]) == "string" and values[5] ~= "" end
+        if lineType == errorLine then
+            return false, type(values[5]) == "string" and values[5] or "Unmet item requirements", itemID
+        end
+        if lineType == requirement or lineType == equipment then
+            for side = 1, 2 do
+                local color, text = values[side + 2], values[side + 4]
+                if side == 1 or color ~= nil or (type(text) == "string" and text ~= "") then
+                    local red, green, blue = Compat.Field(color, "r"), Compat.Field(color, "g"), Compat.Field(color, "b")
+                    if type(red) ~= "number" or type(green) ~= "number" or type(blue) ~= "number"
+                        or red < 0 or red > 1 or green < 0 or green > 1 or blue < 0 or blue > 1 then
+                        return nil, "Requirements unknown"
+                    end
+                    if red >= 0.8 and green <= 0.25 and blue <= 0.25 then
+                        return false, type(text) == "string" and text ~= "" and text or "Unmet item requirements", itemID
+                    end
+                end
+            end
+        end
+    end
+    if not named then return nil, "Requirements unknown" end
+    return true, "Requirements met", itemID
 end
 
 function Compat.RequestRecipeData(display)
