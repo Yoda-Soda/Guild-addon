@@ -494,9 +494,31 @@ actions recheck membership and online status even if an old recipe selection
 remains open. Presence uses the guarded ninth `GetGuildRosterInfo` return, as
 observed in the Forever Olympus roster reference; verify on the running client.
 
+## Application Administrator
+
+**Pod Cast** is the configured application administrator for The Horde Eternal.
+The main window title shows **Application admin** for that verified character,
+**Guild member** for other members, or **Admin status unavailable** when the
+current roster/identity cannot establish authority. The title refreshes on guild
+roster changes, including while profile setup is still required. The same state
+appears in capability and diagnostic reports. Check it without changing any data:
+
+```text
+/hordeeternal admin
+```
+
+The displayed state and crafting-reset permission use the same guarded identity
+check. Guild rank alone, including another officer or guild master, does not grant
+application-admin access. `Podcast Clawson` no longer authorizes new resets; saved
+profiles/preferences are not renamed or erased by this identity change. Update
+all participating clients before using administrator operations. Main-lock
+approval and signed correction features remain planned, not unlocked by this
+status label. Existing peer-reset authorization is still trust-based as described
+below. Use `/reload` for the Lua changes, then check the label on Pod Cast and an alt.
+
 ## Crafting Reset
 
-Only **Podcast Clawson**, uniquely identified in the current guild roster, can
+Only **Pod Cast**, uniquely identified in the current guild roster, can
 use the normal reset command. Run:
 
 ```text
@@ -511,7 +533,7 @@ own character. Minimap/window settings, other addon data, sharing preferences,
 and the bundled LibProfessionDB catalogue are not reset.
 
 Guild clients relay the latest generation to members who return later, even
-when Podcast Clawson is offline. The account also retains the generation so its
+when Pod Cast is offline. The account also retains the generation so its
 other characters adopt it before publishing. Old-generation packets and queued
 transfers cannot restore the cleared data. Generation control messages are
 exchanged even when recipe sharing is disabled.
@@ -540,11 +562,12 @@ development notes describing `HERC3` are not evidence that it is present here.
 The administrator confirmed their launch character is **Pod Cast** and they are
 the guild master. Administrative corrections and raid-main approvals are intended
 for this administrator only, not every officer. Resolve the character's full
-guild/realm identity from a readable roster before implementation; do not split
-the first name and surname or infer authority from display text alone. The current
-runtime reset gate still names `Podcast Clawson` and needs a deliberate migration
-to the new identity. This planning update does not change that gate, and a future
-guild-master transfer must not silently transfer signing authority.
+guild/realm identity from a readable roster; do not split the first name and
+surname or infer authority from display text alone. The current reset gate and
+read-only application-role display now use `Pod Cast`, rejecting the previous
+`Podcast Clawson` identity. Authenticated corrections and main approvals remain
+planned. A future guild-master transfer must not silently transfer signing
+authority.
 
 The user's launch-client `C_Club.GetSubscribedClubs()` probe also reports
 **The Horde Eternal**, `clubId=503775441`, `clubType=2`, and `memberCount=241`.
@@ -641,7 +664,7 @@ account ownership without administrative verification.
 
 ### Authenticate Administrative Authority
 
-The existing `Podcast Clawson` command gate is useful UI authorization, but a
+The existing `Pod Cast` command gate is useful UI authorization, but a
 relayed issuer string is forgeable. A checksum detects changed content, not who
 authorized it. A larger version number is not authorization either.
 
@@ -705,10 +728,9 @@ addon releases. Compression and full-snapshot traffic are not defaults.
    lifecycle, targeted withdrawal, and failed-scan preservation in game.
 2. Add owner revisions/digests, requested reconciliation, bounded retries/offline
    relay, and per-peer recipe application status through the shared transport.
-3. Bind administrator policy to the roster-verified `Pod Cast` identity in this
-  guild, migrate the old `Podcast Clawson` gate deliberately, select/test signature
-  verification, and specify authority versions, limits, key recovery, and
-  all-client migration.
+3. The current reset gate and read-only role display now bind to the roster-verified
+  `Pod Cast` identity. Next select/test signature verification, and specify
+  authority versions, limits, key recovery, and all-client migration.
 4. Implement authenticated targeted correction/import with preview, rollback, and
    persistence checks; add administrative snapshot/patch redistribution.
 5. Implement and test the approved-main registry, lock transition, change requests,
@@ -840,7 +862,7 @@ not certify them. In-game checks still required:
   confirm their crafting entries disappear without removing offline members.
   Log a known crafter out and back in: check online-first ordering, dimmed offline
   rows, disabled whisper requests, and re-enabled requests after reconnection.
-9. On upgraded test clients, create a reset as Podcast Clawson and confirm other
+9. On upgraded test clients, create a reset as Pod Cast and confirm other
   characters cannot create one. Verify settings remain unchanged. Keep one peer
   online, log the owner out, then log an older-generation character in and check
   that it adopts the peer's generation and rebuilds only its own crafting data.

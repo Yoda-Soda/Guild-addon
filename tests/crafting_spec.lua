@@ -367,6 +367,7 @@ local function Widget(name)
     return setmetatable({ name = name, shown = true, scripts = {} }, { __index = methods })
 end
 function methods:SetText(text) self.text = text end
+function methods:SetTitle(title) self.titleText = title end
 function methods:GetText() return self.text or "" end
 function methods:GetName() return self.name end
 function methods:SetPoint(...) self.point = { ... } end
@@ -680,7 +681,13 @@ print("PASS: saved top-toolbar usability filter, unknown labels, bounded loading
 ChatFrameUtil = nil
 local previousGuildState = addon.GuildState
 local guildAllowed = false
-addon.GuildState = { IsAllowed = function() return guildAllowed end }
+local applicationRole = "Application admin"
+addon.GuildState = {
+    IsAllowed = function() return guildAllowed end,
+    IsReady = function() return guildAllowed end,
+    Rows = function() return {} end,
+    AdminStatus = function() return applicationRole end,
+}
 addon.ToggleCanvas()
 assert(not canvas:IsShown(), "guild-ineligible toggles must hide an already open canvas")
 local frameCount = #frames
@@ -694,10 +701,22 @@ assert(not canvas:IsShown(), "direct window shows must also honor guild eligibil
 guildAllowed = true
 addon.ToggleCanvas()
 assert(canvas:IsShown(), "eligible guild access must restore the same window")
+canvas.RefreshAdminStatus()
+assert(canvas.titleText == "Horde Eternal - Application admin", "administrator role must be explicit in the window title")
+applicationRole = "Guild member"
+addon.RefreshGuild()
+assert(canvas.titleText == "Horde Eternal - Guild member", "member views must not retain an administrator label")
+applicationRole = "Admin status unavailable"
+canvas.RefreshAdminStatus()
+assert(canvas.titleText == "Horde Eternal - Admin status unavailable", "unverified administrator status must remain explicit")
+applicationRole = "Application admin"
+canvas.RefreshAdminStatus()
 assert(canvas.logsButton, "the main window must expose the diagnostic viewer")
 canvas.logsButton.scripts.OnClick()
 local logWindow = diagnostics.window
 assert(logWindow:IsShown() and logWindow.edit:GetText():find("current session", 1, true))
+assert(logWindow.edit:GetText():find("ApplicationRole=Application admin", 1, true),
+    "diagnostic reports must include the same local application role without identifying the player")
 addon.LogEvent("SEND_REJECTED", { result = 9 })
 addon.LogEvent("SCAN_UNAVAILABLE", { reason = "source" })
 logWindow.filters[2].scripts.OnClick()

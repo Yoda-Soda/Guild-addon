@@ -133,6 +133,8 @@ function Diagnostics.ReportText(filter)
             .. " interface=" .. Compat.SafeText(build and build[5]) .. " project=" .. Compat.SafeText(WOW_PROJECT_ID),
         "Database=" .. (addon.initialized and "ready" or "unavailable")
             .. " guildAccess=" .. (Allowed() and "allowed" or "unavailable"),
+        "ApplicationRole=" .. (addon.GuildState and addon.GuildState.AdminStatus and addon.GuildState.AdminStatus()
+            or "Admin status unavailable"),
         "FreshRecipeScan=" .. (addon.Catalog and addon.Catalog.scannedThisSession and "yes" or "no")
             .. " records=" .. #entries .. "/" .. MAX_ENTRIES
             .. " filter=" .. (filter == "ERROR" and "errors" or filter == "WARN" and "warnings+errors" or "all")
@@ -313,6 +315,9 @@ function addon.Report()
     addon.Print("Project ID=" .. Compat.SafeText(WOW_PROJECT_ID)
         .. " (not a reliable flavor discriminator)")
     addon.Print("Database=" .. addon.databaseStatus)
+    if addon.GuildState and addon.GuildState.AdminStatus then
+        addon.Print("Application role: " .. addon.GuildState.AdminStatus())
+    end
     for _, path in ipairs(capabilities) do
         addon.Print(path .. "=" .. (Compat.HasFunction(path) and "present" or "missing/unavailable"))
     end

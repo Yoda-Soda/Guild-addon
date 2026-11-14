@@ -3,6 +3,17 @@ local _, addon = ...
 local frame
 local emblemPath = "Interface\\AddOns\\HordeEternal\\media\\HordeEternalEmblem.tga"
 
+local function RefreshAdminStatus()
+    if not frame then return end
+    local role = addon.GuildState and addon.GuildState.AdminStatus and addon.GuildState.AdminStatus()
+        or "Admin status unavailable"
+    frame.applicationRole = role
+    local title = "Horde Eternal - " .. role
+    if frame.SetTitle then frame:SetTitle(title)
+    elseif frame.TitleText then frame.TitleText:SetText(title)
+    elseif frame.TitleContainer and frame.TitleContainer.TitleText then frame.TitleContainer.TitleText:SetText(title) end
+end
+
 local function FormatAge(timestamp)
     timestamp = tonumber(timestamp)
     if not timestamp or timestamp <= 0 then
@@ -98,13 +109,8 @@ local function CreateCanvas()
     FitWindow()
 
 
-    if frame.SetTitle then
-        frame:SetTitle("Horde Eternal")
-    elseif frame.TitleText then
-        frame.TitleText:SetText("Horde Eternal")
-    elseif frame.TitleContainer and frame.TitleContainer.TitleText then
-        frame.TitleContainer.TitleText:SetText("Horde Eternal")
-    end
+    frame.RefreshAdminStatus = RefreshAdminStatus
+    RefreshAdminStatus()
 
     local portrait = frame.portrait or frame.Portrait
         or (frame.PortraitContainer and frame.PortraitContainer.portrait)
@@ -605,6 +611,7 @@ local function CreateCanvas()
             addon.HideCanvas()
             return
         end
+        RefreshAdminStatus()
         requestedItems = {}
         RefreshResults()
     end)
@@ -708,6 +715,7 @@ local function CreateCanvas()
 
     if frame.guild then
         addon.RefreshGuild = function()
+            RefreshAdminStatus()
             if addon.Members and addon.Members.CanView and not addon.Members.CanView() then
                 RefreshResults()
                 SelectTab("guild")

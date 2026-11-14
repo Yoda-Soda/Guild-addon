@@ -85,6 +85,8 @@ SlashCmdList[slashKey] = function(message)
     local command = string.lower(message or ""):match("^%s*(.-)%s*$")
     if command == "report" then
         addon.Report()
+    elseif command == "admin" then
+        addon.Print("Application role: " .. addon.GuildState.AdminStatus())
     elseif command == "logs" then
         addon.Diagnostics.ToggleWindow()
     elseif command == "logs clear" then

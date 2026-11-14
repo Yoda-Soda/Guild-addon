@@ -519,7 +519,7 @@ end
 
 function Sync.ResetCrafting(confirm)
     if not GuildReady() or not addon.GuildState.CanReset() then
-        Sync.status = "Only Podcast Clawson, uniquely identified in this guild, can create a crafting reset"
+        Sync.status = "Only application administrator Pod Cast, uniquely identified in this guild, can create a crafting reset"
         return false
     end
     if not CommunicationReady() then return false end

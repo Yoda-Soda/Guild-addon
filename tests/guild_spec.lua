@@ -7,9 +7,9 @@ local guildName = "Horde Eternal"
 local inGuild = true
 local guildClubId = 503775441
 C_Club = { GetGuildClubId = function() return guildClubId end }
-local roster = { "Podcast Clawson-ForeverRealm", "Other Crafter-ForeverRealm" }
+local roster = { "Pod Cast-ForeverRealm", "Other Crafter-ForeverRealm" }
 local onlineByName = { [roster[1]] = true, [roster[2]] = false }
-local playerFirst, playerLast = "Podcast", "Clawson"
+local playerFirst, playerLast = "Pod", "Cast"
 local unavailableRow, restrictedGUID
 IsInGuild = function() return inGuild end
 GetNormalizedRealmName = function() return "ForeverRealm" end
@@ -31,6 +31,17 @@ assert(#rosterRows == 2 and rosterRows[1].name == roster[2]
     and rosterRows[1].rank == "Member" and rosterRows[1].rankIndex == 5,
     "the verified roster must retain member information for guild statistics")
 assert(addon.GuildState.CanReset(), "only the configured local owner can reset")
+assert(addon.GuildState.IsAdmin() == true, "Pod Cast must be identified as application administrator")
+assert(addon.GuildState.AdminStatus() == "Application admin")
+roster[3] = "Podcast Clawson-ForeverRealm"
+playerFirst, playerLast = "Podcast", "Clawson"
+assert(addon.GuildState.RefreshRoster() and addon.GuildState.IsAdmin() == false and not addon.GuildState.CanReset(),
+    "the former administrator identity must not retain application permissions")
+assert(addon.GuildState.AdminStatus() == "Guild member")
+assert(not addon.GuildState.AcceptGeneration(2, roster[3]), "the former issuer must not authorize a new reset")
+roster[3] = nil
+playerFirst, playerLast = "Pod", "Cast"
+assert(addon.GuildState.RefreshRoster() and addon.GuildState.IsAdmin() == true)
 assert(not addon.GuildState.Resolve("Outsider"))
 local database = addon.Catalog.Initialize()
 assert(addon.GuildState.IsOnline(roster[1]) == true and addon.GuildState.IsOnline("Other Crafter") == false)
@@ -57,6 +68,9 @@ database.remoteProfiles[roster[2]] = { recipes = {} }
 database.remoteProfiles["Departed Member-ForeverRealm"] = { recipes = {} }
 unavailableRow = 2
 assert(not addon.GuildState.RefreshRoster())
+assert(addon.GuildState.IsAdmin() == nil and not addon.GuildState.CanReset(),
+    "unreadable rosters must make administrator status unavailable without granting permissions")
+assert(addon.GuildState.AdminStatus() == "Admin status unavailable")
 assert(#addon.GuildState.Rows() == 0, "an unreadable roster must not expose stale statistics")
 assert(addon.GuildState.IsOnline(roster[1]) == nil, "invalidating the roster must discard cached presence")
 assert(database.remoteProfiles["Departed Member-ForeverRealm"], "partial rosters must not delete profiles")
@@ -74,12 +88,13 @@ assert(database.remoteProfiles["Departed Member-ForeverRealm"])
 canaccessvalue, restrictedGUID = nil, nil
 assert(addon.GuildState.RefreshRoster())
 assert(database.remoteProfiles["Departed Member-ForeverRealm"] == nil and database.remoteProfiles[roster[2]])
-roster[3] = "Podcast Clawson-OtherRealm"
+roster[3] = "Pod Cast-OtherRealm"
 assert(addon.GuildState.RefreshRoster())
-assert(not addon.GuildState.CanReset(), "an ambiguous owner name must not authorize a reset")
+assert(addon.GuildState.IsAdmin() == nil and not addon.GuildState.CanReset(),
+    "an ambiguous administrator name must not grant or claim application authority")
 roster[3] = nil
 playerFirst, playerLast = "Other", "Crafter"
-assert(addon.GuildState.RefreshRoster() and not addon.GuildState.CanReset())
+assert(addon.GuildState.RefreshRoster() and addon.GuildState.IsAdmin() == false and not addon.GuildState.CanReset())
 guildName = "Another Guild"
 guildClubId = 123456
 assert(not addon.GuildState.IsAllowed() and not addon.GuildState.RefreshRoster(),
@@ -161,7 +176,7 @@ C_TradeSkillUI = {
 }
 SlashCmdList = {}
 guildName, inGuild = "Horde Eternal", true
-roster = { "Podcast Clawson-ForeverRealm", "Other Crafter-ForeverRealm", "Returning Member-ForeverRealm", "Alt Character-ForeverRealm" }
+roster = { "Pod Cast-ForeverRealm", "Other Crafter-ForeverRealm", "Returning Member-ForeverRealm", "Alt Character-ForeverRealm" }
 
 local function NewClient(first, last, ids, account, character)
     local client = { first = first, last = last, ids = ids, sent = {}, timers = {}, messages = {}, buttons = 0 }
@@ -209,7 +224,12 @@ local account = {
     memberGuilds = { preserved = { main = "Podcast Clawson", discord = "test.handle" } },
     futureTool = { preserved = true }, catalog = { localProfile = { recipes = { { recipeID = 999 } } } },
 }
-local owner = NewClient("Podcast", "Clawson", { 1001 }, account)
+local owner = NewClient("Pod", "Cast", { 1001 }, account)
+local beforeAdminReport = owner.addon.GuildState.Generation()
+SlashCmdList.HORDEETERNAL("admin")
+assert(owner.messages[#owner.messages] == "Application role: Application admin"
+    and owner.addon.GuildState.Generation() == beforeAdminReport,
+    "administrator status must be visible through a read-only command")
 local peer = NewClient("Other", "Crafter", { 2001 })
 local returning = NewClient("Returning", "Member", { 3001 })
 Flush(owner)
@@ -331,7 +351,7 @@ assert(reloadedAlt.addon.Catalog.RemoteProfiles()[roster[1]].recipes[1].recipeID
     "the shared cache must survive saving and reloading without runtime metatables")
 local savedOnlyAccount = SavedCopy(owner.addon.db)
 savedOnlyAccount.craftingGuilds["Horde Eternal@ForeverRealm"].remoteProfiles[roster[1]] = nil
-local savedOnlyMain = NewClient("Podcast", "Clawson", nil, savedOnlyAccount, SavedCopy(owner.addon.characterDB))
+local savedOnlyMain = NewClient("Pod", "Cast", nil, savedOnlyAccount, SavedCopy(owner.addon.characterDB))
 assert(savedOnlyMain.addon.characterDB.catalog.localProfile.recipes[1].recipeID == 1001
     and not savedOnlyMain.addon.Sync.Publish(), "an unavailable fresh scan must retain the saved character profile without publishing it")
 local savedOnlyAlt = NewClient("Alt", "Character", {}, savedOnlyMain.addon.db)
@@ -343,7 +363,7 @@ assert(savedOnlyAlt.addon.characterDB.catalog.localProfile.learned == 0 and not 
 local incompleteAccount, incompleteCharacter = SavedCopy(owner.addon.db), SavedCopy(owner.addon.characterDB)
 incompleteAccount.craftingGuilds["Horde Eternal@ForeverRealm"].remoteProfiles[roster[1]] = nil
 incompleteCharacter.catalog.localProfile.unavailable = 1
-local incompleteMain = NewClient("Podcast", "Clawson", nil, incompleteAccount, incompleteCharacter)
+local incompleteMain = NewClient("Pod", "Cast", nil, incompleteAccount, incompleteCharacter)
 assert(incompleteMain.addon.Catalog.Initialize().remoteProfiles[roster[1]] == nil,
     "an incomplete saved scan must not become an account-wide crafting claim")
 local legacyCharacter = { schemaVersion = 1, catalog = {
@@ -391,7 +411,7 @@ local beforeLeave = #owner.sent
 inGuild = false
 Flush(owner)
 assert(#owner.sent == beforeLeave and not owner.addon.GuildState.ready, "leaving guild must cancel pending broadcasts")
-local guildless = NewClient("Podcast", "Clawson", { 1001 })
+local guildless = NewClient("Pod", "Cast", { 1001 })
 Flush(guildless)
 assert(not guildless.addon.guildActive and guildless.buttons == 0 and #guildless.messages == 0
     and #guildless.sent == 0 and not guildless.addon.Catalog.listener,
@@ -399,7 +419,7 @@ assert(not guildless.addon.guildActive and guildless.buttons == 0 and #guildless
 assert(guildless.addon.Catalog.Scan() == nil and not guildless.addon.Catalog.Initialize().localProfile,
     "guildless scans must not update learned recipes")
 inGuild, guildClubId = true, 123456
-local outsider = NewClient("Podcast", "Clawson", { 1001 })
+local outsider = NewClient("Pod", "Cast", { 1001 })
 local openings = 0
 outsider.addon.ToggleCanvas = function() openings = openings + 1 end
 SlashCmdList.HORDEETERNAL("")

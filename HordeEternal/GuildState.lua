@@ -2,7 +2,7 @@ local _, addon = ...
 
 local Guild = { ready = false, serial = 0, members = {}, aliases = {}, online = {}, details = {} }
 addon.GuildState = Guild
-local OWNER = "Podcast Clawson"
+local OWNER = "Pod Cast"
 local GUILD_CLUB_ID = 503775441
 local MAX_MEMBERS = 1000
 local listener
@@ -123,10 +123,22 @@ function Guild.Rows()
     return rows
 end
 
-function Guild.CanReset()
-    if not Guild.IsReady() then return false end
+function Guild.IsAdmin()
+    if not Guild.IsReady() then return nil end
     local authority = Guild.Authority()
-    return authority ~= nil and addon.Compat.IsPlayerName(authority)
+    if not authority then return nil end
+    return addon.Compat.IsPlayerName(authority)
+end
+
+function Guild.CanReset()
+    return Guild.IsAdmin() == true
+end
+
+function Guild.AdminStatus()
+    local admin = Guild.IsAdmin()
+    if admin == true then return "Application admin" end
+    if admin == false then return "Guild member" end
+    return "Admin status unavailable"
 end
 
 function Guild.Generation()
