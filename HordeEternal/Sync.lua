@@ -112,6 +112,7 @@ local function CommunicationReady(prefix)
         or type(C_ChatInfo.SendAddonMessage) ~= "function"
         or not C_Timer or type(C_Timer.After) ~= "function" then
         Sync.status = "Guild message APIs unavailable"
+        if addon.LogEvent then addon.LogEvent("COMM_UNAVAILABLE") end
         return false
     end
     if addon.Compat.Value(C_ChatInfo.IsAddonMessagePrefixRegistered, prefix) ~= true then
@@ -119,6 +120,7 @@ local function CommunicationReady(prefix)
     end
     if addon.Compat.Value(C_ChatInfo.IsAddonMessagePrefixRegistered, prefix) ~= true then
         Sync.status = "Guild message prefix registration failed"
+        if addon.LogEvent then addon.LogEvent("COMM_UNAVAILABLE") end
         return false
     end
     return true
@@ -140,15 +142,18 @@ local function SendOne(job)
     local results, state = addon.Compat.Call(C_ChatInfo.SendAddonMessage, job.prefix or PREFIX, job.message, "GUILD")
     if not results then
         Sync.status = "Guild send " .. state
+        if addon.LogEvent then addon.LogEvent("SEND_UNAVAILABLE", { state = state }) end
         return false
     end
     local resultType = Enum and Enum.SendAddonMessageResult
     if not resultType or results[2] ~= resultType.Success then
         Sync.status = "Guild message rejected or delivery unconfirmed (result: "
             .. addon.Compat.SafeText(results[2]) .. ")"
+        if addon.LogEvent then addon.LogEvent("SEND_REJECTED", { result = results[2] }) end
         return false
     end
     Sync.status = "Guild message accepted; delivery is unconfirmed"
+    if addon.LogEvent then addon.LogEvent("SEND_ACCEPTED", { bytes = #job.message }) end
     return true
 end
 
@@ -183,6 +188,8 @@ end
 local function Queue(message, control, prefix)
     if type(message) ~= "string" or #message > MAX_MESSAGE_SIZE or #queue >= MAX_QUEUE then
         Sync.status = "Guild sync queue full or message too large"
+        if addon.LogEvent then addon.LogEvent("QUEUE_REJECTED", { queued = #queue,
+            bytes = type(message) == "string" and #message or 0 }) end
         return false
     end
     queue[#queue + 1] = {
@@ -233,21 +240,25 @@ function Sync.Publish()
     local profile = catalog and catalog.localProfile
     if not catalog or catalog.shareEnabled ~= true or type(profile) ~= "table" then
         Sync.status = "Enable sharing and scan recipes first"
+        if addon.LogEvent then addon.LogEvent("PUBLISH_BLOCKED", { reason = "sharing" }) end
         return false
     end
     if not addon.Catalog.scannedThisSession then
         Sync.status = "Rescan this character before publishing recipes"
+        if addon.LogEvent then addon.LogEvent("PUBLISH_BLOCKED", { reason = "scan" }) end
         return false
     end
     if not CommunicationReady() or not GuildReady() then return false end
     local rows = BuildRows(profile)
     if not rows then
         Sync.status = "Local recipe profile is invalid or too large"
+        if addon.LogEvent then addon.LogEvent("PROFILE_REJECTED", { direction = "send", reason = "format" }) end
         return false
     end
     local payload = table.concat(rows, ";")
     if #payload > MAX_PROFILE_BYTES then
         Sync.status = "Recipe profile exceeds the sync limit"
+        if addon.LogEvent then addon.LogEvent("PROFILE_REJECTED", { direction = "send", reason = "limit" }) end
         return false
     end
     transferCounter = transferCounter + 1
@@ -264,6 +275,7 @@ function Sync.Publish()
     local total = math.max(1, math.ceil(#payload / chunkSize))
     if total > MAX_PARTS or #queue + total > MAX_QUEUE then
         Sync.status = "Recipe profile exceeds the sync queue limit"
+        if addon.LogEvent then addon.LogEvent("QUEUE_REJECTED", { queued = #queue, bytes = #payload }) end
         return false
     end
     for part = 1, total do
@@ -335,6 +347,7 @@ local function StoreProfile(sender, payload, sourceUpdatedAt)
     local recipes = DecodeProfile(payload)
     local database = addon.db and addon.Catalog.Initialize()
     if not recipes or not database or not GuildReady() or not addon.GuildState.Resolve(sender) then
+        if addon.LogEvent then addon.LogEvent("PROFILE_REJECTED", { direction = "receive", reason = "format" }) end
         return false
     end
     local remoteProfiles = database.remoteProfiles
@@ -347,12 +360,16 @@ local function StoreProfile(sender, payload, sourceUpdatedAt)
     end
     local previous = remoteProfiles[sender]
     if type(previous) == "table" and type(previous.updatedAt) == "number" and sourceUpdatedAt > 0
-        and previous.updatedAt > sourceUpdatedAt then return false end
+        and previous.updatedAt > sourceUpdatedAt then
+        if addon.LogEvent then addon.LogEvent("PROFILE_REJECTED", { direction = "receive", reason = "stale" }) end
+        return false
+    end
     local previousCount = type(previous) == "table" and type(previous.recipes) == "table"
         and #previous.recipes or 0
     if (previous == nil and profileCount >= MAX_REMOTE_PROFILES)
         or recipeCount - previousCount + #recipes > MAX_REMOTE_RECIPES then
         Sync.status = "Remote recipe cache limit reached"
+        if addon.LogEvent then addon.LogEvent("PROFILE_REJECTED", { direction = "receive", reason = "limit" }) end
         return false
     end
     remoteProfiles[sender] = {
@@ -361,6 +378,7 @@ local function StoreProfile(sender, payload, sourceUpdatedAt)
         receivedAt = time(),
     }
     Sync.status = "Received recipe profile from " .. addon.Compat.CharacterLabel(sender)
+    if addon.LogEvent then addon.LogEvent("PROFILE_RECEIVED", { recipes = #recipes }) end
     if addon.RefreshCatalog then
         addon.RefreshCatalog()
     end
@@ -374,8 +392,10 @@ local function ReceiveProfile(sender, transferID, sourceUpdatedAt, part, total, 
         or not transferID:match("^%d+%-%d+$")
         or not part or not total or total < 1 or total > MAX_PARTS or part < 1 or part > total
         or #piece > MAX_MESSAGE_SIZE then
+        if addon.LogEvent then addon.LogEvent("PROFILE_REJECTED", { direction = "receive", reason = "format" }) end
         return
     end
+    if addon.LogEvent then addon.LogEvent("TRANSFER_CHUNK", { part = part, total = total, bytes = #piece }) end
     local key = sender .. "|" .. transferID
     local now = Now()
     for assemblyKey, current in pairs(assemblies) do
@@ -390,6 +410,7 @@ local function ReceiveProfile(sender, transferID, sourceUpdatedAt, part, total, 
             count = count + 1
         end
         if count >= MAX_ASSEMBLIES then
+            if addon.LogEvent then addon.LogEvent("PROFILE_REJECTED", { direction = "receive", reason = "limit" }) end
             return
         end
         assembly = {
@@ -428,11 +449,21 @@ function Sync.Receive(prefix, message, channel, sender)
         return
     end
     sender = addon.GuildState.Resolve(sender)
-    if not sender or not AllowReceive(sender) then return end
+    if not sender then
+        if addon.LogEvent then addon.LogEvent("MESSAGE_REJECTED", { reason = "sender" }) end
+        return
+    end
+    if not AllowReceive(sender) then
+        if addon.LogEvent then addon.LogEvent("MESSAGE_REJECTED", { reason = "rate" }) end
+        return
+    end
     local kind, scope, generation, body = message:match("^2|([A-Z])|([^|]+)|(%d+)|(.*)$")
     generation = tonumber(generation)
     if not kind or Unescape(scope) ~= addon.GuildState.key or not generation
-        or generation < 1 or generation > 2147483647 then return end
+        or generation < 1 or generation > 2147483647 then
+        if addon.LogEvent then addon.LogEvent("MESSAGE_REJECTED", { reason = "format" }) end
+        return
+    end
     if kind == "H" then
         if body:find("|", 1, true) then return end
         local previousGeneration = addon.GuildState.Generation()
@@ -457,6 +488,7 @@ function Sync.Receive(prefix, message, channel, sender)
         return
     end
     if kind ~= "P" or generation ~= addon.GuildState.Generation() then
+        if addon.LogEvent then addon.LogEvent("MESSAGE_REJECTED", { reason = "generation" }) end
         return
     end
     local transferID, sourceUpdatedAt, part, total, piece = body:match("^([%d%-]+)|(%d+)|(%d+)|(%d+)|(.*)$")

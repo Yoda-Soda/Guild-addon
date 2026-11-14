@@ -4,6 +4,7 @@ addon.GuildMap = Map
 local MAP_WIDTH, MAP_HEIGHT, LOCATION_PAGE_SIZE = 684, 372, 3
 
 local function Allowed()
+    if addon.GuildState and addon.GuildState.IsAllowed and not addon.GuildState.IsAllowed() then return false end
     return addon.Members and type(addon.Members.CanView) == "function" and addon.Members.CanView()
         and addon.GuildState and addon.GuildState.IsReady()
 end
@@ -211,6 +212,16 @@ end
 local worldPins, hookedMap = {}, nil
 local lastRosterRequest
 
+function Map.Hide()
+    for _, pin in ipairs(worldPins) do pin:Hide(); pin.location = nil end
+    if Map.view then
+        for _, pin in ipairs(Map.view.pins) do pin:Hide(); pin.location = nil end
+    end
+    if Map.nativeFilter then Map.nativeFilter.button:Hide(); Map.nativeFilter.panel:Hide() end
+    Map.index = nil
+    HideTooltip()
+end
+
 function Map.SetEnabled(enabled)
     if type(enabled) ~= "boolean" or not addon.db then return end
     addon.db.showGuildMap = enabled
@@ -296,6 +307,10 @@ function Map.RefreshWorld()
 end
 
 local function HookWorldMap()
+    if addon.GuildState and addon.GuildState.IsAllowed and not addon.GuildState.IsAllowed() then
+        Map.Hide()
+        return
+    end
     CreateNativeFilter()
     if not WorldMapFrame or hookedMap == WorldMapFrame then return end
     hookedMap = WorldMapFrame

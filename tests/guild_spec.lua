@@ -5,6 +5,8 @@ assert(loadfile("HordeEternal/GuildState.lua"))("HordeEternal", addon)
 
 local guildName = "Horde Eternal"
 local inGuild = true
+local guildClubId = 503775441
+C_Club = { GetGuildClubId = function() return guildClubId end }
 local roster = { "Podcast Clawson-ForeverRealm", "Other Crafter-ForeverRealm" }
 local onlineByName = { [roster[1]] = true, [roster[2]] = false }
 local playerFirst, playerLast = "Podcast", "Clawson"
@@ -20,6 +22,7 @@ GetGuildRosterInfo = function(index)
 end
 local invalidations = 0
 addon.Sync = { Invalidate = function() invalidations = invalidations + 1 end }
+assert(addon.GuildState.IsAllowed(), "the configured guild club must be eligible")
 assert(addon.GuildState.RefreshRoster())
 assert(addon.GuildState.Resolve("Other Crafter") == roster[2])
 local rosterRows = addon.GuildState.Rows()
@@ -78,13 +81,47 @@ roster[3] = nil
 playerFirst, playerLast = "Other", "Crafter"
 assert(addon.GuildState.RefreshRoster() and not addon.GuildState.CanReset())
 guildName = "Another Guild"
-assert(addon.GuildState.RefreshRoster())
+guildClubId = 123456
+assert(not addon.GuildState.IsAllowed() and not addon.GuildState.RefreshRoster(),
+    "another guild must not activate the addon")
 database = addon.Catalog.Initialize()
 assert(next(database.remoteProfiles) == nil, "changing guild must clear the previous guild's profiles")
 database.remoteProfiles[roster[1]] = { recipes = {} }
 inGuild = false
 assert(not addon.GuildState.IsReady() and next(addon.Catalog.Initialize().remoteProfiles) == nil)
 assert(invalidations > 0)
+inGuild, guildClubId = true, 503775441
+assert(addon.GuildState.RefreshRoster())
+local retainedProfile = { recipes = {} }
+local retainedProfiles = addon.Catalog.Initialize().remoteProfiles
+retainedProfiles[roster[2]] = retainedProfile
+guildClubId = nil
+assert(not addon.GuildState.IsAllowed() and not addon.GuildState.RefreshRoster())
+assert(retainedProfiles[roster[2]] == retainedProfile,
+    "temporarily unavailable guild identity must preserve the guild cache")
+guildClubId = "503775441"
+assert(addon.GuildState.IsAllowed() and addon.GuildState.RefreshRoster(),
+    "a readable string club ID must resolve to the same guild")
+guildClubId = secret
+canaccessvalue = function(value) return value ~= secret end
+assert(not addon.GuildState.IsAllowed(), "restricted club IDs must not be compared")
+canaccessvalue, guildClubId = nil, 503775441
+local directClubApi = C_Club.GetGuildClubId
+C_Club.GetGuildClubId = nil
+C_Club.GetSubscribedClubs = function()
+    return { { clubType = 0, clubId = 503775441 }, { clubType = 2, clubId = guildClubId } }
+end
+assert(addon.GuildState.IsAllowed(), "subscribed guild identity must not depend on list position")
+guildClubId = 123456
+assert(not addon.GuildState.IsAllowed(), "a community ID must not authorize another guild")
+C_Club.GetGuildClubId, guildClubId = directClubApi, 503775441
+local clubApi = C_Club
+canaccesstable = function(value) return value ~= clubApi end
+assert(not addon.GuildState.IsAllowed(), "inaccessible club namespaces must fail closed before field access")
+canaccesstable = nil
+C_Club = nil
+assert(not addon.GuildState.IsAllowed(), "missing club APIs must not fall back to guild name alone")
+C_Club = clubApi
 print("PASS: complete guild rosters, departure cleanup, context changes, and unique owner authorization")
 
 local active, clock = nil, 100
@@ -127,9 +164,12 @@ guildName, inGuild = "Horde Eternal", true
 roster = { "Podcast Clawson-ForeverRealm", "Other Crafter-ForeverRealm", "Returning Member-ForeverRealm", "Alt Character-ForeverRealm" }
 
 local function NewClient(first, last, ids, account, character)
-    local client = { first = first, last = last, ids = ids, sent = {}, timers = {} }
+    local client = { first = first, last = last, ids = ids, sent = {}, timers = {}, messages = {}, buttons = 0 }
     Activate(client)
-    local instance = { Print = function() end, CreateMinimapButton = function() end }
+    local instance = {
+        Print = function(message) client.messages[#client.messages + 1] = message end,
+        CreateMinimapButton = function() client.buttons = client.buttons + 1 end,
+    }
     client.addon = instance
     HordeEternalDB = account
     HordeEternalCharacterDB = character
@@ -351,4 +391,21 @@ local beforeLeave = #owner.sent
 inGuild = false
 Flush(owner)
 assert(#owner.sent == beforeLeave and not owner.addon.GuildState.ready, "leaving guild must cancel pending broadcasts")
+local guildless = NewClient("Podcast", "Clawson", { 1001 })
+Flush(guildless)
+assert(not guildless.addon.guildActive and guildless.buttons == 0 and #guildless.messages == 0
+    and #guildless.sent == 0 and not guildless.addon.Catalog.listener,
+    "guildless startup must create no addon controls, scan listeners, announcements, or messages")
+assert(guildless.addon.Catalog.Scan() == nil and not guildless.addon.Catalog.Initialize().localProfile,
+    "guildless scans must not update learned recipes")
+inGuild, guildClubId = true, 123456
+local outsider = NewClient("Podcast", "Clawson", { 1001 })
+local openings = 0
+outsider.addon.ToggleCanvas = function() openings = openings + 1 end
+SlashCmdList.HORDEETERNAL("")
+SlashCmdList.HORDEETERNAL("scan")
+Flush(outsider)
+assert(not outsider.addon.guildActive and outsider.buttons == 0 and #outsider.messages == 0
+    and #outsider.sent == 0 and openings == 0 and not outsider.addon.Catalog.Initialize().localProfile,
+    "another guild must neither activate the addon nor bypass eligibility with slash commands")
 print("PASS: reset cancels partial transfers, empty profession updates, alt isolation, and departed-member exclusion")

@@ -1,5 +1,60 @@
 # Horde Eternal
 
+## Guild Restriction
+
+The addon is restricted to **The Horde Eternal**, guild club ID `503775441`.
+Outside that guild, including on guildless characters, the main window, minimap
+button, native map filter, and guild map pins are hidden. Slash commands do not
+open the UI or trigger scans, and member/crafting communication is paused. There
+is no automatic startup announcement or profession scan outside the guild.
+
+Guild identity is checked through guarded `C_Club.GetGuildClubId`, or a single
+guild-type entry from `GetSubscribedClubs` when the direct API is absent. Missing,
+pending, or restricted identity fails closed; guild-name matching alone cannot
+grant access. Guild/club events restore eligible access without reopening the
+window automatically. Existing scoped saved data is preserved. The addon still
+appears in WoW's installed-addon management list; this restriction hides its own
+in-game controls, not the game's addon-manager entry.
+
+Use `/reload` to apply these Lua changes. Check a member of this guild and an alt
+in another/no guild, and verify both fresh login and leaving/rejoining. The club
+reader's source declarations are from pinned build `1.60.1.70425`; supplied live
+subscription evidence is from build `70938`. Offline tests do not certify the
+running client's event timing or identity API results.
+
+## Diagnostic Log
+
+Open the paper-note icon in the main window header, or run:
+
+```text
+/hordeeternal logs
+/hordeeternal logs trace on
+/hordeeternal logs trace off
+/hordeeternal logs clear
+```
+
+The copyable viewer lists All events, Warnings (including errors), or Errors.
+Select **Select All**, then use Ctrl+C to copy the displayed report. It includes
+client build/interface/project, initialization/access state, scan freshness,
+filter/trace settings, and event history. New events do not replace a focused
+report while it is being copied. Clear affects only diagnostic history.
+
+The current-session log retains at most 200 entries, evicts the oldest, and
+coalesces repeated identical events within five seconds. It is not written to
+SavedVariables: copy a reproduction before `/reload` or logout. Times are client
+uptime, not a shared clock. Detailed tracing is off by default; enable it before
+reproducing a sync problem to include accepted sends, received chunks, and message
+rejections, then disable it afterwards. Send acceptance still does not prove
+remote receipt.
+
+Recorded data uses fixed event codes, approved reason values, and bounded counts.
+It excludes character names, Discord nicknames, recipe names, message bodies,
+database dumps, and raw API-error content; restricted values are omitted. Logs
+are local and never automatically shared. The viewer and commands obey the same
+single-guild restriction as the addon. This records detected addon failures, not
+every unexpected Lua exception; it does not replace or suppress WoW's error
+handler. Include the first actual Lua error stack when reporting such an exception.
+
 ## Guild Overview
 
 The Guild tab includes class, race, and talent-estimate counts in a compact
@@ -472,6 +527,198 @@ announcement does not prove delivery to every client.
 storage and a new module. Protocol `HERC2` rejects old `HERC1` clients. The old
 account-wide crafting cache is discarded because its recipes cannot safely be
 assigned to a character; each character rebuilds its own cache on scanning.
+
+## Launch Sync And Correction Plan
+
+This is proposed work, not implemented behavior. Launch diagnostics supplied on
+2026-11-15 report client `1.60.1.70938`, interface `16001`, project ID `18`, a
+ready schema-1 database, and a ready 2,511-recipe library. The Forever installation
+is linked to this repository. Feature delivery, restrictions, and current recipe
+accuracy still require live checks. The current source uses `HERC2`; previous
+development notes describing `HERC3` are not evidence that it is present here.
+
+The administrator confirmed their launch character is **Pod Cast** and they are
+the guild master. Administrative corrections and raid-main approvals are intended
+for this administrator only, not every officer. Resolve the character's full
+guild/realm identity from a readable roster before implementation; do not split
+the first name and surname or infer authority from display text alone. The current
+runtime reset gate still names `Podcast Clawson` and needs a deliberate migration
+to the new identity. This planning update does not change that gate, and a future
+guild-master transfer must not silently transfer signing authority.
+
+The user's launch-client `C_Club.GetSubscribedClubs()` probe also reports
+**The Horde Eternal**, `clubId=503775441`, `clubType=2`, and `memberCount=241`.
+The requested single-guild restriction now uses that ID for runtime eligibility,
+not administrator authority. The pinned club declarations map guild type to `2`.
+Live checks of current-guild ID results, cross-client consistency, and event timing
+remain required. The existing guild-name/realm storage key is unchanged; no database
+key migration or roster replacement was performed. The member count does not
+certify a complete readable roster, online status, or distinct accounts. Club
+broadcasts, descriptions, and unrelated subscriptions are not stored or shared.
+
+### Separate Data Ownership
+
+Do not synchronize or replace the complete SavedVariables database. Separate
+wire-protocol version, local storage schema, catalogue release, administrative
+correction revision, crafting generation, and character-profile revision.
+Use persistent per-character revision counters for profile ordering; timestamps
+describe freshness, not authority or a reliable ordering between different clients.
+
+| Data | Writer and proposed correction policy |
+| --- | --- |
+| Bundled recipe catalogue | Reviewed dependency release; maintainer corrections use a separate data-only overlay, without editing pinned vendor files. |
+| Learned recipes and character facts | Each character reports its own facts. A maintainer may invalidate a bad cached claim or require a fresh report, not invent learned ownership. |
+| Main selection | Members declare a main during open setup. Once the raid roster is locked, the administrator-approved main record is authoritative; member profiles cannot replace it. |
+| Administrative corrections and resets | Only the maintainer can author authenticated releases; peers may retain and relay the unchanged signed records. |
+| Presence and map locations | Readable current-client observations; do not promote them into permanent administrative truth. |
+| Personal preferences and unrelated saved data | Remain local and outside correction/reset payloads. |
+
+Priorities confirmed on 2026-11-15: no current errors reported; reliable learned
+recipe updates are the greatest member-facing risk, and preventing casual main
+changes after raid lockdown is the administrator's principal policy requirement.
+Recipe catalogue errors, learned-profile errors, and main declarations still
+require different repair operations. A crafting reset currently clears learned/
+observed caches; it does not repair an incorrect bundled recipe definition.
+
+### Recipe Update Reliability First
+
+Before expanding administrative features, verify the complete lifecycle on two
+guild clients: learn a recipe, open/switch professions, publish, receive, log out,
+and switch to an alt. A successful update must change the receiving crafter list,
+not merely return send-API success. Keep catalogue definitions and each character's
+learned ownership separate; a ready 2,511-recipe library is not proof of either
+current availability or correct guild ownership.
+
+Use persistent owner-profile revisions and content digests to reconcile changes.
+Relayed learned profiles retain their original owner and revision; a relay cannot
+make old data newer. Request missing/newer profiles, retry with bounded provider
+fallback, and retain useful offline snapshots. Expose fresh, cached, pending,
+unavailable, and rejected states without treating offline owners as non-crafters.
+
+Explicit unlearning withdraws the affected profession/recipes. A missing API,
+partial scan, linked profession, or temporarily empty loading context must not
+erase previously valid professions or publish cached data as a fresh scan.
+Targeted maintainer invalidation requires a new valid owner scan and prevents
+older cached/queued records from restoring the bad claim. Tests must cover cold
+caches, interrupted transfers, reordered/duplicate packets, returning offline
+members, opt-out, restarts, and scans spanning several professions.
+
+### Raid Main Lockdown
+
+Current `Members.Save` allows replacing or clearing the main; the received-profile
+handler can also accept a higher group revision with a changed main. No raid-main
+lock currently exists. Disabling the checkbox alone would not enforce this policy.
+
+Plan a guild-scoped open-setup phase followed by an administrator-confirmed lock.
+Before locking, preview current declarations, resolve duplicate/conflicting links,
+and publish an authenticated approved-main snapshot. The approved record, not
+the most recent member declaration, becomes authoritative for main/alt displays,
+statistics, and profile access. Characters not approved at lockdown remain pending
+approval rather than silently choosing their own locked main.
+
+After locking, a member may request a change with a proposed main and reason, but
+the request never changes the approved record. Only the administrator may approve
+or reject it. Approval publishes a new authenticated revision; the guild remains
+locked while that one assignment changes. Allow nickname, race/talent, profession,
+and other permitted character updates independently of main approval.
+
+Enforce policy in local saving, incoming profiles, capture/migration, queued work,
+and view resolution. Clearing a main, selecting an alt, advertising a larger member
+revision, regenerating an addon group ID, reinstalling, or replaying older data
+must not replace an existing approved assignment. Keep approved roster identities
+separate from member-supplied account/group IDs, which do not prove WoW account
+ownership. New characters and disputed account links require administrative review.
+
+Persist and relay lock/approval records while the administrator is offline. Missing
+or unverifiable policy cannot grant change permission or trigger automatic unlock.
+A confirmed departed/renamed main needs an unavailable/review state, not automatic
+promotion of an alt. Recipe resets must preserve approved mains, approval history,
+and lock policy. Test pre-lock changes, post-lock save and packet rejection, valid
+approvals, new recruits, alts/reinstalls, departure, guild changes, restarts, offline
+catch-up, and unsupported clients. Unmodified clients enforce the shared policy;
+the addon cannot prevent someone editing their own files or establish real-world
+account ownership without administrative verification.
+
+### Authenticate Administrative Authority
+
+The existing `Podcast Clawson` command gate is useful UI authorization, but a
+relayed issuer string is forgeable. A checksum detects changed content, not who
+authorized it. A larger version number is not authorization either.
+
+For the strict maintainer-only requirement, plan an external signing workflow.
+Keep the private signing key outside the repository, addon installation, and
+shared SavedVariables. Pin only its public verification key in guild clients.
+Select a vetted Lua-compatible signature verifier and benchmark it on this exact
+client before committing to a dependency or algorithm; do not invent cryptography
+or assume WoW provides a signing API. Define backup, loss, and authenticated key
+rotation procedures before rollout.
+
+Sign an envelope covering format, guild scope, key identity, base catalogue/schema
+requirements, correction revision, operation identity, payload digest, and content.
+Reject invalid signatures, incompatible schemas, wrong-guild records, and unknown
+operations before changing data or advancing accepted revisions. Advertised peer
+versions must never advance local authority state. Replaying an older release
+must not restore old data. Restoring earlier content requires a newly signed,
+higher revision, rather than lowering the revision counter.
+
+This authenticates administrative releases on conforming clients, not arbitrary
+player facts. It cannot stop someone modifying their own addon or saved files.
+Unsigned legacy resets must not remain an administrative bypass after migration;
+members need an addon update to participate in authenticated corrections.
+
+### Repair And Relay Without Replacing The Database
+
+Keep `Sync.lua` as the transport owner; add a separately owned administrative
+message handler rather than another competing send queue or standalone addon.
+Reuse bounded chunking, roster/guild checks, throttling, and stale-work cancellation.
+Add revision/digest inventories, requested transfers, bounded retries/provider
+fallback, duplicate suppression, and startup/periodic reconciliation.
+
+The maintainer previews and confirms a release before signing and publishing it.
+Compatible receiving clients verify and automatically apply valid newer releases;
+members do not need to edit saved files or approve each correction manually.
+Stage a complete correction, validate it, then apply it atomically and rebuild
+derived indexes. Retain a last-known-good correction state
+and an audit record. Use targeted patches/tombstones for normal repairs and a
+signed snapshot when a peer lacks the required patch base. Persist authority
+revision and invalidations across alts/reloads so stale reports cannot resurrect
+corrected data. Reserve broad resets for a confirmed need and preserve other data.
+
+Peers relay signed records unchanged, including when the maintainer is offline.
+Track unsupported, pending, applied, and rejected peers separately; API acceptance
+does not establish receipt or application. SavedVariables persist on orderly
+logout/reload, so an in-session acknowledgement is not proof of disk persistence.
+Offline members catch up only when a retained peer is reachable; keep an external
+release backup for recovery if every peer loses its copy.
+
+Evaluate AceComm, LibSerialize, and LibDeflate only against demonstrated needs,
+license/load-order requirements, and build-specific behavior. Libraries do not
+provide administrative authority or conflict rules. Bound encoded, decoded, and
+decompressed sizes and work. Never send executable Lua, run a received chunk, or
+use guild messages to install addon/library code; those updates remain reviewed
+addon releases. Compression and full-snapshot traffic are not defaults.
+
+### Implementation And Validation Order
+
+1. Restore the missing MoonSharp runner and ProfessionDB updater archive fixture;
+   rerun the existing regression baseline and verify the two-client recipe
+   lifecycle, targeted withdrawal, and failed-scan preservation in game.
+2. Add owner revisions/digests, requested reconciliation, bounded retries/offline
+   relay, and per-peer recipe application status through the shared transport.
+3. Bind administrator policy to the roster-verified `Pod Cast` identity in this
+  guild, migrate the old `Podcast Clawson` gate deliberately, select/test signature
+  verification, and specify authority versions, limits, key recovery, and
+  all-client migration.
+4. Implement authenticated targeted correction/import with preview, rollback, and
+   persistence checks; add administrative snapshot/patch redistribution.
+5. Implement and test the approved-main registry, lock transition, change requests,
+   and administrator approval path before raid lockdown. Never activate a lock
+   until participating clients understand and retain its policy.
+6. Test forged/unsigned high revisions, tampered/replayed records, wrong guilds,
+   conflicting equal revisions, missing bases, interrupted/reordered transfers,
+   stale resurrection, main-change bypasses, authority offline, key rotation,
+   and restored backups. Finish with restart, alt, restriction, and mixed-version
+   checks on multiple clients.
 
 ## Source And Compatibility
 

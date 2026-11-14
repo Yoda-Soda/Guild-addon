@@ -45,11 +45,52 @@ local function InitializeDatabase()
     addon.initialized = true
 end
 
+function addon.HideGuildUI()
+    if addon.guildActive and addon.LogEvent then addon.LogEvent("ACCESS_PAUSED") end
+    addon.guildActive = false
+    if addon.minimapButton then
+        addon.minimapButton:SetScript("OnUpdate", nil)
+        addon.minimapButton:Hide()
+    end
+    if addon.HideCanvas then addon.HideCanvas() end
+    if addon.Diagnostics then addon.Diagnostics.HideWindow() end
+    if addon.GuildMap and addon.GuildMap.Hide then addon.GuildMap.Hide() end
+    if addon.Catalog.Pause then addon.Catalog.Pause() end
+    addon.Catalog.scannedThisSession = false
+end
+
+function addon.RefreshGuildAccess()
+    if not addon.initialized or not addon.GuildState then return end
+    if not addon.GuildState.CheckContext() then addon.HideGuildUI(); return end
+    if not addon.guildActive then
+        addon.guildActive = true
+        if addon.LogEvent then addon.LogEvent("ACCESS_ENABLED") end
+        addon.CreateMinimapButton()
+        local scanned = addon.Catalog.Scan()
+        addon.Sync.Start(scanned ~= nil)
+        addon.Catalog.Start()
+        if addon.Members then addon.Members.Start() end
+        if addon.GuildMap then addon.GuildMap.Start() end
+        addon.Print("Ready.")
+    end
+    if addon.minimapButton then addon.minimapButton:Show() end
+end
+
 _G["SLASH_" .. slashKey .. "1"] = "/" .. string.lower(addonName)
 SlashCmdList[slashKey] = function(message)
+    if not addon.GuildState or not addon.GuildState.IsAllowed() then
+        addon.HideGuildUI()
+        return
+    end
     local command = string.lower(message or ""):match("^%s*(.-)%s*$")
     if command == "report" then
         addon.Report()
+    elseif command == "logs" then
+        addon.Diagnostics.ToggleWindow()
+    elseif command == "logs clear" then
+        addon.Diagnostics.Clear()
+    elseif command == "logs trace on" or command == "logs trace off" then
+        addon.Diagnostics.SetTrace(command == "logs trace on")
     elseif command == "library" then
         for _, line in ipairs(addon.Catalog.LibraryReport()) do addon.Print(line) end
     elseif command == "scan" then
@@ -87,18 +128,13 @@ frame:RegisterEvent("PLAYER_LOGIN")
 frame:SetScript("OnEvent", function(self, event, loadedAddon)
     if event == "ADDON_LOADED" and loadedAddon == addonName then
         InitializeDatabase()
+        if addon.LogEvent then addon.LogEvent(addon.initialized and "DATABASE_READY" or "DATABASE_UNAVAILABLE") end
         self:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_LOGIN" then
         if addon.initialized then
-            addon.CreateMinimapButton()
             if addon.GuildState then addon.GuildState.Start() end
-            local scanned = addon.Catalog.Scan()
-            addon.Sync.Start(scanned ~= nil)
-            addon.Catalog.Start()
-            if addon.Members then addon.Members.Start() end
-            if addon.GuildMap then addon.GuildMap.Start() end
-            addon.Print("Ready.")
-        else
+            addon.RefreshGuildAccess()
+        elseif addon.GuildState and addon.GuildState.IsAllowed() then
             addon.Print("Database unavailable; diagnostics remain available.")
         end
         self:UnregisterEvent("PLAYER_LOGIN")

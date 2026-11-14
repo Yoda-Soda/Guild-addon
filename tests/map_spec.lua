@@ -1,7 +1,7 @@
 local addon = {}
 assert(loadfile("HordeEternal/Compat.lua"))("HordeEternal", addon)
 assert(loadfile("HordeEternal/GuildMap.lua"))("HordeEternal", addon)
-local ready, configured = true, true
+local ready, configured, eligible = true, true, true
 local characters = {
     { name = "First Character-BetaClassicBetaPvP2", zone = "Orgrimmar", online = true },
     { name = "Second Character", zone = "Orgrimmar", online = true },
@@ -10,7 +10,10 @@ local characters = {
     { name = "Unknown Presence", zone = "The Barrens" },
     { name = "No Location", online = true },
 }
-addon.GuildState = { IsReady = function() return ready end, Rows = function() return characters end }
+addon.GuildState = {
+    IsReady = function() return ready end, IsAllowed = function() return eligible end,
+    Rows = function() return characters end,
+}
 addon.Members = { CanView = function() return configured end }
 local summary = addon.GuildMap.Summary()
 assert(summary.online == 4 and summary.located == 3 and summary.unknown == 1)
@@ -326,4 +329,18 @@ assert(not nativePins[1].shown)
 now = now + 11
 addon.GuildMap.listener.scripts.OnEvent(nil, "ZONE_CHANGED_NEW_AREA")
 assert(rosterRequests == 2)
+eligible = false
+addon.GuildMap.Refresh()
+assert(not nativePins[1].shown and nativePins[1].location == nil
+    and not view.pins[1].shown and view.pins[1].location == nil
+    and not addon.GuildMap.nativeFilter.button.shown and not addon.GuildMap.nativeFilter.panel.shown,
+    "guild-ineligible refreshes must remove map pins, payloads, and the native filter")
+local beforeBlockedRequest = rosterRequests
+WorldMapFrame.scripts.OnShow()
+assert(not nativePins[1].shown and not addon.GuildMap.nativeFilter.button.shown
+    and rosterRequests == beforeBlockedRequest, "opening the native map outside the guild must show no addon controls")
+eligible = true
+addon.GuildMap.Refresh()
+assert(nativePins[1].shown and addon.GuildMap.nativeFilter.button.shown,
+    "restoring guild eligibility must restore authorized native map controls")
 print("PASS: native world-map markers, toggle, scale correction, map switches, profile/roster invalidation, and bounded roster requests")

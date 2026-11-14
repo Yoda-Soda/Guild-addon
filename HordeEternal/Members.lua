@@ -132,7 +132,11 @@ function Members.Publish()
         profile.race, profile.spec, profile.talents, profile.updatedAt, "2" }
     for index, value in ipairs(values) do values[index] = Escape(value) end
     local payload = table.concat(values, "~")
-    if #payload > 1200 then Members.status = "Member profile exceeds the sharing limit"; return false end
+    if #payload > 1200 then
+        Members.status = "Member profile exceeds the sharing limit"
+        if addon.LogEvent then addon.LogEvent("MEMBER_QUEUE_REJECTED") end
+        return false
+    end
     counter = counter + 1
     local transfer = math.floor(Now() * 1000) .. "-" .. counter
     local packets, total = {}, math.ceil(#payload / 140)
@@ -143,6 +147,7 @@ function Members.Publish()
     Members.wireVersion = Members.wireVersion + 1
     local queued = addon.Sync.QueueMembers(packets)
     Members.status = queued and "Member profile queued; delivery unconfirmed" or "Member profile could not be queued"
+    if not queued and addon.LogEvent then addon.LogEvent("MEMBER_QUEUE_REJECTED") end
     if queued then lastPublished = Now() end
     return queued
 end

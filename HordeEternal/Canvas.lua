@@ -129,7 +129,7 @@ local function CreateCanvas()
     local headerX = 62
     local headerTotal = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     headerTotal:SetPoint("TOPLEFT", frame, "TOPLEFT", headerX, -28)
-    headerTotal:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -16, -28)
+    headerTotal:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -48, -28)
     headerTotal:SetJustifyH("LEFT")
     headerTotal:SetWordWrap(false)
 
@@ -138,6 +138,17 @@ local function CreateCanvas()
     headerSub:SetPoint("TOPRIGHT", headerTotal, "BOTTOMRIGHT", 0, -1)
     headerSub:SetJustifyH("LEFT")
     headerSub:SetWordWrap(false)
+
+    if addon.Diagnostics then
+        local logs = CreateFrame("Button", nil, frame)
+        logs:SetSize(24, 24)
+        logs:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -16, -27)
+        logs:SetNormalTexture("Interface\\Icons\\INV_Misc_Note_01")
+        logs:SetScript("OnClick", addon.Diagnostics.ToggleWindow)
+        logs:SetScript("OnEnter", function(self) TextTooltip(self, "Diagnostics") end)
+        logs:SetScript("OnLeave", HideTooltip)
+        frame.logsButton = logs
+    end
 
     local pageHost = CreateFrame("Frame", nil, frame)
     pageHost:SetPoint("TOPLEFT", frame, "TOPLEFT", 6, -56)
@@ -589,7 +600,14 @@ local function CreateCanvas()
         pageLabel = pageLabel, headerTotal = headerTotal, status = status,
     }
 
-    frame:SetScript("OnShow", function() requestedItems = {}; RefreshResults() end)
+    frame:SetScript("OnShow", function()
+        if addon.GuildState and addon.GuildState.IsAllowed and not addon.GuildState.IsAllowed() then
+            addon.HideCanvas()
+            return
+        end
+        requestedItems = {}
+        RefreshResults()
+    end)
     frame:SetScript("OnHide", HideTooltip)
     frame:SetScript("OnEvent", function(_, event, dataID)
         if event == "UI_SCALE_CHANGED" or event == "DISPLAY_SIZE_CHANGED" then
@@ -752,7 +770,16 @@ local function CreateCanvas()
     return frame
 end
 
+function addon.HideCanvas()
+    if frame then frame:StopMovingOrSizing(); frame:Hide() end
+    HideTooltip()
+end
+
 function addon.ToggleCanvas()
+    if addon.GuildState and addon.GuildState.IsAllowed and not addon.GuildState.IsAllowed() then
+        addon.HideCanvas()
+        return
+    end
     local canvas = CreateCanvas()
     if canvas:IsShown() then
         canvas:Hide()

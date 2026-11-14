@@ -1,5 +1,41 @@
 local addon = { db = {} }
 assert(loadfile("HordeEternal/Compat.lua"))("HordeEternal", addon)
+assert(loadfile("HordeEternal/Diagnostics.lua"))("HordeEternal", addon)
+local diagnostics = addon.Diagnostics
+local diagnosticClock = 1
+GetTime = function() return diagnosticClock end
+assert(not addon.LogEvent("PRIVATE_MEMBER_NAME"), "unrecognized event text must not enter the log")
+assert(not addon.LogEvent("SEND_ACCEPTED", { bytes = 12 }), "routine transport tracing must default off")
+assert(addon.LogEvent("SCAN_UNAVAILABLE", { reason = "source", name = "Private Name", payload = "private nickname" }))
+assert(addon.LogEvent("SCAN_UNAVAILABLE", { reason = "source" }) and diagnostics.Count() == 1)
+assert(diagnostics.Lines()[1]:find("(x2)", 1, true), "repeated events must coalesce")
+local privateValue = {}
+canaccessvalue = function(value) return value ~= privateValue end
+assert(not addon.LogEvent("SCAN_COMPLETE", privateValue), "restricted field tables must be rejected before ordinary use")
+assert(not diagnostics.SetTrace(privateValue), "restricted values must not become log settings")
+addon.LogEvent("SEND_REJECTED", { result = privateValue })
+assert(not diagnostics.Lines()[2]:find("result=", 1, true), "restricted log fields must not be converted or formatted")
+canaccessvalue = nil
+addon.LogEvent("SCAN_UNAVAILABLE", { reason = "Private Name" })
+local logText = table.concat(diagnostics.Lines(), "\n")
+assert(not logText:find("Private Name", 1, true) and not logText:find("private nickname", 1, true),
+    "unapproved fields and non-enum text must never be logged")
+assert(#diagnostics.Lines("ERROR") == 1 and #diagnostics.Lines("WARN") == 3,
+    "diagnostic filtering must distinguish errors and warnings")
+diagnostics.Clear()
+for index = 1, 210 do
+    diagnosticClock = index * 6
+    addon.LogEvent("SCAN_COMPLETE", { scanned = index, learned = 1, unavailable = 0 })
+end
+assert(diagnostics.Count() == 200 and diagnostics.Lines()[1]:find("scanned=11", 1, true),
+    "the diagnostic log must evict oldest records at its fixed capacity")
+diagnostics.Clear()
+assert(diagnostics.Count() == 0 and diagnostics.SetTrace(true))
+assert(addon.LogEvent("SEND_ACCEPTED", { bytes = 12 }) and diagnostics.Count() == 1)
+diagnostics.SetTrace(false)
+diagnostics.Clear()
+GetTime = nil
+print("PASS: bounded diagnostic history, repeat coalescing, severity filters, restricted values, and private-data exclusion")
 assert(loadfile("HordeEternal/Catalog.lua"))("HordeEternal", addon)
 
 assert(addon.Catalog.Initialize().shareEnabled == true, "new installs must share automatically")
@@ -323,6 +359,7 @@ for _, name in ipairs({
     "UnlockHighlight", "SetNormalFontObject", "SetID",
     "SetWidth", "SetScale", "SetNormalTexture", "SetPushedTexture", "SetDisabledTexture", "SetHitRectInsets",
     "SetEnabled", "SetVerticalScroll", "ClearFocus", "SetTextColor", "SetColorTexture", "SetVertexColor",
+    "SetMultiLine", "SetFontObject",
 }) do
     methods[name] = function() end
 end
@@ -345,6 +382,10 @@ function methods:Enable() self.enabled = true end
 function methods:Disable() self.enabled = false end
 function methods:SetTexture(texture) self.texture = texture end
 function methods:SetScript(event, callback) self.scripts[event] = callback end
+function methods:SetFocus() self.focused = true end
+function methods:ClearFocus() self.focused = false end
+function methods:HasFocus() return self.focused == true end
+function methods:HighlightText() self.highlighted = true end
 function methods:SetChecked(checked) self.checked = checked end
 function methods:GetChecked() return self.checked end
 function methods:Show() self.shown = true end
@@ -413,7 +454,12 @@ assert(canvas.scale == 1)
 assert(canvas.tabs[1].point[2] == canvas and canvas.tabs[1].point[3] == "BOTTOMLEFT")
 assert(canvas.tabs[1].point[4] == 5 and canvas.tabs[1].point[5] == 2)
 assert(canvas.tabs[2].point[1] == "TOPLEFT" and canvas.tabs[2].point[4] == 3)
-assert(frames[2].point[1] == "BOTTOMRIGHT" and frames[2].point[5] == 6, "no empty internal tab footer")
+local anchoredPageHost
+for _, widget in ipairs(frames) do
+    if widget.parent == canvas and widget.point and widget.point[1] == "BOTTOMRIGHT"
+        and widget.point[3] == "BOTTOMRIGHT" then anchoredPageHost = widget end
+end
+assert(anchoredPageHost and anchoredPageHost.point[5] == 6, "no empty internal tab footer")
 canvas.tabs[1].scripts.OnClick()
 assert(addon.db.canvasTab == "guild")
 assert(canvas.selectedTab == 1)
@@ -632,6 +678,58 @@ C_Item, C_TooltipInfo, UnitLevel, Enum, C_Timer = previousItem, previousTooltip,
 crafting.backButton.scripts.OnClick()
 print("PASS: saved top-toolbar usability filter, unknown labels, bounded loading, unselected-item refresh, and current-character level/skill updates")
 ChatFrameUtil = nil
+local previousGuildState = addon.GuildState
+local guildAllowed = false
+addon.GuildState = { IsAllowed = function() return guildAllowed end }
+addon.ToggleCanvas()
+assert(not canvas:IsShown(), "guild-ineligible toggles must hide an already open canvas")
+local frameCount = #frames
+addon.ToggleCanvas()
+assert(not canvas:IsShown() and #frames == frameCount, "blocked toggles must not create or open addon UI")
+diagnostics.ToggleWindow()
+assert(not diagnostics.window and #frames == frameCount, "diagnostics must create no UI outside the eligible guild")
+canvas:Show()
+canvas.scripts.OnShow()
+assert(not canvas:IsShown(), "direct window shows must also honor guild eligibility")
+guildAllowed = true
+addon.ToggleCanvas()
+assert(canvas:IsShown(), "eligible guild access must restore the same window")
+assert(canvas.logsButton, "the main window must expose the diagnostic viewer")
+canvas.logsButton.scripts.OnClick()
+local logWindow = diagnostics.window
+assert(logWindow:IsShown() and logWindow.edit:GetText():find("current session", 1, true))
+addon.LogEvent("SEND_REJECTED", { result = 9 })
+addon.LogEvent("SCAN_UNAVAILABLE", { reason = "source" })
+logWindow.filters[2].scripts.OnClick()
+assert(logWindow.filter == "WARN" and logWindow.edit:GetText():find("SCAN_UNAVAILABLE", 1, true)
+    and logWindow.edit:GetText():find("SEND_REJECTED", 1, true), "the warning filter must include errors")
+logWindow.filters[3].scripts.OnClick()
+assert(logWindow.edit:GetText():find("SEND_REJECTED", 1, true) and not logWindow.edit:GetText():find("SCAN_COMPLETE", 1, true))
+logWindow.filters[1].scripts.OnClick()
+assert(logWindow.filter == nil and logWindow.edit:GetText():find("SCAN_UNAVAILABLE", 1, true), "All must restore the full log")
+logWindow.trace:SetChecked(true)
+logWindow.trace.scripts.OnClick()
+assert(diagnostics.traceEnabled, "the detailed checkbox must enable trace events")
+logWindow.trace:SetChecked(false)
+logWindow.trace.scripts.OnClick()
+assert(not diagnostics.traceEnabled)
+UIParent.width, UIParent.height = 640, 480
+logWindow.scripts.OnEvent()
+assert(logWindow.scale <= 640 / 700, "diagnostics must fit small UI viewports")
+UIParent.width, UIParent.height = nil, nil
+logWindow.scripts.OnEvent()
+logWindow.selectAll.scripts.OnClick()
+assert(logWindow.edit.highlighted and logWindow.edit:HasFocus(), "diagnostic reports must be selectable for copying")
+local selectedText = logWindow.edit:GetText()
+addon.LogEvent("DATABASE_UNAVAILABLE")
+assert(logWindow.edit:GetText() == selectedText, "new events must not replace a focused report being copied")
+logWindow.clear.scripts.OnClick()
+assert(diagnostics.Count() == 0 and logWindow.edit:GetText():find("No matching events", 1, true))
+guildAllowed = false
+diagnostics.Refresh()
+assert(not logWindow:IsShown(), "diagnostic windows must hide when guild access is lost")
+guildAllowed = true
+addon.GuildState = previousGuildState
 addon.GuildState = nil
 addon.ToggleCanvas()
 assert(not canvas:IsShown())
@@ -687,6 +785,7 @@ local timers, sent = {}, {}
 local registered = false
 GetTime = function() return 10 end
 IsInGuild = function() return true end
+C_Club = { GetGuildClubId = function() return 503775441 end }
 GetNormalizedRealmName = function() return "ForeverRealm" end
 UnitFullName = function() return "Podcast", "Clawson" end
 GetGuildInfo = function() return "Horde Eternal", "Member", 5, "ForeverRealm" end
@@ -800,6 +899,7 @@ assert(#sent == 3 and addon.Sync.status == "Join a guild before syncing")
 addon.Sync.SetSharing(false)
 IsInGuild = function() return true end
 assert(addon.GuildState.RefreshRoster())
+assert(addon.Catalog.Scan() ~= nil, "returning to the guild must require a fresh scan before publishing")
 
 local attempts = 0
 for _, outcome in ipairs({ "rejected", "nil", "error" }) do
@@ -822,3 +922,57 @@ for _, outcome in ipairs({ "rejected", "nil", "error" }) do
     addon.Sync.SetSharing(false)
 end
 print("PASS: automatic guild sync, addon API acceptance/refusal, and queued-send authorization")
+local recordedFailures = table.concat(diagnostics.Lines("ERROR"), "\n")
+assert(recordedFailures:find("SEND_REJECTED", 1, true) and recordedFailures:find("SEND_UNAVAILABLE", 1, true),
+    "actual send rejection and API errors must be retained in diagnostics")
+local diagnosticReport = diagnostics.ReportText()
+assert(diagnosticReport:find("SCAN_COMPLETE", 1, true)
+    and not diagnosticReport:find("Podcast Clawson", 1, true) and not diagnosticReport:find("Other Crafter", 1, true),
+    "actual scan diagnostics must report counts without character identities")
+
+local currentClub, playerInGuild = 503775441, true
+C_Club.GetGuildClubId = function() return currentClub end
+IsInGuild = function() return playerInGuild end
+Minimap = Widget("Minimap")
+function methods:SetFrameLevel(level) self.level = level end
+function methods:HookScript(event, callback) self.scripts[event] = callback end
+assert(loadfile("HordeEternal/MinimapButton.lua"))("HordeEternal", addon)
+addon.RefreshGuildAccess()
+assert(addon.minimapButton and addon.minimapButton:IsShown() and addon.guildActive,
+    "the real minimap button must appear for the eligible guild")
+addon.ToggleCanvas()
+assert(canvas:IsShown())
+diagnostics.ToggleWindow()
+assert(diagnostics.window:IsShown())
+local guildListener
+for _, widget in ipairs(frames) do
+    if widget.events and widget.events.INITIAL_CLUBS_LOADED then guildListener = widget end
+end
+assert(guildListener, "guild eligibility must refresh when club data becomes available")
+local scans = 0
+C_TradeSkillUI.GetAllRecipeIDs = function() scans = scans + 1; return { 25124 } end
+addon.Catalog.listener.scripts.OnEvent(nil, "TRADE_SKILL_SHOW")
+local beforeBlockedSend = #sent
+currentClub = 123456
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+while #timers > 0 do table.remove(timers, 1)() end
+assert(not addon.minimapButton:IsShown() and not canvas:IsShown() and not diagnostics.window:IsShown() and not addon.guildActive,
+    "changing guild must immediately hide all addon entry points")
+assert(scans == 0 and #sent == beforeBlockedSend, "changing guild must cancel pending scans and sends")
+addon.CreateMinimapButton()
+addon.ToggleCanvas()
+assert(not addon.minimapButton:IsShown() and not canvas:IsShown(), "blocked controls must not reopen")
+currentClub = nil
+guildListener.scripts.OnEvent(nil, "INITIAL_CLUBS_LOADED")
+assert(not addon.minimapButton:IsShown(), "pending club data must not show the minimap button")
+currentClub = 503775441
+guildListener.scripts.OnEvent(nil, "INITIAL_CLUBS_LOADED")
+assert(addon.minimapButton:IsShown() and addon.guildActive and not canvas:IsShown(),
+    "restored guild access must show the existing button without reopening the window")
+addon.ToggleCanvas()
+assert(canvas:IsShown())
+playerInGuild = false
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+assert(not addon.minimapButton:IsShown() and not canvas:IsShown() and not addon.guildActive,
+    "leaving the guild must hide the window and minimap button immediately")
+print("PASS: guild-only minimap/window visibility, pending identity, rejoin, and scan cancellation")

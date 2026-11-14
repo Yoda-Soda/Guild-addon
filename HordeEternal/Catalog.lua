@@ -347,14 +347,23 @@ local function RecipeCandidates(api)
     return candidates, professionNames, professionCount, hasRecipeList
 end
 
+local function ScanUnavailable(reason, category)
+    if addon.LogEvent then addon.LogEvent("SCAN_UNAVAILABLE", { reason = category }) end
+    return nil, nil, reason
+end
+
 function Catalog.Scan()
     Catalog.scannedThisSession = false
+    if addon.GuildState and addon.GuildState.IsAllowed and not addon.GuildState.IsAllowed() then
+        return ScanUnavailable("guild access unavailable", "access")
+    end
+    if addon.LogEvent then addon.LogEvent("SCAN_STARTED") end
     local api = C_TradeSkillUI
     if type(api) ~= "table" or type(api.GetRecipeInfo) ~= "function" then
-        return nil, nil, "profession recipe APIs missing"
+        return ScanUnavailable("profession recipe APIs missing", "api")
     end
     local owned, ownershipReason = addon.Compat.OwnRecipeSource(false)
-    if not owned then return nil, nil, ownershipReason end
+    if not owned then return ScanUnavailable(ownershipReason, "source") end
 
     local candidates, professionNames, professionCount, hasRecipeList = RecipeCandidates(api)
     local recipeIDs = {}
@@ -364,10 +373,10 @@ function Catalog.Scan()
     table.sort(recipeIDs)
     local recipeCount = #recipeIDs
     if recipeCount == 0 and not hasRecipeList then
-        return nil, nil, "no recipe list available"
+        return ScanUnavailable("no recipe list available", "list")
     end
     if recipeCount > MAX_RECIPE_IDS then
-        return nil, nil, "recipe list exceeds scan limit"
+        return ScanUnavailable("recipe list exceeds scan limit", "limit")
     end
 
     local recipes, observed, learnedStates = {}, {}, {}
@@ -437,7 +446,7 @@ function Catalog.Scan()
     for _, recipe in ipairs(recipes) do merged[tostring(recipe.recipeID)] = recipe end
     recipes = {}
     for _, recipe in pairs(merged) do recipes[#recipes + 1] = recipe end
-    if #recipes > MAX_RECIPE_IDS then return nil, nil, "learned recipe cache exceeds scan limit" end
+    if #recipes > MAX_RECIPE_IDS then return ScanUnavailable("learned recipe cache exceeds scan limit", "limit") end
     table.sort(recipes, function(left, right) return left.recipeID < right.recipeID end)
     local indexed = 0
     for _ in pairs(database.recipeIndex) do indexed = indexed + 1 end
@@ -457,6 +466,10 @@ function Catalog.Scan()
     }
     Catalog.scannedThisSession = unavailableCount == 0 and (recipeCount > 0 or #recipes == 0)
     if Catalog.scannedThisSession then Catalog.CacheLocalProfile() end
+    if addon.LogEvent then
+        addon.LogEvent(unavailableCount > 0 and "SCAN_INCOMPLETE" or "SCAN_COMPLETE",
+            { scanned = recipeCount, learned = #recipes, unavailable = unavailableCount })
+    end
     return recipeCount, learnedCount, nil, unavailableCount
 end
 
@@ -468,6 +481,11 @@ function Catalog.Start()
     local function Cancel()
         pending, serial = nil, serial + 1
     end
+    Catalog.Pause = function()
+        windowOpen = false
+        Cancel()
+        Catalog.scannedThisSession = false
+    end
     local function Schedule(attempt)
         if pending or not C_Timer or type(C_Timer.After) ~= "function" then return end
         local ticket, scheduledSerial = {}, serial
@@ -476,6 +494,7 @@ function Catalog.Start()
             if pending ~= ticket or serial ~= scheduledSerial then return end
             pending = nil
             if not addon.initialized then return end
+            if addon.GuildState and addon.GuildState.IsAllowed and not addon.GuildState.IsAllowed() then return end
             local owned, reason = addon.Compat.OwnRecipeSource(true)
             if not owned then
                 if reason == "profession data is loading" and windowOpen and attempt < 3 then Schedule(attempt + 1) end
@@ -495,6 +514,10 @@ function Catalog.Start()
     end
     listener:SetScript("OnEvent", function(_, event)
         if not addon.Compat.IsReadable(event) or not addon.initialized then return end
+        if addon.GuildState and addon.GuildState.IsAllowed and not addon.GuildState.IsAllowed() then
+            Catalog.Pause()
+            return
+        end
         if event == "TRADE_SKILL_CLOSE" then windowOpen = false; Cancel(); return end
         if event == "TRADE_SKILL_DATA_SOURCE_CHANGING" then Cancel(); return end
         if event == "TRADE_SKILL_SHOW" or event == "TRADE_SKILL_DATA_SOURCE_CHANGED" then
