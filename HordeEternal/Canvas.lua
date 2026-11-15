@@ -754,7 +754,9 @@ local function CreateCanvas()
         end
         RefreshResults()
     end)
-    addon.RefreshCatalog = RefreshResults
+    addon.RefreshCatalog = function()
+        if frame:IsShown() and addon.db.canvasTab == "crafting" then QueueFilterRefresh() end
+    end
 
     frame.crafting = {
         search = search, backButton = backButton, rows = resultRows, detail = detail,
@@ -770,15 +772,16 @@ local function CreateCanvas()
         end
         RefreshAdminStatus()
         requestedItems = {}
-        RefreshResults()
+        addon.RefreshGuild()
+        if addon.db.canvasTab == "crafting" then RefreshResults() end
     end)
     frame:SetScript("OnHide", HideTooltip)
     frame:SetScript("OnEvent", function(_, event, dataID)
         if event == "UI_SCALE_CHANGED" or event == "DISPLAY_SIZE_CHANGED" then
             FitWindow()
         elseif event == "ADDON_LOADED" then
-            addon.Catalog.RefreshLibrary(true)
-            if frame:IsShown() then RefreshResults() end
+            addon.Catalog.RefreshLibrary()
+            addon.RefreshCatalog()
         elseif frame:IsShown() and craftingPage:IsShown() and hideUnusable:GetChecked()
             and (event == "PLAYER_LEVEL_UP" or event == "SKILL_LINES_CHANGED" or event == "SPELLS_CHANGED"
                 or event == "UPDATE_FACTION" or event == "PLAYER_EQUIPMENT_CHANGED" or event == "TOOLTIP_DATA_UPDATE"
@@ -816,7 +819,6 @@ local function CreateCanvas()
     end
 
     ShowDetail(nil)
-    RefreshResults()
 
     local pages = { guild = guildPage, crafting = craftingPage }
     if mapPage then pages.map = mapPage end
@@ -871,12 +873,23 @@ local function CreateCanvas()
     end
 
     if frame.guild then
+        local guildRefreshPending = false
         addon.RefreshGuild = function()
+            if not frame:IsShown() then return end
             RefreshAdminStatus()
             if addon.Members and addon.Members.CanView and not addon.Members.CanView() then
                 RefreshResults()
                 SelectTab("guild")
-            else frame.guild.Refresh() end
+            elseif addon.db.canvasTab == "guild" then
+                if not C_Timer or type(C_Timer.After) ~= "function" then frame.guild.Refresh()
+                elseif not guildRefreshPending then
+                    guildRefreshPending = true
+                    C_Timer.After(0.1, function()
+                        guildRefreshPending = false
+                        if frame:IsShown() and addon.db.canvasTab == "guild" then frame.guild.Refresh() end
+                    end)
+                end
+            end
             if addon.GuildMap then addon.GuildMap.Refresh() end
         end
     end

@@ -674,6 +674,36 @@ for index = 5, #roster do
     profile.fingerprint = largeGuild.addon.Catalog.Fingerprint(largeGuild.addon.Catalog.EncodeProfile(profile))
     largeCache[roster[index]] = profile
 end
+do
+    local originalEncode = largeGuild.addon.Catalog.EncodeProfile
+    local encodes = 0
+    largeGuild.addon.Catalog.EncodeProfile = function(...)
+        encodes = encodes + 1
+        return originalEncode(...)
+    end
+    assert(largeGuild.addon.Sync.Reconcile() and encodes == 0,
+        "inventory reconciliation must not encode every guild profile synchronously")
+    local pending = #largeGuild.timers
+    assert(largeGuild.addon.Sync.Reconcile() and #largeGuild.timers == pending,
+        "repeated reconciliation must share one pending inventory build")
+    local steps = 0
+    while #largeGuild.timers > 0 do
+        local before = encodes
+        table.remove(largeGuild.timers, 1)()
+        assert(encodes - before <= 1, "each inventory callback must validate at most one profile")
+        steps = steps + 1
+        assert(steps < 500)
+    end
+    assert(encodes == 177, "incremental inventory must still validate every eligible profile")
+    assert(largeGuild.addon.Sync.Reconcile())
+    local sentBefore = #largeGuild.sent
+    largeGuild.addon.Sync.SetSharing(false)
+    Flush(largeGuild)
+    assert(#largeGuild.sent == sentBefore, "sharing opt-out must cancel an unfinished inventory build")
+    largeGuild.addon.Catalog.EncodeProfile = originalEncode
+    assert(largeGuild.addon.Sync.SetSharing(true))
+    Flush(largeGuild)
+end
 local batchStart = Announce(largeGuild)
 local packets = 0
 for index = batchStart, #largeGuild.sent do if largeGuild.sent[index]:sub(1, 4) == "2|I|" then packets = packets + 1 end end

@@ -883,6 +883,20 @@ texture and verify both marks at normal/small UI scales.
 
 ## Verification
 
+Background roster and synchronization updates do not rebuild hidden Guild or
+Crafting pages. Visible-page update bursts are coalesced over 0.1 seconds;
+opening a tab still refreshes its current data. Crafting aggregation deduplicates
+each owner's recipe IDs without repeatedly scanning the accumulated crafter list,
+and guild statistics reuse the directory's member rows.
+
+Periodic recipe inventory validation processes at most one stored profile per
+timer callback rather than serializing the entire guild cache in one frame.
+Guild changes, crafting resets, and sharing opt-out cancel unfinished inventory
+builds. Inventory exchange can therefore take additional frames in large guilds;
+message formats, validation, and outgoing queue limits are unchanged. These
+bounds reduce avoidable work but are not an in-game frame-time guarantee; live
+Forever profiling is still required, especially during profession scans.
+
 [The package check](../tests/embedded_library_spec.ps1) verifies manifest order,
 every imported file's checksum, the retained license, and the absence of a
 standalone dependency. With `-MoonSharpPath` (or the local cached test DLL), it

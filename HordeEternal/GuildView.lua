@@ -496,7 +496,8 @@ function addon.CreateGuildView(page, header, subheader)
         if not addon.Members then return end
         local settings, name = addon.Members.Settings(), addon.Members.Self()
         local allowed = not addon.Members.CanView or addon.Members.CanView()
-        local stats, rows = addon.Members.Stats(view.mainsOnly), addon.Members.Rows()
+        local rows = addon.Members.Rows()
+        local stats = addon.Members.Stats(view.mainsOnly, rows)
         local classFiles = {}
         for classFile in pairs(CLASS_STYLE) do
             local localized = addon.Compat.Field(LOCALIZED_CLASS_NAMES_MALE, classFile)

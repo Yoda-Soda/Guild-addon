@@ -212,7 +212,7 @@ function Members.Rows()
     return rows
 end
 
-function Members.Stats(mainsOnly)
+function Members.Stats(mainsOnly, rows)
     local stats = { total = 0, all = 0, mains = 0, unassigned = 0, classes = {}, races = {}, specs = {} }
     if not Members.CanView() then return stats end
     for _, class in ipairs({ { "WARRIOR", "Warrior" }, { "PALADIN", "Paladin" }, { "HUNTER", "Hunter" },
@@ -221,7 +221,7 @@ function Members.Stats(mainsOnly)
         local localized = addon.Compat.Field(LOCALIZED_CLASS_NAMES_MALE, class[1])
         stats.classes[type(localized) == "string" and localized or class[2]] = 0
     end
-    for _, row in ipairs(Members.Rows()) do
+    for _, row in ipairs(rows or Members.Rows()) do
         stats.all = stats.all + 1
         if row.state == "Main" then stats.mains = stats.mains + 1 end
         if row.state == "No main selected" then stats.unassigned = stats.unassigned + 1 end

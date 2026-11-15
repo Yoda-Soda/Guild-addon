@@ -689,20 +689,16 @@ local function Entries(includeUnlearned)
     for _, source in ipairs(profiles) do
         local recipes = source.profile.recipes
         if type(recipes) == "table" then
+            local seen = {}
             for _, recipe in ipairs(recipes) do
                 local entry = AddRecipe(recipe)
-                if entry then
-                    local duplicate = false
-                    for _, crafter in ipairs(entry.crafters) do
-                        if crafter.name == source.name then duplicate = true end
-                    end
-                    if not duplicate then
-                        entry.crafters[#entry.crafters + 1] = {
-                            name = source.name, updatedAt = source.profile.updatedAt,
-                            isLocal = source.name == "You",
-                            isOnline = source.isOnline,
-                        }
-                    end
+                if entry and not seen[entry.key] then
+                    seen[entry.key] = true
+                    entry.crafters[#entry.crafters + 1] = {
+                        name = source.name, updatedAt = source.profile.updatedAt,
+                        isLocal = source.name == "You",
+                        isOnline = source.isOnline,
+                    }
                 end
             end
         end

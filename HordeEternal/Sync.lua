@@ -34,6 +34,7 @@ local receiveWindows = {}
 local inventoryBook, requests, snapshotAssemblies = {}, {}, {}
 local lastSnapshotRequest = {}
 local inventoryDue
+local inventoryBuild
 local inventoryCursor = 1
 local maintenanceElapsed = 0
 local stats = { applied = 0, retries = 0, failed = 0 }
@@ -110,6 +111,7 @@ function Sync.Invalidate()
     inventoryBook, requests, snapshotAssemblies = {}, {}, {}
     lastSnapshotRequest = {}
     inventoryDue = nil
+    inventoryBuild = nil
     inventoryCursor = 1
     pendingReset = nil
 end
@@ -520,19 +522,7 @@ local function VerifiedProfile(owner)
     return profile, payload
 end
 
-QueueInventory = function()
-    if not SharingEnabled() or not GuildReady() or not CommunicationReady() then return false end
-    local header = table.concat({ "2", "I", Escape(addon.GuildState.key), tostring(addon.GuildState.Generation()), "" }, "|")
-    local rows = {}
-    for owner in pairs(addon.Catalog.Initialize().remoteProfiles) do
-        if addon.GuildState.Resolve(owner) then
-            local profile = VerifiedProfile(owner)
-            if profile then
-                rows[#rows + 1] = { text = table.concat({ Escape(owner), profile.revision, profile.fingerprint,
-                    #profile.recipes }, "~"), own = addon.Compat.IsPlayerName(owner) and profile or nil }
-            end
-        end
-    end
+local function QueueInventoryPackets(header, rows)
     table.sort(rows, function(left, right)
         if (left.own ~= nil) ~= (right.own ~= nil) then return left.own ~= nil end
         return left.text < right.text
@@ -562,6 +552,48 @@ QueueInventory = function()
         Queue(packet.text, true, nil, { recipe = true, ownProfile = packet.own })
     end
     inventoryCursor = last < #packets and last + 1 or 1
+    return true
+end
+
+QueueInventory = function()
+    if not SharingEnabled() or not GuildReady() or not CommunicationReady() then return false end
+    if inventoryBuild then return true end
+    local ticket, serial = {}, queueSerial
+    local scope, generation = addon.GuildState.key, addon.GuildState.Generation()
+    local header = table.concat({ "2", "I", Escape(scope), tostring(generation), "" }, "|")
+    local owners, rows = {}, {}
+    for owner in pairs(addon.Catalog.Initialize().remoteProfiles) do owners[#owners + 1] = owner end
+    inventoryBuild = ticket
+    local cursor = 1
+    local function Step()
+        if inventoryBuild ~= ticket or serial ~= queueSerial then return end
+        if not SharingEnabled() or not GuildReady() or addon.GuildState.key ~= scope
+            or addon.GuildState.Generation() ~= generation then
+            inventoryBuild = nil
+            return
+        end
+        local owner = owners[cursor]
+        if owner then
+            cursor = cursor + 1
+            if addon.GuildState.Resolve(owner) then
+                local profile = VerifiedProfile(owner)
+                if profile then
+                    rows[#rows + 1] = { text = table.concat({ Escape(owner), profile.revision, profile.fingerprint,
+                        #profile.recipes }, "~"), own = addon.Compat.IsPlayerName(owner) and profile or nil }
+                end
+            end
+            C_Timer.After(0, Step)
+        else
+            inventoryBuild = nil
+            local queued = QueueInventoryPackets(header, rows)
+            if not queued then
+                Sync.status = "Recipe inventory could not be queued; retry scheduled"
+                if addon.LogEvent then addon.LogEvent("QUEUE_REJECTED", { queued = #queue }) end
+            end
+            inventoryDue = Now() + (queued and inventoryCursor == 1 and RECONCILE_INTERVAL or INVENTORY_BATCH_INTERVAL)
+        end
+    end
+    C_Timer.After(0, Step)
     return true
 end
 
@@ -949,6 +981,7 @@ function Sync.SetSharing(enabled)
     inventoryBook, requests, snapshotAssemblies = {}, {}, {}
     lastSnapshotRequest = {}
     inventoryDue = nil
+    inventoryBuild = nil
     inventoryCursor = 1
     Sync.status = "Sharing disabled; received profiles remain cached locally"
     return true

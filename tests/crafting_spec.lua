@@ -77,6 +77,29 @@ addon.Catalog.Scan()
 assert(addon.Catalog.Initialize().localProfile.revision == 3, "a withdrawal must issue a newer profile revision")
 local results = addon.Catalog.Search("wizard")
 assert(#results == 1 and results[1].crafters[1].name == "You", "local recipes must appear without sharing")
+do
+    local database = addon.Catalog.Initialize()
+    local previousProfiles, originalIpairs = database.remoteProfiles, ipairs
+    local recipe = database.localProfile.recipes[1]
+    database.remoteProfiles = {}
+    for index = 1, 150 do
+        database.remoteProfiles["Crafter " .. index] = { recipes = { recipe, recipe } }
+    end
+    local crafterVisits = 0
+    ipairs = function(values)
+        local iterator, state, first = originalIpairs(values)
+        return function(list, index)
+            local key, value = iterator(list, index)
+            if value and type(value) == "table" and value.isLocal ~= nil then crafterVisits = crafterVisits + 1 end
+            return key, value
+        end, state, first
+    end
+    local shared = addon.Catalog.Search("wizard")
+    ipairs = originalIpairs
+    assert(#shared == 1 and #shared[1].crafters == 151, "duplicate recipe rows must not duplicate a crafter")
+    assert(crafterVisits == 0, "aggregation must not rescan accumulated crafters for every shared recipe")
+    database.remoteProfiles = previousProfiles
+end
 assert(addon.db.catalog.shareEnabled == true, "sharing must default to enabled")
 assert(addon.db.catalog.localProfile.recipes[1].skillLineID == 333)
 local browse, total = addon.Catalog.Browse("", 333)
@@ -808,6 +831,46 @@ for recipeID = 910001, 910015 do addon.db.catalog.recipeIndex[tostring(recipeID)
 C_Item, C_TooltipInfo, UnitLevel, Enum, C_Timer = previousItem, previousTooltip, previousUnitLevel, previousEnum, previousTimer
 crafting.backButton.scripts.OnClick()
 print("PASS: saved top-toolbar usability filter, unknown labels, bounded loading, unselected-item refresh, and current-character level/skill updates")
+do
+    local originalTimer, originalOverview, originalRows = C_Timer, addon.Catalog.Overview, addon.Members.Rows
+    local callbacks, overviews, rowBuilds = {}, 0, 0
+    C_Timer = { After = function(delay, callback)
+        assert(delay == 0.1)
+        callbacks[#callbacks + 1] = callback
+    end }
+    addon.Catalog.Overview = function(...) overviews = overviews + 1; return originalOverview(...) end
+    addon.Members.Rows = function(...) rowBuilds = rowBuilds + 1; return originalRows(...) end
+    canvas:Hide()
+    for _ = 1, 10 do addon.RefreshCatalog(); addon.RefreshGuild() end
+    assert(overviews == 0 and rowBuilds == 0 and #callbacks == 0,
+        "hidden windows must not build recipe or member results or schedule refresh work")
+    canvas:Show()
+    canvas.tabs[1].scripts.OnClick()
+    overviews, rowBuilds = 0, 0
+    for _ = 1, 10 do addon.RefreshCatalog(); addon.RefreshGuild() end
+    assert(#callbacks == 1 and overviews == 0 and rowBuilds == 0, "guild refresh bursts must coalesce")
+    table.remove(callbacks, 1)()
+    assert(rowBuilds == 1 and overviews == 0, "only the visible guild page may rebuild")
+    canvas.tabs[2].scripts.OnClick()
+    overviews, rowBuilds = 0, 0
+    for _ = 1, 10 do addon.RefreshCatalog(); addon.RefreshGuild() end
+    assert(#callbacks == 1 and overviews == 0 and rowBuilds == 0, "crafting refresh bursts must coalesce")
+    table.remove(callbacks, 1)()
+    assert(overviews == 1 and rowBuilds == 0, "only the visible crafting page may rebuild")
+    addon.RefreshCatalog()
+    canvas:Hide()
+    table.remove(callbacks, 1)()
+    assert(overviews == 1, "closing the window must discard delayed rendering")
+    canvas:Show()
+    canvas.tabs[1].scripts.OnClick()
+    overviews = 0
+    canvas.scripts.OnShow()
+    assert(overviews == 0, "opening on Guild must not rebuild the hidden crafting catalogue")
+    while #callbacks > 0 do table.remove(callbacks, 1)() end
+    canvas.tabs[2].scripts.OnClick()
+    C_Timer, addon.Catalog.Overview, addon.Members.Rows = originalTimer, originalOverview, originalRows
+end
+print("PASS: hidden-page rendering skipped, visible refresh bursts coalesced, and delayed rendering cancelled on close")
 ChatFrameUtil = nil
 local previousGuildState = addon.GuildState
 local guildAllowed = false
