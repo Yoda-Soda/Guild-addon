@@ -505,6 +505,43 @@ local relayed = newcomer.addon.Catalog.Initialize().remoteProfiles[roster[1]]
 assert(relayed and relayed.revision == original.revision and relayed.updatedAt == original.updatedAt
     and relayed.fingerprint == original.fingerprint and #relayed.recipes == 2,
     "a retained peer must recover an absent owner's profile without inventing a newer revision or timestamp")
+do
+    local previousOnline = onlineByName[roster[1]]
+    onlineByName[roster[1]] = false
+    local cachedHolder = NewClient("Other", "Crafter", nil,
+        SavedCopy(provider.addon.db), SavedCopy(provider.addon.characterDB))
+    Flush(cachedHolder)
+    clock = clock + 4
+    Activate(cachedHolder)
+    cachedHolder.syncFrame.scripts.OnUpdate(nil, 1)
+    Flush(cachedHolder)
+    assert(not cachedHolder.addon.Catalog.scannedThisSession,
+        "the relay regression must exercise a holder with no fresh local profession scan")
+    local newArrival = NewClient("Returning", "Member", nil)
+    Flush(newArrival)
+    local responseStart = #cachedHolder.sent + 1
+    Deliver(Latest(newArrival, "H"), newArrival, cachedHolder)
+    Flush(cachedHolder)
+    clock = clock + 4
+    Activate(cachedHolder)
+    cachedHolder.syncFrame.scripts.OnUpdate(nil, 1)
+    Flush(cachedHolder)
+    local announcedCache = false
+    for index = responseStart, #cachedHolder.sent do
+        if cachedHolder.sent[index]:sub(1, 4) == "2|I|" then announcedCache = true end
+    end
+    assert(announcedCache,
+        "a newcomer greeting must promptly advertise cached peers even when the holder cannot publish its own recipes")
+    Recover(cachedHolder, newArrival, responseStart)
+    Activate(newArrival)
+    local recovered = newArrival.addon.Catalog.Initialize().remoteProfiles[roster[1]]
+    assert(recovered and recovered.revision == original.revision and recovered.fingerprint == original.fingerprint,
+        "automatic newcomer catch-up must preserve the offline original owner's recipe revision")
+    local known = newArrival.addon.Catalog.Search("Recipe 1001")
+    assert(#known == 1 and known[1].crafters[1].name == roster[1] and known[1].crafters[1].isOnline == false,
+        "relayed recipes must be visible under the offline owner without requiring a local scan")
+    onlineByName[roster[1]] = previousOnline
+end
 Activate(source)
 local beforeWithdrawal = source.addon.Catalog.Initialize().localProfile.revision
 local learnedAPI = C_TradeSkillUI.GetRecipeInfo

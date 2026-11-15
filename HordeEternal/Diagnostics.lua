@@ -51,6 +51,10 @@ local eventDefinitions = {
     } },
     RESET_APPLIED = { level = "INFO", text = "Crafting reset applied", fields = { { name = "generation" } } },
     MEMBER_QUEUE_REJECTED = { level = "WARN", text = "Member profile could not be queued" },
+    MEMBER_PROFILE_REJECTED = { level = "WARN", text = "Member profile rejected", fields = {
+        { name = "reason", values = { format = true, stale = true, conflict = true, checksum = true, identity = true } },
+    } },
+    MEMBER_RECOVERY_EXHAUSTED = { level = "WARN", text = "Member profile recovery exhausted three attempts" },
     RECOVERY_RETRY = { level = "WARN", text = "Recipe snapshot request retried", fields = { { name = "attempt" } } },
     RECOVERY_EXHAUSTED = { level = "ERROR", text = "Recipe snapshot recovery exhausted three attempts" },
     PROFESSION_CONFLICT = { level = "WARN", text = "More than two primary professions; owner confirmation required",

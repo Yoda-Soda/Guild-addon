@@ -18,6 +18,7 @@ function Compat.SafeText(value)
     if not Compat.IsReadable(value) then
         return "<restricted>"
     end
+
     local valueType = type(value)
     if valueType == "nil" then
         return "<nil>"
@@ -26,6 +27,16 @@ function Compat.SafeText(value)
         return tostring(value)
     end
     return "<non-scalar>"
+end
+
+function Compat.Fingerprint(payload)
+    if not Compat.IsReadable(payload) or type(payload) ~= "string" or #payload > 16320 then return nil end
+    local first, second = 1, 0
+    for index = 1, #payload do
+        first = (first + payload:byte(index)) % 65521
+        second = (second + first) % 65521
+    end
+    return tostring(first) .. "-" .. tostring(second)
 end
 
 function Compat.CharacterLabel(name)

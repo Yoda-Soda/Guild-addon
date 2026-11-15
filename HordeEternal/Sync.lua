@@ -162,7 +162,8 @@ local function SendOne(job)
     if job.ownProfile and (not addon.Catalog.scannedThisSession
         or job.ownProfile ~= addon.Catalog.Initialize().localProfile) then return true end
     if job.snapshot and addon.Catalog.Initialize().remoteProfiles[job.owner] ~= job.snapshot then return true end
-    if job.prefix == "HEGM1" and addon.Members and job.memberVersion ~= addon.Members.wireVersion then return true end
+    if job.prefix == "HEGM1" and addon.Members and job.memberVersion ~= nil
+        and job.memberVersion ~= addon.Members.wireVersion then return true end
     if not job.control and (not addon.Catalog.scannedThisSession
         or job.profile ~= addon.Catalog.Initialize().localProfile) then
         Sync.status = "Discarded a queued profile superseded by a rescan"
@@ -226,7 +227,8 @@ local function Queue(message, control, prefix, metadata)
     end
     local job = {
         message = message, control = control, prefix = prefix,
-        memberVersion = prefix == "HEGM1" and addon.Members and addon.Members.wireVersion or nil,
+        memberVersion = prefix == "HEGM1" and not (metadata and metadata.memberRelay)
+            and addon.Members and addon.Members.wireVersion or nil,
         scope = addon.GuildState.key, generation = addon.GuildState.Generation(),
         serial = addon.GuildState.serial,
         profile = not control and addon.Catalog.Initialize().localProfile or nil,
@@ -237,13 +239,13 @@ local function Queue(message, control, prefix, metadata)
     return true
 end
 
-function Sync.QueueMembers(messages)
+function Sync.QueueMembers(messages, metadata)
     if not GuildReady() or not CommunicationReady("HEGM1") or type(messages) ~= "table"
         or #messages < 1 or #messages > 9 or #queue + #messages > MAX_QUEUE then return false end
     for _, message in ipairs(messages) do
         if type(message) ~= "string" or #message > MAX_MESSAGE_SIZE then return false end
     end
-    for _, message in ipairs(messages) do Queue(message, true, "HEGM1") end
+    for _, message in ipairs(messages) do Queue(message, true, "HEGM1", metadata) end
     return true
 end
 
@@ -899,7 +901,10 @@ function Sync.Receive(prefix, message, channel, sender)
             C_Timer.After(math.random(1, 4), function()
                 if not GuildReady() or serial ~= addon.GuildState.serial or not addon.GuildState.Resolve(sender) then return end
                 if generation < addon.GuildState.Generation() then Sync.Request()
-                elseif SharingEnabled() then Sync.Publish() end
+                elseif SharingEnabled() then
+                    ScheduleInventory()
+                    if addon.Catalog.scannedThisSession then Sync.Publish() end
+                end
             end)
         end
         return

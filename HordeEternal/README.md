@@ -171,7 +171,7 @@ profiles and crafting generations. Crafting resets do not erase main choices,
 server nicknames, or character facts. `HEGM1` schema 2 distinguishes server
 nicknames from legacy handle records, which updated clients reject. It uses bounded, rate-limited guild-only packets
 through the existing send queue, including when recipe sharing is off. Only a
-current verified roster sender can update its character profile. Profile data
+current verified roster sender can publish or relay member reports. Profile data
 from departed members is pruned after a complete roster; unavailable rosters
 hide it. Guild scopes cannot be mixed.
 
@@ -179,9 +179,35 @@ Main/alt links are member declarations, not proof of account ownership. The stoc
 UI only selects the logged-in character and enforces one main per account per
 guild. Modified guild addons can forge shared group claims; separate WoW accounts
 and separate installations cannot be reliably linked or constrained by this UI.
-Newer account-profile revisions supersede older declarations. Profiles are not
-relayed on behalf of offline characters; a new installation starts with unknown
-facts until their owners publish. Local saved reports persist across sessions.
+Newer account-profile revisions supersede older declarations. Updated clients
+also exchange `HEGM1` protocol-2 inventories and schema-3 snapshots, retaining the
+original character's identity. A peer can relay cached main/alt links, Discord
+server nicknames, race, talent estimates, and talent distributions after their
+owners go offline. Local saved reports persist across sessions. The original
+owner and relay sender must still belong to the current verified guild roster.
+
+Account declarations and character facts have independent revision counters.
+Newer facts do not roll back a newer main or nickname declaration; explicit
+clearing is retained rather than restored from an older peer. Unchanged character
+facts keep their revision and original report time. Equal-version conflicts,
+identity conflicts, malformed snapshots, and checksum failures are rejected and
+logged without private profile fields. A checksum detects corruption; it is not
+authentication of the original author. These remain trusted-guild declarations,
+not cryptographic proof of account ownership.
+
+Member catch-up uses inventories, requested snapshots, and up to three recovery
+attempts. Each inventory callback serializes at most one report, with up to eight
+records per outgoing batch, existing message-queue limits, and delayed subsequent
+batches for large guilds. Login greetings request cache announcements without
+requiring the main window to be open or local profile setup to be complete.
+Receiving reports does not bypass that setup lock. Online state and map locations
+continue to come from the current roster, not historical relayed reports.
+
+Older clients still receive the original schema-2 direct owner broadcasts, but
+only updated clients exchange versioned member snapshots and relay them. Older
+cached reports without character-fact revisions remain non-relayable until their
+owners complete an updated inventory/snapshot exchange. Member catch-up remains
+independent of recipe-sharing opt-out and crafting resets, as before.
 
 **Update every guild client and fully restart WoW.** New modules were added to
 the manifest. Existing crafting clients continue to share crafting data, but
@@ -896,6 +922,16 @@ builds. Inventory exchange can therefore take additional frames in large guilds;
 message formats, validation, and outgoing queue limits are unchanged. These
 bounds reduce avoidable work but are not an in-game frame-time guarantee; live
 Forever profiling is still required, especially during profession scans.
+
+An arriving member's sync greeting schedules an inventory response independently
+of the responding character's own profession scan. A peer holding verified
+recipe revisions can therefore relay an offline guild member's recipes even
+after reloading without opening its own profession windows. This is queued
+catch-up, not immediate delivery: it includes the randomized greeting-response
+delay, inventory preparation, and the outgoing message queue. Original owners
+must remain in the verified guild roster, and both peers must have sharing
+enabled. Legacy direct recipe packets without an original revision are not
+eligible for relay until a verified inventory/snapshot exchange has completed.
 
 [The package check](../tests/embedded_library_spec.ps1) verifies manifest order,
 every imported file's checksum, the retained license, and the absence of a
