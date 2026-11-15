@@ -503,7 +503,7 @@ lib:LoadNames(202, {
 			["name"] = "烟花束发射器",
 		},
 		[28327] = {
-			["name"] = "蒸汽车控制器",
+			["name"] = "蒸汽坦克控制器",
 		},
 		[424641] = {
 			["name"] = "伐木机自动回收单元",
@@ -599,13 +599,13 @@ lib:LoadNames(202, {
 			["name"] = "砂纸",
 		},
 		[1253004] = {
-			["name"] = "污泥压制器",
+			["name"] = "",
 		},
 		[1253005] = {
-			["name"] = "巨型麻醉飞镖",
+			["name"] = "",
 		},
 		[1253006] = {
-			["name"] = "怒吼爆弹",
+			["name"] = "",
 		},
 		[1263034] = {
 			["name"] = "修理机器人",
@@ -662,7 +662,7 @@ lib:LoadNames(202, {
 			["name"] = "紧急战地斗篷",
 		},
 		[1266920] = {
-			["name"] = "Compact Critter Carrier",
+			["name"] = "便携式小动物箱",
 		},
 		[1266921] = {
 			["name"] = "EZ-Thro Tru-Trigger",
@@ -782,54 +782,54 @@ lib:LoadNames(202, {
 			["name"] = "凹瘪的护目镜",
 		},
 		[1317270] = {
-			["name"] = "Unsanctified Grenade",
+			["name"] = "未圣化的手雷",
 		},
 		[1317958] = {
-			["name"] = "Satchel of Copper Bombs",
+			["name"] = "一袋铜壳炸弹",
 		},
 		[1317959] = {
-			["name"] = "Satchel of Bronze Bombs",
+			["name"] = "一袋青铜炸弹",
 		},
 		[1317960] = {
-			["name"] = "Satchel of Iron Bombs",
+			["name"] = "一袋铁制炸弹",
 		},
 		[1317961] = {
-			["name"] = "Satchel of Dark Iron Bombs",
+			["name"] = "一袋黑铁炸弹",
 		},
 		[1319154] = {
-			["name"] = "Small Purple Rocket",
+			["name"] = "小型紫色烟花",
 		},
 		[1319155] = {
-			["name"] = "Small White Rocket",
+			["name"] = "小型白色烟花",
 		},
 		[1319156] = {
-			["name"] = "Small Yellow Rocket",
+			["name"] = "小型黄色烟花",
 		},
 		[1319157] = {
-			["name"] = "Large Purple Rocket",
+			["name"] = "大型紫色烟花",
 		},
 		[1319158] = {
-			["name"] = "Large White Rocket",
+			["name"] = "大型白色烟花",
 		},
 		[1319159] = {
-			["name"] = "Large Yellow Rocket",
+			["name"] = "大型黄色烟花",
 		},
 		[1319160] = {
-			["name"] = "Purple Rocket Cluster",
+			["name"] = "紫色烟花束",
 		},
 		[1319161] = {
-			["name"] = "White Rocket Cluster",
+			["name"] = "白色烟花束",
 		},
 		[1319162] = {
-			["name"] = "Yellow Rocket Cluster",
+			["name"] = "黄色烟花束",
 		},
 		[1319163] = {
-			["name"] = "Large Purple Rocket Cluster",
+			["name"] = "大型紫色烟花束",
 		},
 		[1319164] = {
-			["name"] = "Large White Rocket Cluster",
+			["name"] = "大型白色烟花束",
 		},
 		[1319165] = {
-			["name"] = "Large Yellow Rocket Cluster",
+			["name"] = "大型黄色烟花束",
 		},
 	})

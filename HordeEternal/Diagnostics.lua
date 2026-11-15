@@ -38,7 +38,7 @@ local eventDefinitions = {
     PROFILE_RECEIVED = { level = "INFO", text = "Recipe profile received", fields = { { name = "recipes" } } },
     PROFILE_REJECTED = { level = "WARN", text = "Recipe profile rejected", fields = {
         { name = "direction", values = { send = true, receive = true } },
-        { name = "reason", values = { format = true, limit = true, stale = true } },
+        { name = "reason", values = { format = true, limit = true, stale = true, conflict = true, checksum = true, professions = true } },
     } },
     PUBLISH_BLOCKED = { level = "WARN", text = "Recipe publication blocked", fields = {
         { name = "reason", values = { sharing = true, scan = true } },
@@ -51,6 +51,12 @@ local eventDefinitions = {
     } },
     RESET_APPLIED = { level = "INFO", text = "Crafting reset applied", fields = { { name = "generation" } } },
     MEMBER_QUEUE_REJECTED = { level = "WARN", text = "Member profile could not be queued" },
+    RECOVERY_RETRY = { level = "WARN", text = "Recipe snapshot request retried", fields = { { name = "attempt" } } },
+    RECOVERY_EXHAUSTED = { level = "ERROR", text = "Recipe snapshot recovery exhausted three attempts" },
+    PROFESSION_CONFLICT = { level = "WARN", text = "More than two primary professions; owner confirmation required",
+        fields = { { name = "count" } } },
+    PROFESSION_CONFIRMED = { level = "INFO", text = "Owner confirmed an unlearned primary profession",
+        fields = { { name = "remaining" } } },
 }
 
 function addon.LogEvent(code, fields)
@@ -142,6 +148,21 @@ function Diagnostics.ReportText(filter)
         "",
     }
     local records = Diagnostics.Lines(filter)
+    if addon.Sync and addon.Sync.Progress then
+        local pending, applied, retries, failed = addon.Sync.Progress()
+        lines[#lines + 1] = "RecipeRecovery pending=" .. pending .. " applied=" .. applied .. " retries=" .. retries .. " failed=" .. failed
+        lines[#lines + 1] = ""
+    end
+    if addon.Catalog then
+        local profile = addon.Catalog.Initialize().localProfile
+        if type(profile) == "table" then
+            lines[#lines + 1] = "LocalRecipeProfile scanned=" .. Compat.SafeText(profile.scanned)
+                .. " learned=" .. Compat.SafeText(profile.learned) .. " unavailable=" .. Compat.SafeText(profile.unavailable)
+                .. " revision=" .. Compat.SafeText(profile.revision)
+                .. " professionConflict=" .. (profile.professionConflict and "yes" or "no")
+            lines[#lines + 1] = ""
+        end
+    end
     if #records == 0 then records[1] = "No matching events." end
     for _, line in ipairs(records) do lines[#lines + 1] = line end
     return table.concat(lines, "\n"), #lines

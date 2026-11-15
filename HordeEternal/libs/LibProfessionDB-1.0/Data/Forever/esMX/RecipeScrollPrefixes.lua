@@ -30,7 +30,7 @@ lib:LoadRecipeScrollPrefixSamples({
 [171]=8,
 [185]=8,
 [197]=14,
-[202]=20,
+[202]=12,
 [333]=5,
 })
 

@@ -4,7 +4,7 @@
 
 The addon is restricted to **The Horde Eternal**, guild club ID `503775441`.
 Outside that guild, including on guildless characters, the main window, minimap
-button, native map filter, and guild map pins are hidden. Slash commands do not
+button, and internal map pins are hidden. Slash commands do not
 open the UI or trigger scans, and member/crafting communication is paused. There
 is no automatic startup announcement or profession scan outside the guild.
 
@@ -71,13 +71,17 @@ characters or addon users. Mains-only totals exclude undeclared characters rathe
 than guessing which character is their main.
 
 The searchable directory lists every verified guild character, online first,
-with six fixed rows per page and no nested list scrolling. Aligned Character,
+in a fixed-height scrollable table with a mouse wheel and native scrollbar.
+Six rows are visible, with one additional recycled buffer row for partial scrolling;
+scrolling only paints cached rows rather than rebuilding the roster or statistics.
+Aligned Character,
 Class/Race, Talents, Role, and Main/Nickname columns separate each character's information.
 Class-coloured names and standard class icons make the rows easy to scan. Each
-online character has a green status dot and explicit Online text. Offline rows
+online character has a green status dot and normal class-coloured styling without
+repeating an Online label. Offline rows
 use a gray band and muted text while class icons stay coloured; unknown presence uses
-amber and Status unknown instead of implying the character is offline. Text
-labels remain available independently of colour, and reconnecting characters
+amber and Status unknown instead of implying the character is offline. Offline
+and unknown labels remain explicit; tooltips retain full presence details, and reconnecting characters
 restore their online styling immediately on roster refresh. Each
 Main/Discord cell has a gold star beside the referenced main's full name,
 including on alt rows that reference that main. Main/Alt status remains explicit
@@ -98,7 +102,7 @@ realm-qualified identities remain unchanged for storage, membership, and sender
 validation; display formatting never merges their underlying identities.
 Click a column heading to sort the entire filtered list, then click again to
 reverse direction. A direction arrow marks the active heading, and sorting
-returns to page one. Role sorts by the guild's rank hierarchy, not alphabetically
+returns to the top of the directory. Role sorts by the guild's rank hierarchy, not alphabetically
 or by a guessed tank/healer/damage role. Unknown roles/specs stay after known
 values in either direction; name ties are deterministic. Guild roles are also
 searchable. The initial unsorted view remains online-first.
@@ -192,6 +196,8 @@ No external map library or coordinate-sharing protocol is required.
 
 - The world overview groups counts by continent. Click a count to drill down;
   continent maps show zone counts, and zone maps show the zone's total.
+  Right-click the map artwork, background, or a count marker to go up one map
+  layer. A map without a parent stays unchanged; left-click drill-down remains.
 - Hover a count or zone row for the character names. Large tooltips show the
   first twelve names plus the remaining count. Counts always mean characters,
   not distinct people or accounts.
@@ -201,13 +207,11 @@ No external map library or coordinate-sharing protocol is required.
   reachable. Unmapped names remain available as text rather than guessed pins.
 - The toolbar includes parent map, world overview, your current zone, open
   native world map, and refresh. Opening the native map is a user action.
-- **Guild markers** toggles this guild's count markers on both map views. It is
-  enabled by default and persists account-wide. On WoW's native map, select the
-  Horde Eternal emblem in the bottom-left and toggle **Guild characters** in
-  its filter popup. Both controls share one setting and stay synchronized.
-  Count markers keep a fixed
-  screen size while the map zoom changes. This does not alter other addons'
-  pins or the world's own map data.
+- **Guild markers** toggles count markers inside the addon's Map tab. It is
+  enabled by default and persists account-wide. Horde Eternal does not add pins,
+  a filter button, or hooks to WoW's native world map; other map addons remain
+  responsible for their own overlays. The Map tab and its native-map opening
+  button remain available.
 
 Locations are snapshots from `GetGuildRosterInfo`, not live player coordinates.
 Only confirmed online characters with a readable nonempty zone enter the counts.
@@ -235,7 +239,7 @@ and contribute to the **unplotted** count. A uniquely resolved map remains click
 and opens its own artwork when available. Unresolved or ambiguous names remain
 listed without guessing a map ID; detached instance maps remain available in the
 strip, while locations verified on another continent are excluded. Continent
-tooltips on both map views also show each character's reported zone.
+tooltips inside the Map tab also show each character's reported zone.
 
 This is roster-reported location, not a new BG presence protocol, proof of a
 particular match, or exact player coordinates. The change needs only `/reload`.
@@ -244,7 +248,7 @@ compare the world count, continent pin plus location-strip counts, character
 tooltips, and opening the BG artwork. Confirm logging the guildmate out removes
 the BG entry; unavailable metadata/art must remain honest unavailable states.
 
-The Map tab and native pins require completed main/server-nickname setup and a
+The Map tab and its internal pins require completed main/server-nickname setup and a
 complete readable roster. Losing access removes pins and their cached frame
 payloads. Guild changes cannot mix location snapshots from different guilds.
 No map locations are written to SavedVariables or sent to other players.
@@ -258,24 +262,32 @@ for `C_Map.GetMapInfo`, `GetMapChildrenInfo`, `GetMapRectOnMap`,
 implementation is bundled. These sources predate the reported running build;
 offline tests do not certify the actual client's rendering or secure execution.
 
-**Fully restart WoW after this update** to discover the new map module. In-game
-checks: verify the artwork on world/continent/zone maps, tooltip names and counts,
-navigation, the native marker toggle and zoom sizing, and cold-cache behavior.
+Use `/reload` after this native-overlay removal. In-game
+checks: verify the Map tab's world/continent/zone artwork, tooltip names and counts,
+navigation, internal marker toggle, and cold-cache behavior.
 Change zones and compare with the guild roster. Log a character out and confirm
 their count disappears. Test profile locking and guild leave/change; all markers
 must clear. Check normal and small UI scales, and coexistence with other map
-addons. Custom native-map overlays and the filter popup are hidden in gamepad
-mode to avoid interacting with that map's protected controls; the addon Map tab
-remains separate. Live gamepad behavior is unverified. No automated gameplay is
-performed.
+addons. Opening WoW's native world map must show no Horde Eternal markers or
+filter button. No automated gameplay is performed.
 
 ## Crafting
 
 The Crafting tab opens on a profession directory. Select a profession or filter
-recipes globally. Recipe pages include icons, item effects, available material
+recipes globally. Recipe rows include icons, item effects, available material
 data, and cached guild crafters. Hovering a recipe also opens its native tooltip.
-The arrow controls make every result reachable, including catalogues larger than
-100 recipes. The window scales down to fit smaller game viewports.
+Recipes with no known guild crafter use gray text and desaturated icons while
+remaining clickable. Normal styling returns when any guild crafter is known,
+including offline crafters; this does not change ownership or the usability filter.
+Recipes with known guild crafters appear first, then unknown recipes, with
+alphabetical ordering inside each group. The full filtered list is scrollable by
+mouse wheel or native scrollbar instead of page arrows. A bounded recycled row
+pool renders only the visible area; scrolling does not rebuild the catalogue or
+change the selected recipe's details. The window scales down for smaller viewports.
+
+Opening a profession shows its **guild-known / total catalogued recipes** in the
+main header. These are the full profession totals, independent of search and
+usability filters; the list footer separately shows the visible filtered range.
 
 The profession directory groups matching profession names across built-in,
 Forever client, library, and cached skill-line IDs. Each group has one row and
@@ -296,7 +308,7 @@ The **Hide unusable** checkbox in the top crafting toolbar hides confirmed unmet
 item-use requirements for the logged-in character, including minimum level,
 required professions such as Engineering, and equipment proficiency. It is not a
 filter for the profession that makes the item. Filtering happens before search
-result counts and pagination; the profession directory and guild coverage totals
+result counts and scrolling; the profession directory and guild coverage totals
 remain unfiltered. The account-wide checkbox preference persists, but eligibility
 is always re-evaluated for the current character, never copied from a guildmate.
 
@@ -347,10 +359,14 @@ required. Existing lost recipes cannot be invented and must be observed again.
 ## Full Recipe Catalogue
 
 Horde Eternal bundles [LibProfessionDB](https://www.curseforge.com/wow/addons/libprofessiondb)
-v1.9.1, LibStub, and the complete Forever core/locale data listed by that release.
+v1.10.0, LibStub, and the complete Forever core/locale data listed by that release.
 No separate ProfessionDB, Ace3, or VersionCheck installation is required. The
 standalone addon's version-check bootstrap is not included. Restart WoW after
 installing this update so the changed manifest and embedded files are loaded.
+The bundled snapshot declares 2,517 recipes from live build `1.60.1.70938`,
+including Herbalism's Incense Candle, Greenhouse, and Seed Hybridizer and Skinning's
+Camp Chair, Field Guide, and Trapper's Workbench. Catalogue entries do not establish
+which guild members have learned those recipes.
 
 If the coverage tooltip reports a missing library lookup or an unregistered
 LibProfessionDB instance, run `/hordeeternal library`. This read-only diagnostic
@@ -393,14 +409,14 @@ and review its API, license, and client-build coverage. Calculate its SHA-256
 with `Get-FileHash -Algorithm SHA256`. A hash pins the bytes you reviewed; it does
 not independently prove that a download is trustworthy.
 
-Run from the repository root. These values reproduce the current v1.9.1 release;
+Run from the repository root. These values reproduce the current v1.10.0 release;
 replace the archive path, hash, and release URL together for a newer release:
 
 ```powershell
 $release = @{
   ArchivePath = 'C:\Downloads\ProfessionDB.zip'
-  ExpectedSha256 = '909CB41720CF6BF6920F1C25C644F89B39AD63087F589C07737E7DA943C52379'
-  SourceUrl = 'https://www.curseforge.com/wow/addons/libprofessiondb/files/9095167'
+  ExpectedSha256 = 'F146D5D82347033EC381F42150BFA4D4379149E41D9EFE5C0D4FF291A64C3639'
+  SourceUrl = 'https://www.curseforge.com/wow/addons/libprofessiondb/files/9619259'
   Update = $true
 }
 .\tools\Import-ProfessionDB.ps1 @release -CheckOnly
@@ -449,7 +465,8 @@ The updater regression uses a synthetic release and temporary addon copies to
 test preview, replacement, rollback, backups, local-edit protection, obsolete
 file removal, and unrelated-file preservation. It never changes the real
 bundle. VS Code also provides the **Validate library updater** test task in
-[tasks.json](../.vscode/tasks.json); it uses the cached v1.9.1 archive when no
+[tasks.json](../.vscode/tasks.json); its synthetic updater regression deliberately
+uses the historical cached v1.9.1 archive when no
 archive path is supplied. Run the existing Lua crafting/guild suites before
 shipping. Do not hand-edit generated recipe files or mix game versions.
 
@@ -469,8 +486,9 @@ queued profiles.
 Same-generation caches from the previous per-character format migrate when that
 character next logs in. Existing newer cached profiles take precedence. Old
 generations cannot repopulate reset guild caches or old local learned claims;
-affected characters must rescan. Network profiles with an older nonzero source
-timestamp cannot replace newer data in the same generation. The library snapshot
+affected characters must rescan. Revisioned network profiles are ordered by owner
+revision, not timestamp; legacy profiles cannot replace them. Legacy-only records
+still reject older nonzero source timestamps in the same generation. The library snapshot
 is unchanged. Data sharing is within the same WoW SavedVariables account/profile,
 not across unrelated accounts or game installations.
 
@@ -493,6 +511,91 @@ it is never merged into another guild's cache. Whisper
 actions recheck membership and online status even if an old recipe selection
 remains open. Presence uses the guarded ninth `GetGuildRosterInfo` return, as
 observed in the Forever Olympus roster reference; verify on the running client.
+
+## Recipe Synchronization Reliability
+
+New complete readable scans issue persistent per-character revisions and canonical
+content fingerprints. Unchanged scans keep their revision; changed recipes and
+explicit withdrawals advance it even when timestamps move backwards. Fingerprints
+detect corruption, not author identity. The bundled recipe library is unchanged.
+Identical complete rescans retain the queued profile identity and coalesce repeat
+publication, so frequent profession-list events cannot cancel chunks already in
+flight or indefinitely postpone inventory announcements. Changed or unavailable
+scans still invalidate queued claims.
+
+Upgraded clients exchange bounded inventories and request missing/newer complete
+snapshots through additional `I`, `W`, and `R` messages on `HERC2`. Verified snapshots
+retain their original character, generation, revision, fingerprint, and source time
+when relayed by a guild peer. Empty snapshots retain withdrawals so old caches cannot
+restore the removed recipes. Legacy direct-owner `P` messages remain supported but
+cannot overwrite a revisioned record and are never relayed as revisioned claims.
+
+Inventory reconciliation starts shortly after login/publication and repeats about
+every three minutes. Large inventories use at most eight packets per batch, with
+queue capacity reserved for other work and unfinished batches continued after
+fifteen seconds. At most eight owner requests run at once. Recovery makes at most
+three attempts, allowing up to five minutes for each transfer and rotating among
+up to three retaining providers, then pauses before another reconciliation round.
+There is no guaranteed delivery or server-side archive.
+
+Transfers validate guild membership, generation, requested owner/provider, revision,
+count, canonical encoding, and fingerprint before replacing any profile. Assemblies,
+cache size, request history, and queued work are bounded. Recipe sharing opt-out
+stops inventory/request relay. A verified departure removes profiles and cancels
+requests/queued snapshots; an incomplete roster still preserves offline members.
+Diagnostics include aggregate pending/applied/retry/failure counters, without names.
+
+If an owner restores an older backup, a retained peer can supply the newer revision.
+Only a fresh readable scan may issue a revision above it; unavailable recipe APIs
+must not turn restored data into a fresh ownership claim. All upgraded clients need
+this version for inventory recovery; older clients still use direct broadcasts.
+
+### Detecting Profession Removal
+
+Only the character running the addon can observe their current profession state.
+The current scan path withdraws a cached recipe on explicit readable unlearning,
+including `C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) == false` for previously
+cached recipes. Missing/restricted/nil returns and empty loading windows do not mean
+unlearning. That API is declared in pinned build `1.60.1.70425`; its live behavior on
+build `70938` is not yet verified. Skill/profession events trigger guarded rescans,
+but event arrival alone is not proof that anything was removed. A character who
+does not run the addon after changing professions leaves peers with a last report.
+
+Members may have at most **two primary professions**. Profile validation counts
+distinct known primary professions per character, excluding First Aid, Fishing,
+and Cooking and deduplicating base/Forever aliases. Gathering professions count
+toward the limit; unknown skill lines and test professions are not treated as
+additional primaries. Do not combine the entire guild or all account alts into one
+character's count. A local profile above the limit now flags a conflict and pauses
+publication; incoming profiles above the limit are rejected without replacing the
+last valid data. The count detects a conflict, not which profession was removed.
+
+Three or more recorded primaries now open an owner-only correction dialog asking
+which profession was unlearned. This does not block the member's Guild/Map access;
+only publication of the conflicting recipe profile pauses. The owner selects a
+recorded primary and explicitly confirms removing its cached learned recipes.
+**Later**, closing the dialog, or losing guild access leaves the records unchanged.
+Neither selection nor confirmation performs an in-game profession-unlearn action.
+
+Confirmation requires a current readable scan and verified guild roster; stale
+dialog selections cannot change a newer profile. It issues a newer owner revision,
+preserves the other professions and secondary skills, and resumes sharing once
+the cached primary set is valid. Repeated historical swaps may require confirming
+more than one old record. A persisted withdrawal prevents stale recipe windows
+from restoring the removed profession.
+
+Open the dialog again with `/hordeeternal professions`. **Previously removed**
+offers explicit owner confirmation of relearning or recovery from a mistaken
+withdrawal, followed by a guarded rescan and the same two-primary validation.
+If current recipe APIs are unavailable, the withdrawal is retained rather than
+silently restoring old ownership. Other guild members cannot use this dialog to
+change someone else's profile. The dialog obeys guild-only visibility.
+
+Live checks: compare a newly learned recipe on two upgraded clients, log the owner
+out and recover via a third client, confirm already-known profession removal only
+when safe, and compare a verified departure against offline-member preservation.
+Enable Detailed diagnostics before reproducing dropped transfers; no offline suite
+certifies the actual client's API behavior, roster completeness, or delivery.
 
 ## Application Administrator
 
@@ -757,13 +860,13 @@ needed. It marks the addon-declared main and does not set an actual raid target
 marker or imply a guild rank. Restart WoW after first adding the new
 texture and verify both marks at normal/small UI scales.
 
-- Library API inspected: [LibProfessionDB v1.9.1](https://www.curseforge.com/wow/addons/libprofessiondb/files/9095167),
-  LibStub major `LibProfessionDB-1.0`, minor 13. The release is MIT-licensed;
+- Library API inspected: [LibProfessionDB v1.10.0](https://www.curseforge.com/wow/addons/libprofessiondb/files/9619259),
+  LibStub major `LibProfessionDB-1.0`, minor 14. The release is MIT-licensed;
   its [license notice](libs/LibProfessionDB-1.0/LICENSE) is retained. The import
-  records 150 byte-verified upstream files, including 149 Lua scripts.
-- That release advertises 2,511 Forever recipes from build `1.60.1.69977`.
-  This is an older snapshot than the user's reported client `1.60.1.70450`,
-  interface `16001`, project ID `18`. A catalogue count is not proof that every
+  records 177 byte-verified upstream files, including 176 Lua scripts.
+- That release declares 2,517 Forever recipes from build `1.60.1.70938`, matching
+  the user's reported launch build, interface `16001`, project ID `18`.
+  A matching data build or catalogue count is not proof that every
   entry is currently obtainable. Borrowed Vanilla availability flags are shown
   as unconfirmed rather than silently hiding those recipes.
 - Read-only integration uses `GetGameVersion`, `GetMeta`, `IsReady`, `Count`,
@@ -788,7 +891,8 @@ Actual library initialization and the full catalogue still need an in-game
 check; mocked API tests do not prove that the embedded data loads in WoW.
 
 [The offline suite](../tests/crafting_spec.lua) exercises optional library loading,
-pagination, unique coverage counts, restricted data, draft preservation,
+legacy paged-query compatibility, full scrolling queries, known-first ordering,
+profession coverage, unique coverage counts, restricted data, draft preservation,
 profession navigation, item-load refresh, Rescan, tab fallbacks, viewport fitting,
 and guild transport. It has been run with MoonSharp 2.0.0 and mocked WoW APIs;
 this does not certify actual WoW rendering or secure-execution behavior.
@@ -815,12 +919,14 @@ background-capable clients, explicit profession unlearning, and reload retention
 [Map regression tests](../tests/map_spec.lua) cover online-only guild-zone
 aggregation, profile/roster gates, restricted map data, ambiguous zone names,
 continent totals, native tile order and edge cropping, map navigation, pin
-tooltips, native overlays, zoom correction, and bounded roster requests.
+tooltips, internal marker toggles, bounded roster requests, and absence of native
+world-map overlays or hooks.
 
 [Member regression tests](../tests/members_spec.lua) cover main replacement,
 alt association, default-main statistics, Discord clearing, guarded talent-group
 counts, staged/unknown/tied/zero talents, member message reassembly, revision
-ordering, guild scopes, profile editing, drafts, and directory paging/filtering.
+ordering, guild scopes, profile editing, drafts, pooled directory scrolling/filtering,
+scrollbar/wheel input, roster-shrink clamping, and cached-only row rendering.
 The mocked Canvas suite also loads the real Guild view to check tab isolation.
 
 Guild-tab client checks still required: save a main and Discord server nickname, log into
@@ -838,9 +944,11 @@ need confirmation on the running Forever build. The pinned UI source alone does
 not certify them. In-game checks still required:
 
 1. With standalone ProfessionDB disabled, restart WoW and open Crafting. Confirm
-  `/hordeeternal library` reports a ready library and the pinned snapshot's 2,511
+  `/hordeeternal library` reports a ready library and the pinned snapshot's 2,517
   recipes. Check the source label and repeat with a standalone copy if used.
-2. Browse several professions, search globally, and page through a large list.
+2. Browse Herbalism and Skinning camp recipes, search globally, and scroll through
+  a large recipe list. Verify each gathering profession's catalogue includes
+  three recipes without fabricating learned guild ownership.
 3. Check images, item effects, long names, and material names with a cold cache.
 4. Hover and click Rescan; confirm the tooltip and successful guild publication.
   Open Enchanting, then Alchemy (or another pair) without clicking Rescan. Verify

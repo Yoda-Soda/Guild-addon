@@ -9,15 +9,15 @@ local lib = LibStub and LibStub("LibProfessionDB-1.0", true)
 if not lib then return end
 
 lib:LoadRecipeScrollPrefixes({
-[129]="Manuale: ",
+[129]="Manual: ",
 [164]="Plans: ",
-[165]="Modello: ",
-[171]="Ricetta: ",
+[165]="Pattern: ",
+[171]="Recipe: ",
 [182]="Blueprint: ",
-[185]="Ricetta: ",
+[185]="Recipe: ",
 [186]="Blueprint: ",
-[197]="Modello: ",
-[202]="Schema: ",
+[197]="Pattern: ",
+[202]="Schematic: ",
 [333]="Formula: ",
 [356]="Blueprint: ",
 [393]="Blueprint: ",
@@ -28,16 +28,16 @@ lib:LoadRecipeScrollPrefixes({
 -- descriptors. Shipped so a consumer can see the sample size and draw its
 -- own header if it would rather -- the builder does not decide that here.
 lib:LoadRecipeScrollPrefixSamples({
-[129]=4,
-[164]=174,
-[165]=167,
-[171]=54,
+[129]=13,
+[164]=365,
+[165]=460,
+[171]=117,
 [182]=2,
-[185]=73,
+[185]=111,
 [186]=2,
-[197]=151,
-[202]=74,
-[333]=90,
+[197]=347,
+[202]=163,
+[333]=156,
 [356]=2,
 [393]=2,
 })

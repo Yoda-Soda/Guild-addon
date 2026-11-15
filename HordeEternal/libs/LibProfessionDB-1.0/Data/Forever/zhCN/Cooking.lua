@@ -404,6 +404,6 @@ lib:LoadNames(185, {
 			["name"] = "普通的苍牙野猪",
 		},
 		[1319313] = {
-			["name"] = "Plated Armorfish",
+			["name"] = "板鳞鱼",
 		},
 	})

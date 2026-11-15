@@ -8,295 +8,295 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(185, {
 		[2538] = {
-			["name"] = "Carne di Lupo in Crosta",
+			["name"] = "Charred Wolf Meat",
 		},
 		[2539] = {
-			["name"] = "Carne di Lupo Speziata",
+			["name"] = "Spiced Wolf Meat",
 		},
 		[2540] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Roasted Boar Meat",
 		},
 		[2541] = {
-			["name"] = "Bistecca di Coyote",
+			["name"] = "Coyote Steak",
 		},
 		[2542] = {
-			["name"] = "Pasticcio di Fegato di Cinghiospino",
+			["name"] = "Goretusk Liver Pie",
 		},
 		[2543] = {
-			["name"] = "Stufato delle Marche Occidentali",
+			["name"] = "Westfall Stew",
 		},
 		[2544] = {
-			["name"] = "Torta di Granchio",
+			["name"] = "Crab Cake",
 		},
 		[2545] = {
-			["name"] = "Chela Cotta di Crostaceo",
+			["name"] = "Cooked Crab Claw",
 		},
 		[2546] = {
-			["name"] = "Costolette di Cinghiale Glassate",
+			["name"] = "Dry Pork Ribs",
 		},
 		[2547] = {
-			["name"] = "Gulasch alla Crestarossa",
+			["name"] = "Redridge Goulash",
 		},
 		[2548] = {
-			["name"] = "Costolette di Cinghiale Succulente",
+			["name"] = "Succulent Pork Ribs",
 		},
 		[2549] = {
-			["name"] = "Kebab Speziato di Lupo",
+			["name"] = "Seasoned Wolf Kabob",
 		},
 		[2795] = {
-			["name"] = "Costolette di Cinghiale alla Birra",
+			["name"] = "Beer Basted Boar Ribs",
 		},
 		[3370] = {
-			["name"] = "Bistecca di Crocolisco",
+			["name"] = "Crocolisk Steak",
 		},
 		[3371] = {
-			["name"] = "Sanguinaccio d'Orso",
+			["name"] = "Blood Sausage",
 		},
 		[3372] = {
-			["name"] = "Zuppa di Pinne di Murloc",
+			["name"] = "Murloc Fin Soup",
 		},
 		[3373] = {
-			["name"] = "Gumbo di Crocolisco",
+			["name"] = "Crocolisk Gumbo",
 		},
 		[3376] = {
-			["name"] = "Omelette Stranamente Saporita",
+			["name"] = "Curiously Tasty Omelet",
 		},
 		[3377] = {
-			["name"] = "Torta Viscosa di Ragno",
+			["name"] = "Gooey Spider Cake",
 		},
 		[3397] = {
-			["name"] = "Bistecca d'Orso Adulto",
+			["name"] = "Big Bear Steak",
 		},
 		[3398] = {
-			["name"] = "Bocconcini Piccanti di Leone",
+			["name"] = "Hot Lion Chops",
 		},
 		[3399] = {
-			["name"] = "Bistecca Saporita di Leone",
+			["name"] = "Tasty Lion Steak",
 		},
 		[3400] = {
-			["name"] = "Zuppa Cremosa di Tartaruga",
+			["name"] = "Soothing Turtle Bisque",
 		},
 		[3413] = {
-			["name"] = "Cucina",
+			["name"] = "Cooking",
 		},
 		[4094] = {
-			["name"] = "Ala di Condor alla Griglia",
+			["name"] = "Barbecued Buzzard Wing",
 		},
 		[6412] = {
-			["name"] = "Spiedino di Ragno alla Kaldorei",
+			["name"] = "Kaldorei Spider Kabob",
 		},
 		[6413] = {
-			["name"] = "Sformato di Scorpione",
+			["name"] = "Scorpid Surprise",
 		},
 		[6414] = {
-			["name"] = "Carne di Kodo Arrosto",
+			["name"] = "Roasted Kodo Meat",
 		},
 		[6415] = {
-			["name"] = "Filetto di Piranha",
+			["name"] = "Fillet of Frenzy",
 		},
 		[6416] = {
-			["name"] = "Stufato di Zampalunga",
+			["name"] = "Strider Stew",
 		},
 		[6417] = {
-			["name"] = "Stufato di Ratto di Fossa",
+			["name"] = "Dig Rat Stew",
 		},
 		[6418] = {
-			["name"] = "Coda Croccante di Sauro",
+			["name"] = "Crispy Lizard Tail",
 		},
 		[6419] = {
-			["name"] = "Tagliata di Cervo",
+			["name"] = "Lean Venison",
 		},
 		[6499] = {
-			["name"] = "Bivalve Bollito",
+			["name"] = "Boiled Clams",
 		},
 		[6500] = {
-			["name"] = "Bivalve Piccante alla Goblin",
+			["name"] = "Goblin Deviled Clams",
 		},
 		[6501] = {
-			["name"] = "Guazzetto di Bivalve",
+			["name"] = "Clam Chowder",
 		},
 		[7213] = {
-			["name"] = "Capesante Piccanti",
+			["name"] = "Giant Clam Scorcho",
 		},
 		[7751] = {
-			["name"] = "Pesciolino Brillante al Vapore",
+			["name"] = "Brilliant Smallfish",
 		},
 		[7752] = {
-			["name"] = "Sgombro Squamalesta Marinato",
+			["name"] = "Slitherskin Mackerel",
 		},
 		[7753] = {
-			["name"] = "Barracuda di Palude Ripieno",
+			["name"] = "Longjaw Mud Snapper",
 		},
 		[7754] = {
-			["name"] = "Zuppa di Piranha del Loch",
+			["name"] = "Loch Frenzy Delight",
 		},
 		[7755] = {
-			["name"] = "Pescegatto Irsuto alla Pizzaiola",
+			["name"] = "Bristle Whisker Catfish",
 		},
 		[7827] = {
-			["name"] = "Alborella Iridata in Carpione",
+			["name"] = "Rainbow Fin Albacore",
 		},
 		[7828] = {
-			["name"] = "Merluzzo Squamadura al Sale",
+			["name"] = "Rockscale Cod",
 		},
 		[8238] = {
-			["name"] = "Pesce Mutante all'Acquapazza",
+			["name"] = "Savory Deviate Delight",
 		},
 		[8604] = {
-			["name"] = "Uovo Strapazzato alle Erbe",
+			["name"] = "Herb Baked Egg",
 		},
 		[8607] = {
-			["name"] = "Carne d'Orso Affumicata",
+			["name"] = "Smoked Bear Meat",
 		},
 		[9513] = {
-			["name"] = "Tè di Sboccialesto",
+			["name"] = "Thistle Tea",
 		},
 		[13028] = {
-			["name"] = "Tè di Spinoaureo",
+			["name"] = "Goldthorn Tea",
 		},
 		[15853] = {
-			["name"] = "Controfiletto di Lupo",
+			["name"] = "Lean Wolf Steak",
 		},
 		[15855] = {
-			["name"] = "Raptor Arrosto",
+			["name"] = "Roast Raptor",
 		},
 		[15856] = {
-			["name"] = "Costolette di Lupo Piccanti",
+			["name"] = "Hot Wolf Ribs",
 		},
 		[15861] = {
-			["name"] = "Stufato della Giungla",
+			["name"] = "Jungle Stew",
 		},
 		[15863] = {
-			["name"] = "Salame di Carogna",
+			["name"] = "Carrion Surprise",
 		},
 		[15865] = {
-			["name"] = "Stufato Misterioso",
+			["name"] = "Mystery Stew",
 		},
 		[15906] = {
-			["name"] = "Chili alla Ruttafuoco",
+			["name"] = "Dragonbreath Chili",
 		},
 		[15910] = {
-			["name"] = "Stufato Denso di Kodo",
+			["name"] = "Heavy Kodo Stew",
 		},
 		[15915] = {
-			["name"] = "Granchio Piccante al Chili",
+			["name"] = "Spiced Chili Crab",
 		},
 		[15933] = {
-			["name"] = "Omelette Mostruosa",
+			["name"] = "Monster Omelet",
 		},
 		[15935] = {
-			["name"] = "Ala Croccante di Pipistrello",
+			["name"] = "Crispy Bat Wing",
 		},
 		[18238] = {
-			["name"] = "Pinnagialla Maculato al Vapore",
+			["name"] = "Spotted Yellowtail",
 		},
 		[18239] = {
-			["name"] = "Pescetoro Lucente Lessato",
+			["name"] = "Cooked Glossy Mightfish",
 		},
 		[18240] = {
-			["name"] = "Calamaro alla Griglia",
+			["name"] = "Grilled Squid",
 		},
 		[18241] = {
-			["name"] = "Filetto di Branchiarossa",
+			["name"] = "Filet of Redgill",
 		},
 		[18242] = {
-			["name"] = "Branzino Piccante Affumicato",
+			["name"] = "Hot Smoked Bass",
 		},
 		[18243] = {
-			["name"] = "Zuppa di Pinnanera",
+			["name"] = "Nightfin Soup",
 		},
 		[18244] = {
-			["name"] = "Salmone Scagliagialla al Cartoccio",
+			["name"] = "Poached Sunscale Salmon",
 		},
 		[18245] = {
-			["name"] = "Stufato d'Aragosta",
+			["name"] = "Lobster Stew",
 		},
 		[18246] = {
-			["name"] = "Trancio di Pescetoro",
+			["name"] = "Mightfish Steak",
 		},
 		[18247] = {
-			["name"] = "Salmone Impanato",
+			["name"] = "Baked Salmon",
 		},
 		[20626] = {
-			["name"] = "Guazzetto di Bivalve Piccante",
+			["name"] = "Undermine Clam Chowder",
 		},
 		[20916] = {
 			["name"] = "Mithril Headed Trout",
 		},
 		[21143] = {
-			["name"] = "Pan di Zenzero",
+			["name"] = "Gingerbread Cookie",
 		},
 		[21144] = {
-			["name"] = "Zabaione",
+			["name"] = "Egg Nog",
 		},
 		[21175] = {
-			["name"] = "Salsicce di Ragno",
+			["name"] = "Spider Sausage",
 		},
 		[22480] = {
-			["name"] = "Filetto di Lupo",
+			["name"] = "Tender Wolf Steak",
 		},
 		[22761] = {
-			["name"] = "Sformato di Tubero Runn Tum",
+			["name"] = "Runn Tum Tuber Surprise",
 		},
 		[24418] = {
-			["name"] = "Stufato Denso di Crocolisco",
+			["name"] = "Heavy Crocolisk Stew",
 		},
 		[24801] = {
-			["name"] = "Gnocchi di Verme Affumicati",
+			["name"] = "Smoked Desert Dumplings",
 		},
 		[25659] = {
-			["name"] = "Braciole Caustiche alla Dirge",
+			["name"] = "Dirge's Kickin' Chimaerok Chops",
 		},
 		[25704] = {
-			["name"] = "Pescesalvia Affumicato",
+			["name"] = "Smoked Sagefish",
 		},
 		[25954] = {
-			["name"] = "Pescesalvia all'Isolana",
+			["name"] = "Sagefish Delight",
 		},
 		[470359] = {
-			["name"] = "Stufato d'Aragosta",
+			["name"] = "Darkclaw Bisque",
 		},
 		[470370] = {
-			["name"] = "Filetto di Branchiarossa",
+			["name"] = "Smoked Redgill",
 		},
 		[1225758] = {
-			["name"] = "Braciole Caustiche alla Dirge",
+			["name"] = "Prowler Steak",
 		},
 		[1225759] = {
-			["name"] = "Braciole Caustiche alla Dirge",
+			["name"] = "Filet o' Flank",
 		},
 		[1225760] = {
-			["name"] = "Braciole Caustiche alla Dirge",
+			["name"] = "Sunrise Omelette",
 		},
 		[1225762] = {
-			["name"] = "Braciole Caustiche alla Dirge",
+			["name"] = "Specklefin Feast",
 		},
 		[1225763] = {
-			["name"] = "Braciole Caustiche alla Dirge",
+			["name"] = "Grand Lobster Banquet",
 		},
 		[1229737] = {
 			["name"] = "Basic Campfire",
 		},
 		[1247741] = {
-			["name"] = "Barracuda di Palude Ripieno",
+			["name"] = "Spinefin Halibut",
 		},
 		[1249957] = {
-			["name"] = "Carne di Lupo in Crosta",
+			["name"] = "Peace Tea",
 		},
 		[1249958] = {
-			["name"] = "Carne di Lupo in Crosta",
+			["name"] = "Royal Tea",
 		},
 		[1249959] = {
-			["name"] = "Carne di Lupo in Crosta",
+			["name"] = "Root Tea",
 		},
 		[1249960] = {
-			["name"] = "Carne di Lupo in Crosta",
+			["name"] = "Triage Tea",
 		},
 		[1249961] = {
-			["name"] = "Carne di Lupo in Crosta",
+			["name"] = "Sunny Tea",
 		},
 		[1249962] = {
-			["name"] = "Carne di Lupo in Crosta",
+			["name"] = "Sage's Tea",
 		},
 		[1249963] = {
 			["name"] = "Venomous Smoothie",
@@ -317,61 +317,61 @@ lib:LoadNames(185, {
 			["name"] = "Wicked Smoothie",
 		},
 		[1250142] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Savory Stag Sliders",
 		},
 		[1250143] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Soaring Pamplona",
 		},
 		[1250144] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Bat Hachee",
 		},
 		[1250145] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Savory Turtle Stew",
 		},
 		[1250146] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Flank au Poivre",
 		},
 		[1250147] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Bear Bruscitti",
 		},
 		[1250148] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Steaming Stag Steak",
 		},
 		[1250149] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Swiftstrike Steak",
 		},
 		[1250150] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Raging Raptor Ribs",
 		},
 		[1250151] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Bear Brisket",
 		},
 		[1250152] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Prehistoric Pulled Raptor",
 		},
 		[1250153] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Raptor Rouladen",
 		},
 		[1250154] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Twice-Spiced Raptor Slice",
 		},
 		[1250155] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Giant Scrambled Eggs",
 		},
 		[1250156] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Tasty Raptor Bites",
 		},
 		[1250157] = {
 			["name"] = "Breakfast Omelette",
 		},
 		[1250158] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Clam Linguine",
 		},
 		[1252566] = {
-			["name"] = "Pesce Mutante all'Acquapazza",
+			["name"] = "Savory Whimsyfin Delight",
 		},
 		[1255241] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "Cleansing Stew",
 		},
 		[1262978] = {
 			["name"] = "Cookie's Feast",
@@ -380,13 +380,13 @@ lib:LoadNames(185, {
 			["name"] = "Iron Oven",
 		},
 		[1270632] = {
-			["name"] = "Stufato delle Marche Occidentali",
+			["name"] = "Critter Cookie",
 		},
 		[1270633] = {
-			["name"] = "Stufato delle Marche Occidentali",
+			["name"] = "Skywall Souffle",
 		},
 		[1270635] = {
-			["name"] = "Stufato delle Marche Occidentali",
+			["name"] = "Pincer Bites",
 		},
 		[1283400] = {
 			["name"] = "Journeyman Campfire",

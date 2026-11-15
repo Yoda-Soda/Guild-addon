@@ -599,13 +599,13 @@ lib:LoadNames(202, {
 			["name"] = "Sandpaper",
 		},
 		[1253004] = {
-			["name"] = "Sludge Suppressor",
+			["name"] = "",
 		},
 		[1253005] = {
-			["name"] = "Enormous Tranquilizer Dart",
+			["name"] = "",
 		},
 		[1253006] = {
-			["name"] = "G.R.R.-Nade",
+			["name"] = "",
 		},
 		[1263034] = {
 			["name"] = "Repair Bot",

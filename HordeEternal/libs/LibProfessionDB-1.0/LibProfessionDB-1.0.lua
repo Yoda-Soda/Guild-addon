@@ -33,6 +33,10 @@
 -- positives here rather than re-declaring the whole Lua stdlib per workspace.
 ---@diagnostic disable: undefined-global
 
+-- MINOR 14 (2026-11-14): vendor prices and factions (LoadVendorCosts /
+-- LoadSourceFactions / GetVendorCost / GetSourceFaction); GetRecipeSources'
+-- vendor entries carry `faction` and `cost`. Forever's Merchant's Favor recipe
+-- vendors are the first data to use them.
 -- MINOR 13 (2026-10-04): GetGameVersion answers "Retail" for Interface 100000+,
 -- with a `skillLine` core field and GetSkillLine for Retail's per-expansion
 -- skill lines; borrowed-value flags (LoadBorrowed / IsBorrowed / GetBorrowed). A flavour with no source of its own for a value (WoW Forever has
@@ -41,7 +45,7 @@
 -- can answer "Forever" (Interface 16001) or "Unknown" (any other client no Data
 -- tree ships for), LoadSources counts true
 -- totals across a merge. A behaviour change a same-MINOR copy must not shadow.
-local MAJOR, MINOR = "LibProfessionDB-1.0", 13
+local MAJOR, MINOR = "LibProfessionDB-1.0", 14
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end   -- a same-or-newer version is already loaded
 
@@ -149,6 +153,13 @@ lib.acquireMethods       = lib.acquireMethods       or {}
 -- an English string — decide that deliberately.
 lib.sources              = lib.sources              or {}
 lib.sourceNames          = lib.sourceNames          or {}
+
+-- What a vendor charges for a recipe (MINOR 14). [craftSpellID] = { [npcID] =
+-- { {c = currencyID | i = itemID | g = copper, n = amount}, ... } }. Only
+-- where it was SEEN: today, Forever's own vendors from a TOGTools capture.
+-- [npcID] = "Alliance" | "Horde" for a vendor only one faction can use.
+lib.vendorCosts          = lib.vendorCosts          or {}
+lib.sourceFactions       = lib.sourceFactions       or {}
 
 -- Borrowed values (MINOR 13). [craftSpellID] = { [field] = "Vanilla" }: the value
 -- this client was given for `field` is NOT its own -- it is the named flavour's
@@ -500,6 +511,32 @@ function lib:LoadSourceNames(t)
     end
 end
 
+-- Vendor prices: { [craftSpellIDStr] = { [npcIDStr] = { {c=3402,n=120}, ... } } }.
+-- A later file replaces a (spell, npc) pair's price; other pairs are kept.
+function lib:LoadVendorCosts(t)
+    if type(t) ~= "table" then return end
+    for spellStr, byNpc in pairs(t) do
+        local spellID = tonumber(spellStr)
+        if spellID and type(byNpc) == "table" then
+            local slot = self.vendorCosts[spellID]
+            if not slot then slot = {}; self.vendorCosts[spellID] = slot end
+            for npcStr, parts in pairs(byNpc) do
+                local npcID = tonumber(npcStr)
+                if npcID and type(parts) == "table" and #parts > 0 then slot[npcID] = parts end
+            end
+        end
+    end
+end
+
+-- Vendor factions: { [npcIDStr] = "Alliance" | "Horde" }.
+function lib:LoadSourceFactions(t)
+    if type(t) ~= "table" then return end
+    for idStr, faction in pairs(t) do
+        local id = tonumber(idStr)
+        if id and (faction == "Alliance" or faction == "Horde") then self.sourceFactions[id] = faction end
+    end
+end
+
 -- Borrowed-value flags: field, the flavour it came from, and { craftSpellID, ... }.
 -- A second call for the same spell and field overwrites; other fields are kept.
 function lib:LoadBorrowed(field, fromGame, ids)
@@ -563,6 +600,46 @@ end
 --- Every never-implemented recipe spell for this client. The live table -- read-only.
 function lib:GetHiddenRecipes() return self.hiddenRecipes end
 
+-- A stored price as a fresh list of { currencyID = n } | { itemID = n } | { copper = n }
+-- parts, each with `amount` (copper parts carry the amount as `copper`). nil in, nil out.
+local function copyCost(parts)
+    if not parts then return nil end
+    local out = {}
+    for i = 1, #parts do
+        local p = parts[i]
+        if p.c then
+            out[#out + 1] = { currencyID = p.c, amount = p.n }
+        elseif p.i then
+            out[#out + 1] = { itemID = p.i, amount = p.n }
+        elseif p.g then
+            out[#out + 1] = { copper = p.g }
+        end
+    end
+    return out
+end
+
+--- What a vendor charges for a recipe (MINOR 14), or nil when no price was seen.
+---
+--- A fresh list, one part per thing the price asks for -- a recipe can cost a
+--- currency AND gold:
+---
+---     { { currencyID = 3402, amount = 120 } }          -- 120 Merchant's Favor
+---     { { itemID = 2589, amount = 2 }, { copper = 500 } }
+---
+--- Resolve a currency's name and icon with C_CurrencyInfo.GetCurrencyInfo(id) on
+--- the client; it is localized there and is not shipped here. nil is the common
+--- answer: prices are only known where a TOGTools capture saw the vendor.
+--- @return table|nil
+function lib:GetVendorCost(spellID, npcID)
+    local prices = self.vendorCosts[spellID]
+    return copyCost(prices and prices[npcID])
+end
+
+--- "Alliance" or "Horde" for a source only one faction can use (MINOR 14), or nil
+--- when it is open to both or not known.
+--- @return string|nil
+function lib:GetSourceFaction(npcID) return self.sourceFactions[npcID] end
+
 --- Where a recipe can be obtained (MINOR 10), or nil when nothing is known.
 ---
 --- nil is a real answer covering roughly a quarter of recipes, and a caller must
@@ -579,7 +656,9 @@ function lib:GetHiddenRecipes() return self.hiddenRecipes end
 ---
 --- Only kinds that have at least one entry are present, so `next(t)` is never
 --- nil on a non-nil return and `for kind, npcs in pairs(t)` needs no emptiness
---- guard. `name` is nil for an id the name map does not cover; show the kind
+--- guard. Since MINOR 14 an entry may also carry `faction` ("Alliance" /
+--- "Horde", see GetSourceFaction) and, on a vendor, `cost` (see GetVendorCost).
+--- `name` is nil for an id the name map does not cover; show the kind
 --- alone in that case rather than an id. Names are ENGLISH ONLY — see the note
 --- on lib.sourceNames.
 ---
@@ -603,8 +682,12 @@ function lib:GetRecipeSources(spellID)
         local ids  = raw[kind.key]
         if ids and #ids > 0 then
             local list = {}
+            local prices = kind.key == "v" and self.vendorCosts[spellID] or nil
             for j = 1, #ids do
-                list[j] = { id = ids[j], name = self.sourceNames[ids[j]] }
+                local npcID = ids[j]
+                list[j] = { id = npcID, name = self.sourceNames[npcID],
+                            faction = self.sourceFactions[npcID],
+                            cost = prices and copyCost(prices[npcID]) or nil }
             end
             -- `<key>n` is present only when the shipped list was truncated.
             list.total = raw[kind.key .. "n"] or #ids

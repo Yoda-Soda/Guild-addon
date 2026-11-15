@@ -174,7 +174,7 @@ local function Tool(parent, texture, title)
     return button
 end
 
-local function DrawPins(parent, pool, markers, width, height, scale, navigate)
+local function DrawPins(parent, pool, markers, width, height, scale, navigate, goParent)
     for _, pin in ipairs(pool) do pin:Hide(); pin.location = nil end
     for index = 1, math.min(100, #markers) do
         local location = markers[index]
@@ -182,6 +182,7 @@ local function DrawPins(parent, pool, markers, width, height, scale, navigate)
         if not pin then
             pin = CreateFrame("Button", nil, parent)
             pin:SetSize(30, 30)
+            pin:RegisterForClicks("LeftButtonUp", "RightButtonUp")
             local rim = pin:CreateTexture(nil, "BACKGROUND")
             rim:SetAllPoints(pin)
             rim:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
@@ -195,7 +196,11 @@ local function DrawPins(parent, pool, markers, width, height, scale, navigate)
             pin.text:SetPoint("CENTER", pin, "CENTER", 0, 0)
             pin:SetScript("OnEnter", function(self) ShowTooltip(self, self.location) end)
             pin:SetScript("OnLeave", HideTooltip)
-            pin:SetScript("OnClick", function(self) if self.location then navigate(self.location.mapID) end end)
+            pin:SetScript("OnClick", function(self, mouseButton)
+                if not addon.Compat.IsReadable(mouseButton) then return end
+                if mouseButton == "RightButton" then goParent()
+                elseif (mouseButton == nil or mouseButton == "LeftButton") and self.location then navigate(self.location.mapID) end
+            end)
             pool[index] = pin
         end
         pin.location = location
@@ -209,15 +214,12 @@ local function DrawPins(parent, pool, markers, width, height, scale, navigate)
     end
 end
 
-local worldPins, hookedMap = {}, nil
 local lastRosterRequest
 
 function Map.Hide()
-    for _, pin in ipairs(worldPins) do pin:Hide(); pin.location = nil end
     if Map.view then
         for _, pin in ipairs(Map.view.pins) do pin:Hide(); pin.location = nil end
     end
-    if Map.nativeFilter then Map.nativeFilter.button:Hide(); Map.nativeFilter.panel:Hide() end
     Map.index = nil
     HideTooltip()
 end
@@ -225,46 +227,10 @@ end
 function Map.SetEnabled(enabled)
     if type(enabled) ~= "boolean" or not addon.db then return end
     addon.db.showGuildMap = enabled
-    if Map.nativeFilter then Map.nativeFilter.check:SetChecked(enabled) end
     if Map.view then
         Map.view.enabled:SetChecked(enabled)
         if Map.view.visible then Map.view.Refresh() end
     end
-    Map.RefreshWorld()
-end
-
-local function CreateNativeFilter()
-    if Map.nativeFilter or not WorldMapFrame then return end
-    local anchor = WorldMapFrame.ScrollContainer or WorldMapFrame
-    local button = Tool(WorldMapFrame, "Interface\\AddOns\\HordeEternal\\media\\HordeEternalEmblem.tga", "Guild map filters")
-    button:SetSize(30, 30)
-    button:SetPoint("BOTTOMLEFT", anchor, "BOTTOMLEFT", 8, 8)
-    local level = addon.Compat.Value(anchor.GetFrameLevel, anchor)
-    if type(level) == "number" then addon.Compat.Call(button.SetFrameLevel, button, level + 50) end
-    local ok, panel = pcall(CreateFrame, "Frame", nil, button, "BackdropTemplate")
-    if not ok or not panel then panel = CreateFrame("Frame", nil, button) end
-    panel:SetSize(218, 70)
-    panel:SetPoint("BOTTOMLEFT", button, "TOPLEFT", 0, 6)
-    local background = panel:CreateTexture(nil, "BACKGROUND")
-    background:SetAllPoints(panel)
-    background:SetColorTexture(0.035, 0.035, 0.03, 0.98)
-    if panel.SetBackdrop then
-        panel:SetBackdrop({ edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 12,
-            insets = { left = 3, right = 3, top = 3, bottom = 3 } })
-    end
-    panel:EnableMouse(true)
-    Label(panel, "Horde Eternal", 12, -12, 194, "GameFontNormalSmall")
-    local check = CreateFrame("CheckButton", nil, panel, "UICheckButtonTemplate")
-    check:SetSize(22, 22)
-    check:SetPoint("TOPLEFT", panel, "TOPLEFT", 8, -34)
-    Label(panel, "Guild characters", 36, -39, 170)
-    check:SetScript("OnClick", function(self) Map.SetEnabled(self:GetChecked() == true) end)
-    button:SetScript("OnClick", function()
-        check:SetChecked(addon.db and addon.db.showGuildMap ~= false)
-        if panel:IsShown() then panel:Hide() else panel:Show() end
-    end)
-    panel:Hide()
-    Map.nativeFilter = { button = button, panel = panel, check = check }
 end
 
 function Map.RequestRoster()
@@ -275,77 +241,8 @@ function Map.RequestRoster()
     addon.Compat.Call(C_GuildInfo and C_GuildInfo.GuildRoster)
 end
 
-function Map.RefreshWorld()
-    for _, pin in ipairs(worldPins) do pin:Hide(); pin.location = nil end
-    local gamepad = addon.Compat.Value(InputUtil and InputUtil.IsGamepadUIEnabled)
-    if Map.nativeFilter then
-        Map.nativeFilter.check:SetChecked(addon.db and addon.db.showGuildMap ~= false)
-        if Allowed() and gamepad ~= true then Map.nativeFilter.button:Show()
-        else Map.nativeFilter.button:Hide(); Map.nativeFilter.panel:Hide() end
-    end
-    if not addon.db or addon.db.showGuildMap == false or not Allowed() or not WorldMapFrame
-        or gamepad == true or addon.Compat.Value(WorldMapFrame.IsShown, WorldMapFrame) ~= true then HideTooltip(); return end
-    local canvas = addon.Compat.Value(WorldMapFrame.GetCanvas, WorldMapFrame)
-    local mapID = addon.Compat.Value(WorldMapFrame.GetMapID, WorldMapFrame)
-    if not canvas or type(mapID) ~= "number" then return end
-    local width, height = addon.Compat.Value(canvas.GetWidth, canvas), addon.Compat.Value(canvas.GetHeight, canvas)
-    if type(width) ~= "number" or type(height) ~= "number" or width <= 0 or height <= 0 then return end
-    local container = WorldMapFrame.ScrollContainer
-    local scale = container and addon.Compat.Value(container.GetCanvasScale, container) or 1
-    if type(scale) ~= "number" or scale <= 0 then return end
-    local index = Map.index or Map.Index()
-    if not index then return end
-    Map.index = index
-    if not index.maps[mapID] then
-        local info = addon.Compat.MapInfo(mapID)
-        if not info then return end
-        index.maps[mapID] = info
-    end
-    DrawPins(canvas, worldPins, Map.Markers(Map.Summary(), mapID, index), width, height, scale, function(id)
-        addon.Compat.Call(C_Map and C_Map.OpenWorldMap, id)
-    end)
-end
-
-local function HookWorldMap()
-    if addon.GuildState and addon.GuildState.IsAllowed and not addon.GuildState.IsAllowed() then
-        Map.Hide()
-        return
-    end
-    CreateNativeFilter()
-    if not WorldMapFrame or hookedMap == WorldMapFrame then return end
-    hookedMap = WorldMapFrame
-    addon.Compat.Call(WorldMapFrame.HookScript, WorldMapFrame, "OnShow", function() Map.RequestRoster(); Map.RefreshWorld() end)
-    addon.Compat.Call(WorldMapFrame.HookScript, WorldMapFrame, "OnHide", function()
-        for _, pin in ipairs(worldPins) do pin:Hide(); pin.location = nil end
-        if Map.nativeFilter then Map.nativeFilter.panel:Hide() end
-        HideTooltip()
-    end)
-    if type(WorldMapFrame.SetMapID) == "function" then
-        addon.Compat.Call(hooksecurefunc, WorldMapFrame, "SetMapID", Map.RefreshWorld)
-    end
-    if type(WorldMapFrame.OnMapChanged) == "function" then
-        addon.Compat.Call(hooksecurefunc, WorldMapFrame, "OnMapChanged", Map.RefreshWorld)
-    end
-    local container = WorldMapFrame.ScrollContainer
-    if container then
-        local elapsed = 0
-        addon.Compat.Call(container.HookScript, container, "OnUpdate", function(_, delta)
-            if not addon.Compat.IsReadable(delta) or type(delta) ~= "number" then return end
-            elapsed = elapsed + delta
-            if elapsed < 0.5 then return end
-            elapsed = 0
-            local scale = addon.Compat.Value(container.GetCanvasScale, container)
-            if scale ~= Map.lastCanvasScale then Map.lastCanvasScale = scale; Map.RefreshWorld() end
-        end)
-        addon.Compat.Call(container.HookScript, container, "OnSizeChanged", Map.RefreshWorld)
-        addon.Compat.Call(container.HookScript, container, "OnMouseWheel", Map.RefreshWorld)
-    end
-end
-
 function Map.Refresh()
     if Map.view and Map.view.visible then Map.view.Refresh() end
-    HookWorldMap()
-    Map.RefreshWorld()
 end
 
 function Map.Start()
@@ -359,7 +256,6 @@ function Map.Start()
         if addon.Compat.IsReadable(event) and event == "ZONE_CHANGED_NEW_AREA" then Map.RequestRoster() end
         Map.Refresh()
     end)
-    HookWorldMap()
 end
 
 function addon.CreateGuildMapView(page, header, subheader)
@@ -434,10 +330,19 @@ function addon.CreateGuildMapView(page, header, subheader)
         view.mapID = mapID
         view.Refresh()
     end
-    back:SetScript("OnClick", function()
+    local function GoParent()
+        if not Allowed() then return end
         local info = addon.Compat.MapInfo(view.mapID)
         if info and info.parentMapID > 0 then Navigate(info.parentMapID) end
-    end)
+    end
+    local function MapMouseUp(_, mouseButton)
+        if addon.Compat.IsReadable(mouseButton) and mouseButton == "RightButton" then GoParent() end
+    end
+    back:SetScript("OnClick", GoParent)
+    viewport:EnableMouse(true)
+    viewport:SetScript("OnMouseUp", MapMouseUp)
+    canvas:EnableMouse(true)
+    canvas:SetScript("OnMouseUp", MapMouseUp)
     world:SetScript("OnClick", function() Navigate(Map.index and Map.index.root) end)
     here:SetScript("OnClick", function()
         local id = addon.Compat.Value(C_Map and C_Map.GetBestMapForUnit, "player")
@@ -449,7 +354,6 @@ function addon.CreateGuildMapView(page, header, subheader)
         Map.RequestRoster()
         addon.GuildState.RefreshRoster()
         view.Refresh()
-        Map.RefreshWorld()
     end)
 
     function view.Refresh()
@@ -501,7 +405,7 @@ function addon.CreateGuildMapView(page, header, subheader)
                 tile:SetTexture(data.fileID)
                 tile:Show()
             end
-            if addon.db.showGuildMap ~= false then DrawPins(canvas, view.pins, markers, width, height, 1, Navigate) end
+            if addon.db.showGuildMap ~= false then DrawPins(canvas, view.pins, markers, width, height, 1, Navigate, GoParent) end
         else
             canvas:Hide()
             unavailable:SetText("Map artwork or readable map data unavailable")

@@ -245,7 +245,7 @@ lib:LoadNames(185, {
 			["name"] = "Geräucherte Wüstenknödel",
 		},
 		[25659] = {
-			["name"] = "Dirges abgefahrene Chimearokkoteletts",
+			["name"] = "Dirges abgefahrene Chimaerokkoteletts",
 		},
 		[25704] = {
 			["name"] = "Geräucherter Weisenfisch",
@@ -404,6 +404,6 @@ lib:LoadNames(185, {
 			["name"] = "Stinknormaler Bleichhauer",
 		},
 		[1319313] = {
-			["name"] = "Plated Armorfish",
+			["name"] = "Panzerfisch",
 		},
 	})

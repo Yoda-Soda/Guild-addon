@@ -890,22 +890,22 @@ lib:LoadNames(197, {
 			["name"] = "Faction Banner",
 		},
 		[1252979] = {
-			["name"] = "Slimeslayer's Adaptive Robes",
+			["name"] = "",
 		},
 		[1252980] = {
-			["name"] = "Slimeslayer's Adaptive Cuffs",
+			["name"] = "",
 		},
 		[1252981] = {
-			["name"] = "Slimeslayer's Adaptive Cord",
+			["name"] = "",
 		},
 		[1252991] = {
-			["name"] = "Slimetender's Adaptive Tunic",
+			["name"] = "",
 		},
 		[1252992] = {
-			["name"] = "Slimetender's Adaptive Bracers",
+			["name"] = "",
 		},
 		[1252993] = {
-			["name"] = "Slimetender's Adaptive Belt",
+			["name"] = "",
 		},
 		[1257013] = {
 			["name"] = "Linen Reagent Bag",

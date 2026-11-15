@@ -404,6 +404,6 @@ lib:LoadNames(185, {
 			["name"] = "Palidente común y corriente",
 		},
 		[1319313] = {
-			["name"] = "Plated Armorfish",
+			["name"] = "Pez coraza de placas",
 		},
 	})

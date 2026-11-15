@@ -44,7 +44,7 @@ lib:LoadNames(165, {
 			["name"] = "Toughened Leather Armor",
 		},
 		[2167] = {
-			["name"] = "Dark Leather Boots",
+			["name"] = "Gray Leather Boots",
 		},
 		[2168] = {
 			["name"] = "Dark Leather Cloak",
@@ -974,40 +974,40 @@ lib:LoadNames(165, {
 			["name"] = "Camp Tent",
 		},
 		[1252982] = {
-			["name"] = "Beastculler's Adaptive Vest",
+			["name"] = "",
 		},
 		[1252983] = {
-			["name"] = "Beastculler's Adaptive Bracers",
+			["name"] = "",
 		},
 		[1252984] = {
-			["name"] = "Beastculler's Adaptive Wrap",
+			["name"] = "",
 		},
 		[1252985] = {
-			["name"] = "Dinodestroyer's Adaptive Chestguard",
+			["name"] = "",
 		},
 		[1252986] = {
-			["name"] = "Dinodestroyer's Adaptive Wrists",
+			["name"] = "",
 		},
 		[1252987] = {
-			["name"] = "Dinodestroyer's Adaptive Belt",
+			["name"] = "",
 		},
 		[1252995] = {
-			["name"] = "Beastmender's Adaptive Robe",
+			["name"] = "",
 		},
 		[1252996] = {
-			["name"] = "Beastmender's Adaptive Wristlinks",
+			["name"] = "",
 		},
 		[1252997] = {
-			["name"] = "Beastmender's Adaptive Girdle",
+			["name"] = "",
 		},
 		[1252998] = {
-			["name"] = "Dinomender's Adaptive Tunic",
+			["name"] = "",
 		},
 		[1252999] = {
-			["name"] = "Dinomender's Adaptive Wrists",
+			["name"] = "",
 		},
 		[1253000] = {
-			["name"] = "Dinomender's Adaptive Chain",
+			["name"] = "",
 		},
 		[1254965] = {
 			["name"] = "Forceful Rugged Armor Kit",
@@ -1058,7 +1058,7 @@ lib:LoadNames(165, {
 			["name"] = "Charged Scorpid Bracers",
 		},
 		[1254981] = {
-			["name"] = "Supple Scorpid Shoulder",
+			["name"] = "Supple Scorpid Shoulders",
 		},
 		[1254982] = {
 			["name"] = "Mender's Mail Belt",
@@ -1085,7 +1085,7 @@ lib:LoadNames(165, {
 			["name"] = "Stalker's Mail Gauntlets",
 		},
 		[1254990] = {
-			["name"] = "Charged Scorpid Shoulder",
+			["name"] = "Charged Scorpid Shoulders",
 		},
 		[1254991] = {
 			["name"] = "Supple Scorpid Bracers",
@@ -1127,16 +1127,16 @@ lib:LoadNames(165, {
 			["name"] = "Stalker's Mail Bracers",
 		},
 		[1255004] = {
-			["name"] = "Mender's Mail Shoulder",
+			["name"] = "Mender's Mail Shoulders",
 		},
 		[1255005] = {
-			["name"] = "Skirmisher's Mail Shoulder",
+			["name"] = "Skirmisher's Mail Shoulders",
 		},
 		[1255006] = {
-			["name"] = "Skycaller's Mail Shoulder",
+			["name"] = "Skycaller's Mail Shoulders",
 		},
 		[1255007] = {
-			["name"] = "Stalker's Mail Shoulder",
+			["name"] = "Stalker's Mail Shoulders",
 		},
 		[1255008] = {
 			["name"] = "Mender's Mail Boots",
@@ -1184,7 +1184,7 @@ lib:LoadNames(165, {
 			["name"] = "Tooled Leather Bracers",
 		},
 		[1255023] = {
-			["name"] = "Wicked Leather Shoulder",
+			["name"] = "Wicked Leather Shoulders",
 		},
 		[1255024] = {
 			["name"] = "Blue Suede Armor",
@@ -1193,7 +1193,7 @@ lib:LoadNames(165, {
 			["name"] = "Tooled Leather Crown",
 		},
 		[1255026] = {
-			["name"] = "Blue Suede Shoulder",
+			["name"] = "Blue Suede Shoulders",
 		},
 		[1255027] = {
 			["name"] = "Tooled Leather Gauntlets",
@@ -1280,19 +1280,19 @@ lib:LoadNames(165, {
 			["name"] = "Prowler's Leather Bracers",
 		},
 		[1255055] = {
-			["name"] = "Mender's Leather Shoulder",
+			["name"] = "Mender's Leather Shoulders",
 		},
 		[1255056] = {
-			["name"] = "Skycaller's Leather Shoulder",
+			["name"] = "Skycaller's Leather Shoulders",
 		},
 		[1255057] = {
-			["name"] = "Warden's Leather Shoulder",
+			["name"] = "Warden's Leather Shoulders",
 		},
 		[1255058] = {
-			["name"] = "Skulker's Leather Shoulder",
+			["name"] = "Skulker's Leather Shoulders",
 		},
 		[1255059] = {
-			["name"] = "Prowler's Leather Shoulder",
+			["name"] = "Prowler's Leather Shoulders",
 		},
 		[1255060] = {
 			["name"] = "Mender's Leather Shoes",
@@ -1625,16 +1625,16 @@ lib:LoadNames(165, {
 			["name"] = "Grimstitch Boots",
 		},
 		[1292969] = {
-			["name"] = "Spiritcaller Kilt",
+			["name"] = "Spiritcaller Leggings",
 		},
 		[1292970] = {
-			["name"] = "Spiritcaller Gloves",
+			["name"] = "Spiritcaller Grips",
 		},
 		[1292971] = {
-			["name"] = "Spiritcaller Mantle",
+			["name"] = "Spiritcaller Spaulders",
 		},
 		[1292972] = {
-			["name"] = "Spiritcaller Boots",
+			["name"] = "Spiritcaller Treads",
 		},
 		[1292973] = {
 			["name"] = "Spiritcaller Pants",
@@ -1685,16 +1685,16 @@ lib:LoadNames(165, {
 			["name"] = "Broodwatcher's Treaders",
 		},
 		[1299914] = {
-			["name"] = "Spiritcaller Leggings",
+			["name"] = "Spiritcaller Kilt",
 		},
 		[1299915] = {
-			["name"] = "Spiritcaller Grips",
+			["name"] = "Spiritcaller Gloves",
 		},
 		[1299916] = {
-			["name"] = "Spiritcaller Spaulders",
+			["name"] = "Spiritcaller Mantle",
 		},
 		[1299917] = {
-			["name"] = "Spiritcaller Treads",
+			["name"] = "Spiritcaller Boots",
 		},
 		[1301427] = {
 			["name"] = "Cloudy Gustwoven Harness",

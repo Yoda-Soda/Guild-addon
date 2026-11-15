@@ -29,7 +29,7 @@ lib:LoadNames(185, {
 			["name"] = "Pastel de cangrejo",
 		},
 		[2545] = {
-			["name"] = "Tenaza de cangrejo cocinada",
+			["name"] = "Pinza de cangrejo cocida",
 		},
 		[2546] = {
 			["name"] = "Costillas de cerdo secas",
@@ -38,7 +38,7 @@ lib:LoadNames(185, {
 			["name"] = "Estofado de Crestagrana",
 		},
 		[2548] = {
-			["name"] = "Costilletas de cerdo suculentas",
+			["name"] = "Costillas de cerdo suculentas",
 		},
 		[2549] = {
 			["name"] = "Kebab de lobo sazonado",
@@ -50,7 +50,7 @@ lib:LoadNames(185, {
 			["name"] = "Filete de crocolisco",
 		},
 		[3371] = {
-			["name"] = "Salchicha de sangre",
+			["name"] = "Morcilla",
 		},
 		[3372] = {
 			["name"] = "Sopa de aleta de múrloc",
@@ -59,7 +59,7 @@ lib:LoadNames(185, {
 			["name"] = "Sopa de crocolisco",
 		},
 		[3376] = {
-			["name"] = "Omelet curiosamente sabroso",
+			["name"] = "Tortilla con un sabor curioso",
 		},
 		[3377] = {
 			["name"] = "Pastel pegajoso de araña",
@@ -68,13 +68,13 @@ lib:LoadNames(185, {
 			["name"] = "Chuleta grande de oso",
 		},
 		[3398] = {
-			["name"] = "Pinchos de león cocidas",
+			["name"] = "Chuletillas de león picantes",
 		},
 		[3399] = {
 			["name"] = "Chuletón de león suculento",
 		},
 		[3400] = {
-			["name"] = "Sopa balsámica de tortuga",
+			["name"] = "Sopa de tortuga reconfortante",
 		},
 		[3413] = {
 			["name"] = "Cocina",
@@ -92,7 +92,7 @@ lib:LoadNames(185, {
 			["name"] = "Carne de kodo a la brasa",
 		},
 		[6415] = {
-			["name"] = "Filete de merluza",
+			["name"] = "Filete de pez furia",
 		},
 		[6416] = {
 			["name"] = "Estofado de zancudo",
@@ -101,19 +101,19 @@ lib:LoadNames(185, {
 			["name"] = "Estofado de ratas de excavación",
 		},
 		[6418] = {
-			["name"] = "Cola crocante de lagarto",
+			["name"] = "Cola de lagarto crujiente",
 		},
 		[6419] = {
-			["name"] = "Venison magro",
+			["name"] = "Venado magro",
 		},
 		[6499] = {
 			["name"] = "Almejas hervidas",
 		},
 		[6500] = {
-			["name"] = "Almejas purificadas a la goblin",
+			["name"] = "Almejas picantes a la goblin",
 		},
 		[6501] = {
-			["name"] = "Guiso de almejas",
+			["name"] = "Sopa de almejas",
 		},
 		[7213] = {
 			["name"] = "Almeja gigante a la brasa",
@@ -122,10 +122,10 @@ lib:LoadNames(185, {
 			["name"] = "Pececito brillante",
 		},
 		[7752] = {
-			["name"] = "Caba de piel deslizante",
+			["name"] = "Caballa de piel escurridiza",
 		},
 		[7753] = {
-			["name"] = "Faucelarga muerdebarros",
+			["name"] = "Pargo de lodo boquilargo",
 		},
 		[7754] = {
 			["name"] = "Delicia de merluza del Loch",
@@ -134,10 +134,10 @@ lib:LoadNames(185, {
 			["name"] = "Siluro mostacherizo",
 		},
 		[7827] = {
-			["name"] = "Atún blanco arcoiris",
+			["name"] = "Atún blanco arco iris",
 		},
 		[7828] = {
-			["name"] = "Bacalao de escamas de piedra",
+			["name"] = "Bacalao piedrescama",
 		},
 		[8238] = {
 			["name"] = "Delicia sobrosa retorcida",
@@ -203,7 +203,7 @@ lib:LoadNames(185, {
 			["name"] = "Perca ahumada",
 		},
 		[18243] = {
-			["name"] = "Sopa de aletoche",
+			["name"] = "Sopa de pargo nocturno",
 		},
 		[18244] = {
 			["name"] = "Salmón solescamas salvaje",
@@ -245,7 +245,7 @@ lib:LoadNames(185, {
 			["name"] = "Torrijas al horno del desierto",
 		},
 		[25659] = {
-			["name"] = "Fabulosas chuletas quiméricas de Cantofúnebre",
+			["name"] = "Fabulosas chuletillas de quimerok de Dirge",
 		},
 		[25704] = {
 			["name"] = "Sabiola ahumada",
@@ -404,6 +404,6 @@ lib:LoadNames(185, {
 			["name"] = "Colmillopálido sencillo",
 		},
 		[1319313] = {
-			["name"] = "Plated Armorfish",
+			["name"] = "Pez coraza de placas",
 		},
 	})

@@ -57,6 +57,24 @@ C_TradeSkillUI = {
 
 local scanned, learned, reason = addon.Catalog.Scan()
 assert(scanned == 2 and learned == 1 and reason == nil, "fallback IDs must survive and deduplicate")
+local firstProfile = addon.Catalog.Initialize().localProfile
+assert(firstProfile.revision == 1 and firstProfile.fingerprint == addon.Catalog.Fingerprint(addon.Catalog.EncodeProfile(firstProfile)))
+assert(addon.Catalog.Scan() == 2 and addon.Catalog.Initialize().localProfile.revision == firstProfile.revision,
+    "unchanged scans must retain their persistent revision")
+local originalRecipeInfo = C_TradeSkillUI.GetRecipeInfo
+C_TradeSkillUI.GetRecipeInfo = function(id)
+    local info = originalRecipeInfo(id)
+    info.learned = true
+    return info
+end
+time = function() return 500 end
+addon.Catalog.Scan()
+assert(addon.Catalog.Initialize().localProfile.revision == 2,
+    "changed recipes must advance revision even when wall-clock time moves backwards")
+C_TradeSkillUI.GetRecipeInfo = originalRecipeInfo
+time = function() return 1000 end
+addon.Catalog.Scan()
+assert(addon.Catalog.Initialize().localProfile.revision == 3, "a withdrawal must issue a newer profile revision")
 local results = addon.Catalog.Search("wizard")
 assert(#results == 1 and results[1].crafters[1].name == "You", "local recipes must appear without sharing")
 assert(addon.db.catalog.shareEnabled == true, "sharing must default to enabled")
@@ -66,6 +84,16 @@ assert(total == 2 and #browse == 2, "browser must retain client-visible unlearne
 assert(#addon.db.catalog.localProfile.recipes == 1, "unlearned recipes must not be advertised as craftable")
 local professions, known, catalogued = addon.Catalog.Overview()
 assert(#professions == 12 and known == 1 and catalogued == 2)
+local primaryExample = { recipes = {
+    { skillLineID = 171, professionName = "Alchemy" }, { skillLineID = 333, professionName = "Enchanting" },
+    { skillLineID = 129, professionName = "First Aid" }, { skillLineID = 185, professionName = "Cooking" },
+    { skillLineID = 356, professionName = "Fishing" }, { skillLineID = 9001, professionName = "Alchemy" },
+    { skillLineID = 9002, professionName = "[DNT] Test skill" },
+} }
+assert(#addon.Catalog.PrimaryProfessions(primaryExample) == 2,
+    "primary counts must exclude secondary/test professions and deduplicate Forever/base aliases")
+primaryExample.recipes[#primaryExample.recipes + 1] = { skillLineID = 186, professionName = "Mining" }
+assert(#addon.Catalog.PrimaryProfessions(primaryExample) == 3, "gathering professions count toward the primary limit")
 addon.db.catalog.remoteProfiles.Peer = { updatedAt = 900, recipes = {
     { recipeID = 25124, skillLineID = 333, itemName = "Minor Wizard Oil", professionName = "Enchanting" },
 } }
@@ -107,6 +135,15 @@ assert(#browse == 21 and total == 121 and pages == 3 and page == 3,
     "all recipes must remain reachable beyond the old 100-result cap")
 browse, total, pages, page = addon.Catalog.Browse("Pagination", 171, 999)
 assert(page == 3)
+local allPages, allCount = addon.Catalog.BrowseAll("Pagination", 171)
+assert(allCount == 121 and #allPages == 121, "the scrolling query must expose all filtered recipes without truncation")
+local orderingRecipe = { recipeID = 100122, skillLineID = 171, itemName = "Pagination Zeta available", professionName = "Alchemy" }
+addon.db.catalog.recipeIndex["100122"] = orderingRecipe
+addon.db.catalog.remoteProfiles.OrderingPeer = { updatedAt = 900, recipes = { orderingRecipe } }
+allPages = addon.Catalog.BrowseAll("Pagination", 171)
+assert(allPages[1].recipeID == 100122 and #allPages[2].crafters == 0,
+    "guild-known recipes must precede alphabetically earlier unknown recipes")
+addon.db.catalog.remoteProfiles.OrderingPeer = nil
 addon.db.catalog.recipeIndex = {}
 
 local libraryVersion, libraryReady = "Forever", true
@@ -137,6 +174,41 @@ assert(#readyReport == 2 and readyReport[2]:find("ready: 1 recipes", 1, true)
     and readyReport[2]:find("Standalone ProfessionDB is not required", 1, true),
     "an embedded library must not report a missing standalone addon as a failure")
 assert(libraryRecipe.recipeID == nil, "library-owned records must remain untouched")
+local originalCount, originalIterate = library.Count, library.Iterate
+local gatheringRecipes = {
+    { profession = 182, id = 1229705, data = { name = "Incense Candle", craftedItemId = 279962 } },
+    { profession = 182, id = 1262980, data = { name = "Greenhouse", craftedItemId = 279964 } },
+    { profession = 182, id = 1263070, data = { name = "Seed Hybridizer", craftedItemId = 279947 } },
+    { profession = 393, id = 1229517, data = { name = "Camp Chair", craftedItemId = 279979 } },
+    { profession = 393, id = 1262982, data = { name = "Trapper's Workbench", craftedItemId = 279938 } },
+    { profession = 393, id = 1262985, data = { name = "Field Guide", craftedItemId = 279969 } },
+}
+library.Count = function() return #gatheringRecipes end
+library.Iterate = function()
+    local index = 0
+    return function()
+        index = index + 1
+        local recipe = gatheringRecipes[index]
+        if recipe then return recipe.profession, recipe.id, recipe.data end
+    end
+end
+assert(addon.Catalog.RefreshLibrary(true))
+local herbalismRecipes, herbalismTotal = addon.Catalog.BrowseAll("", 182)
+local skinningRecipes, skinningTotal = addon.Catalog.BrowseAll("", 393)
+assert(herbalismTotal == 3 and skinningTotal == 3,
+    "new Herbalism and Skinning camp recipes must be browsable despite gathering flags")
+local incense = addon.Catalog.BrowseAll("Incense Candle", 182)
+assert(#incense == 1 and incense[1].itemID == 279962 and #incense[1].crafters == 0,
+    "camp recipe catalogue data must not invent learned ownership")
+local gatheringOverview = addon.Catalog.Overview()
+for _, profession in ipairs(gatheringOverview) do
+    if profession.id == 182 or profession.id == 393 then
+        assert(profession.total == 3 and profession.known == 0 and profession.gathering,
+            "gathering profession overview counts must include its camp crafts")
+    end
+end
+library.Count, library.Iterate = originalCount, originalIterate
+assert(addon.Catalog.RefreshLibrary(true))
 local getLibrary = LibStub.GetLibrary
 LibStub.GetLibrary = function() return nil end
 C_AddOns = {
@@ -333,6 +405,14 @@ IsInGuild = function() return true end
 ChatFrameUtil = { SendTellWithMessage = function(name, text) whisperedName, whisperedText = name, text end }
 assert(addon.Compat.OpenCraftRequest(displayEntry, { name = "Crafter-Realm" }))
 assert(whisperedName == "Crafter" and whisperedText:find(displayEntry.itemLink, 1, true))
+assert(whisperedText:find("Could you please craft", 1, true), "crafting requests must include please")
+local longRequestEntry = {
+    recipeID = 25124, itemName = "Requested item",
+    itemLink = "|Hitem:20744|h[" .. string.rep("Long item name ", 40) .. "]|h",
+}
+assert(addon.Compat.OpenCraftRequest(longRequestEntry, { name = "Crafter-Realm" }))
+assert(#whisperedText <= 255 and whisperedText:find("Could you please craft", 1, true),
+    "shortened long-item requests must stay polite and within the chat limit")
 local qualifiedCrafter = { name = "Other Crafter-Beta ClassicBetaPvP2" }
 assert(addon.Compat.OpenCraftRequest(displayEntry, qualifiedCrafter))
 assert(whisperedName == "Other Crafter", "whisper recipients must keep the surname but omit the realm")
@@ -382,7 +462,13 @@ function methods:SetEnabled(enabled) self.enabled = enabled end
 function methods:Enable() self.enabled = true end
 function methods:Disable() self.enabled = false end
 function methods:SetTexture(texture) self.texture = texture end
+function methods:SetDesaturated(desaturated) self.desaturated = desaturated end
+function methods:SetTextColor(...) self.textColor = { ... } end
 function methods:SetScript(event, callback) self.scripts[event] = callback end
+function methods:SetVerticalScroll(offset)
+    self.offset = offset
+    if self.scripts.OnVerticalScroll then self.scripts.OnVerticalScroll(self, offset) end
+end
 function methods:SetFocus() self.focused = true end
 function methods:ClearFocus() self.focused = false end
 function methods:HasFocus() return self.focused == true end
@@ -522,6 +608,18 @@ end
 assert(enchantingRow)
 enchantingRow.scripts.OnClick(enchantingRow)
 assert(crafting.detail:IsShown() and crafting.rows[1].entry.recipeID == 25124)
+local enchantingCoverage
+for _, profession in ipairs(addon.Catalog.Overview()) do
+    if profession.id == 333 then enchantingCoverage = profession end
+end
+local expectedCoverage = enchantingCoverage.known .. " / " .. enchantingCoverage.total .. " Enchanting recipes"
+assert(crafting.headerTotal:GetText() == expectedCoverage, "opening a profession must show its known/total recipe coverage")
+crafting.search:SetText("No matching enchantment")
+crafting.search.scripts.OnTextChanged()
+assert(crafting.headerTotal:GetText() == expectedCoverage and not crafting.rows[1]:IsShown(),
+    "recipe filters must not replace full profession coverage with only matching totals")
+crafting.search:SetText("")
+crafting.search.scripts.OnTextChanged()
 assert(not crafting.crafters[1].request:IsShown(), "do not whisper yourself")
 addon.db.catalog.remoteProfiles["Crafter-Realm"] = {
     updatedAt = 900, recipes = addon.db.catalog.localProfile.recipes,
@@ -538,6 +636,27 @@ addon.db.catalog.remoteProfiles["Absent Crafter-Realm"] = {
 addon.db.catalog.remoteProfiles["Unknown Crafter-Realm"] = {
     updatedAt = 900, recipes = addon.db.catalog.localProfile.recipes,
 }
+local unownedRecipe = { recipeID = 730001, skillLineID = 333, professionName = "Enchanting",
+    itemName = "Unowned example", recipeName = "Unowned example" }
+addon.db.catalog.recipeIndex["730001"] = unownedRecipe
+crafting.search:SetText("Unowned example")
+crafting.search.scripts.OnTextChanged()
+assert(crafting.rows[1].icon.desaturated and crafting.rows[1].label.textColor[1] == crafting.rows[1].label.textColor[2]
+    and crafting.rows[1].detail:GetText() == "No known guild crafter",
+    "recipes with no known guild crafter must be visually gray")
+crafting.rows[1].scripts.OnClick(crafting.rows[1])
+assert(crafting.detail:IsShown(), "unknown recipes must remain inspectable")
+local previousAbsentProfile = addon.db.catalog.remoteProfiles["Absent Crafter-Realm"]
+addon.db.catalog.remoteProfiles["Absent Crafter-Realm"] = { updatedAt = 900, recipes = { unownedRecipe } }
+addon.RefreshCatalog()
+assert(not crafting.rows[1].icon.desaturated
+    and crafting.rows[1].label.textColor[1] ~= crafting.rows[1].label.textColor[2]
+    and crafting.rows[1].entry.crafters[1].isOnline == false,
+    "an offline known crafter must restore normal recipe styling on a reused row")
+addon.db.catalog.remoteProfiles["Absent Crafter-Realm"] = previousAbsentProfile
+addon.db.catalog.recipeIndex["730001"] = nil
+crafting.search:SetText("")
+crafting.search.scripts.OnTextChanged()
 addon.RefreshCatalog()
 local request
 for _, row in ipairs(crafting.crafters) do
@@ -597,14 +716,25 @@ for _, row in ipairs(crafting.rows) do
     if row.profession and row.profession.id == 171 then alchemyRow = row end
 end
 alchemyRow.scripts.OnClick(alchemyRow)
-assert(crafting.pageLabel:GetText():find("1 / 3", 1, true) and not crafting.previousButton.enabled)
-crafting.nextButton.scripts.OnClick()
+assert(crafting.pageLabel:GetText():find("121 recipes", 1, true) and not crafting.previousButton and not crafting.nextButton)
+local previousOverview, previousBrowseAll, previousCreateFrame = addon.Catalog.Overview, addon.Catalog.BrowseAll, CreateFrame
+addon.Catalog.Overview = function() error("scrolling must not recalculate profession counts") end
+addon.Catalog.BrowseAll = function() error("scrolling must not rebuild the recipe catalog") end
+CreateFrame = function() error("scrolling must recycle the recipe rows") end
+crafting.ScrollTo(50 * 46)
 assert(crafting.rows[1].entry.recipeID == 100051)
-crafting.nextButton.scripts.OnClick()
-assert(crafting.rows[21]:IsShown() and not crafting.rows[22]:IsShown() and not crafting.nextButton.enabled)
+crafting.scroll.scripts.OnVerticalScroll(crafting.scroll, 100000)
+local lastRecipe
+for _, row in ipairs(crafting.rows) do if row:IsShown() and row.entry then lastRecipe = row.entry end end
+assert(lastRecipe and lastRecipe.recipeID == 100121 and #crafting.rows <= 48,
+    "the scrolling list must reach the final recipe through a bounded row pool")
+crafting.ScrollTo(0)
+crafting.rows[1].scripts.OnMouseWheel(crafting.rows[1], -1)
+assert(crafting.rows[1].entry.recipeID == 100004, "recipe-row mouse wheel must scroll three rows")
+addon.Catalog.Overview, addon.Catalog.BrowseAll, CreateFrame = previousOverview, previousBrowseAll, previousCreateFrame
 crafting.search:SetText("100121")
 crafting.search.scripts.OnTextChanged()
-assert(crafting.rows[1].entry.recipeID == 100121 and crafting.pageLabel:GetText():find("1 / 1", 1, true))
+assert(crafting.rows[1].entry.recipeID == 100121 and crafting.pageLabel:GetText():find("1 recipes", 1, true))
 crafting.backButton.scripts.OnClick()
 local previousItem, previousTooltip, previousUnitLevel, previousEnum, previousTimer = C_Item, C_TooltipInfo, UnitLevel, Enum, C_Timer
 local filterLevel, hasEngineering, loadedItems, filterTimers, loadRequests = 20, false, {}, {}, {}
@@ -754,7 +884,7 @@ addon.ToggleCanvas()
 assert(not canvas:IsShown())
 addon.ToggleCanvas()
 assert(canvas:IsShown() and frames[1] == canvas)
-print("PASS: profession home, paginated search, item-load refresh, whisper buttons, Rescan, and small viewport fit")
+print("PASS: profession home, recycled recipe scrolling, known-first ordering/coverage, item-load refresh, whisper buttons, and viewport fit")
 addon.Members = nil
 
 for _, sharingEnabled in ipairs({ true, false }) do
@@ -995,3 +1125,45 @@ guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
 assert(not addon.minimapButton:IsShown() and not canvas:IsShown() and not addon.guildActive,
     "leaving the guild must hide the window and minimap button immediately")
 print("PASS: guild-only minimap/window visibility, pending identity, rejoin, and scan cancellation")
+
+playerInGuild = true
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+guildListener.scripts.OnEvent(nil, "GUILD_ROSTER_UPDATE")
+local mixedProfile = addon.Catalog.Initialize().localProfile
+mixedProfile.recipes[#mixedProfile.recipes + 1] = { recipeID = 9001, skillLineID = 171,
+    professionName = "Alchemy", itemName = "Potion", recipeName = "Potion" }
+mixedProfile.recipes[#mixedProfile.recipes + 1] = { recipeID = 9002, skillLineID = 186,
+    professionName = "Mining", itemName = "Smelt", recipeName = "Smelt" }
+addon.Catalog.Scan()
+local correction = addon.professionCorrection
+assert(correction and correction:IsShown() and correction.heading:GetText():find("unlearn", 1, true),
+    "a third cached primary must prompt the owning character rather than block addon access")
+local conflictProfile = addon.Catalog.Initialize().localProfile
+local removalRow
+for _, row in ipairs(correction.rows) do
+    if row.profession and row.profession.id == 186 then removalRow = row end
+    assert(not row.profession or (row.profession.id ~= 129 and row.profession.id ~= 185 and row.profession.id ~= 356),
+        "secondary professions must never appear in the unlearned chooser")
+end
+assert(removalRow and not correction.confirm.enabled)
+removalRow.scripts.OnClick()
+assert(correction.confirm.enabled and addon.Catalog.Initialize().localProfile == conflictProfile,
+    "selecting a profession must not change data before confirmation")
+correction.later.scripts.OnClick()
+assert(not correction:IsShown() and addon.Catalog.Initialize().localProfile == conflictProfile,
+    "Later must preserve all records")
+SlashCmdList.HORDEETERNAL("professions")
+assert(correction:IsShown())
+removalRow.scripts.OnClick()
+correction.confirm.scripts.OnClick()
+assert(not correction:IsShown() and not addon.Catalog.Initialize().localProfile.professionConflict
+    and #addon.Catalog.PrimaryProfessions(addon.Catalog.Initialize().localProfile) == 2,
+    "explicit owner confirmation must repair the profile and dismiss the prompt: " .. correction.status:GetText()
+        .. " selected=" .. tostring(correction.selected) .. " count=" .. #addon.Catalog.PrimaryProfessions(addon.Catalog.Initialize().localProfile))
+SlashCmdList.HORDEETERNAL("professions")
+correction.modes.scripts.OnClick()
+assert(correction.rows[1].profession.id == 186, "previous withdrawals must remain available for relearning or mistake recovery")
+playerInGuild = false
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+assert(not correction:IsShown(), "the correction prompt must obey guild-only visibility")
+print("PASS: owner profession-correction chooser, explicit confirmation/cancel, secondary exclusion, and guild visibility")

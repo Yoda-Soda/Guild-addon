@@ -8,199 +8,199 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(165, {
 		[2149] = {
-			["name"] = "Stivali di Cuoio Cuciti a Mano",
+			["name"] = "Handstitched Leather Boots",
 		},
 		[2152] = {
-			["name"] = "Potenziamento d'Armatura Leggero",
+			["name"] = "Light Armor Kit",
 		},
 		[2153] = {
-			["name"] = "Pantaloni di Cuoio Cuciti a Mano",
+			["name"] = "Handstitched Leather Pants",
 		},
 		[2158] = {
-			["name"] = "Stivali di Cuoio Pregiato",
+			["name"] = "Fine Leather Boots",
 		},
 		[2159] = {
-			["name"] = "Mantello di Cuoio Pregiato",
+			["name"] = "Fine Leather Cloak",
 		},
 		[2160] = {
-			["name"] = "Veste di Cuoio Adornata",
+			["name"] = "Embossed Leather Vest",
 		},
 		[2161] = {
-			["name"] = "Stivali di Cuoio Adornati",
+			["name"] = "Embossed Leather Boots",
 		},
 		[2162] = {
-			["name"] = "Mantello di Cuoio Adornato",
+			["name"] = "Embossed Leather Cloak",
 		},
 		[2163] = {
-			["name"] = "Giaco di Cuoio Bianco",
+			["name"] = "White Leather Jerkin",
 		},
 		[2164] = {
-			["name"] = "Guanti di Cuoio Pregiato",
+			["name"] = "Fine Leather Gloves",
 		},
 		[2165] = {
-			["name"] = "Potenziamento d'Armatura Medio",
+			["name"] = "Medium Armor Kit",
 		},
 		[2166] = {
-			["name"] = "Armatura di Cuoio Temprato",
+			["name"] = "Toughened Leather Armor",
 		},
 		[2167] = {
-			["name"] = "Stivali di Cuoio Scuro",
+			["name"] = "Gray Leather Boots",
 		},
 		[2168] = {
-			["name"] = "Mantello di Cuoio Scuro",
+			["name"] = "Dark Leather Cloak",
 		},
 		[2169] = {
-			["name"] = "Giubba di Cuoio Scuro",
+			["name"] = "Dark Leather Tunic",
 		},
 		[2881] = {
-			["name"] = "Cuoio Leggero",
+			["name"] = "Light Leather",
 		},
 		[3753] = {
-			["name"] = "Cintura di Cuoio Cucito a Mano",
+			["name"] = "Handstitched Leather Belt",
 		},
 		[3756] = {
-			["name"] = "Guanti di Cuoio Adornati",
+			["name"] = "Embossed Leather Gloves",
 		},
 		[3759] = {
-			["name"] = "Pantaloni di Cuoio Adornati",
+			["name"] = "Embossed Leather Pants",
 		},
 		[3760] = {
-			["name"] = "Mantello di Collealto",
+			["name"] = "Hillman's Cloak",
 		},
 		[3761] = {
-			["name"] = "Giubba di Cuoio Pregiato",
+			["name"] = "Fine Leather Tunic",
 		},
 		[3762] = {
-			["name"] = "Veste di Cuoio di Collealto",
+			["name"] = "Hillman's Leather Vest",
 		},
 		[3763] = {
-			["name"] = "Cintura di Cuoio Pregiato",
+			["name"] = "Fine Leather Belt",
 		},
 		[3764] = {
-			["name"] = "Guanti di Cuoio di Collealto",
+			["name"] = "Hillman's Leather Gloves",
 		},
 		[3765] = {
-			["name"] = "Guanti di Cuoio Scuro",
+			["name"] = "Dark Leather Gloves",
 		},
 		[3766] = {
-			["name"] = "Cintura di Cuoio Scuro",
+			["name"] = "Dark Leather Belt",
 		},
 		[3767] = {
-			["name"] = "Cintura di Collealto",
+			["name"] = "Hillman's Belt",
 		},
 		[3768] = {
-			["name"] = "Spallacci di Collealto",
+			["name"] = "Hillman's Shoulders",
 		},
 		[3769] = {
-			["name"] = "Spallacci di Cuoio Scuro",
+			["name"] = "Dark Leather Shoulders",
 		},
 		[3770] = {
-			["name"] = "Guanti di Cuoio Temprato",
+			["name"] = "Toughened Leather Gloves",
 		},
 		[3771] = {
-			["name"] = "Guanti della Barbarie",
+			["name"] = "Barbaric Gloves",
 		},
 		[3772] = {
-			["name"] = "Armatura di Cuoio Verde",
+			["name"] = "Green Leather Armor",
 		},
 		[3773] = {
-			["name"] = "Armatura del Guardiano",
+			["name"] = "Guardian Armor",
 		},
 		[3774] = {
-			["name"] = "Cintura di Cuoio Verde",
+			["name"] = "Green Leather Belt",
 		},
 		[3775] = {
-			["name"] = "Cintura del Guardiano",
+			["name"] = "Guardian Belt",
 		},
 		[3776] = {
-			["name"] = "Bracciali di Cuoio Verde",
+			["name"] = "Green Leather Bracers",
 		},
 		[3777] = {
-			["name"] = "Bracciali di Cuoio da Guardiano",
+			["name"] = "Guardian Leather Bracers",
 		},
 		[3778] = {
-			["name"] = "Cintura di Cuoio Borchiata di Gemme",
+			["name"] = "Gem-studded Leather Belt",
 		},
 		[3779] = {
-			["name"] = "Cintura della Barbarie",
+			["name"] = "Barbaric Belt",
 		},
 		[3780] = {
-			["name"] = "Potenziamento d'Armatura Pesante",
+			["name"] = "Heavy Armor Kit",
 		},
 		[3816] = {
-			["name"] = "Pelle Leggera Trattata",
+			["name"] = "Cured Light Hide",
 		},
 		[3817] = {
-			["name"] = "Pelle Media Trattata",
+			["name"] = "Cured Medium Hide",
 		},
 		[3818] = {
-			["name"] = "Pelle Pesante Trattata",
+			["name"] = "Cured Heavy Hide",
 		},
 		[4096] = {
-			["name"] = "Imbracatura di Pelle di Raptor",
+			["name"] = "Raptor Hide Harness",
 		},
 		[4097] = {
-			["name"] = "Cintura di Pelle di Raptor",
+			["name"] = "Raptor Hide Belt",
 		},
 		[5244] = {
-			["name"] = "Sacca di Pelle di Kodo",
+			["name"] = "Kodo Hide Bag",
 		},
 		[6661] = {
-			["name"] = "Imbracatura della Barbarie",
+			["name"] = "Barbaric Harness",
 		},
 		[6702] = {
-			["name"] = "Cintura di Scaglie di Murloc",
+			["name"] = "Murloc Scale Belt",
 		},
 		[6703] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Murloc",
+			["name"] = "Murloc Scale Breastplate",
 		},
 		[6704] = {
-			["name"] = "Armatura di Murloc Spessa",
+			["name"] = "Thick Murloc Armor",
 		},
 		[6705] = {
-			["name"] = "Bracciali di Scaglie di Murloc",
+			["name"] = "Murloc Scale Bracers",
 		},
 		[7126] = {
-			["name"] = "Veste di Cuoio Cucita a Mano",
+			["name"] = "Handstitched Leather Vest",
 		},
 		[7133] = {
-			["name"] = "Pantaloni di Cuoio Pregiato",
+			["name"] = "Fine Leather Pants",
 		},
 		[7135] = {
-			["name"] = "Pantaloni di Cuoio Scuro",
+			["name"] = "Dark Leather Pants",
 		},
 		[7147] = {
-			["name"] = "Pantaloni del Guardiano",
+			["name"] = "Guardian Pants",
 		},
 		[7149] = {
-			["name"] = "Gambiere della Barbarie",
+			["name"] = "Barbaric Leggings",
 		},
 		[7151] = {
-			["name"] = "Spallacci della Barbarie",
+			["name"] = "Barbaric Shoulders",
 		},
 		[7153] = {
-			["name"] = "Mantello del Guardiano",
+			["name"] = "Guardian Cloak",
 		},
 		[7156] = {
-			["name"] = "Guanti del Guardiano",
+			["name"] = "Guardian Gloves",
 		},
 		[7953] = {
-			["name"] = "Mantello di Scaglie Degeneri",
+			["name"] = "Deviate Scale Cloak",
 		},
 		[7954] = {
-			["name"] = "Guanti di Scaglie Degeneri",
+			["name"] = "Deviate Scale Gloves",
 		},
 		[7955] = {
-			["name"] = "Cintura di Scaglie Degeneri",
+			["name"] = "Deviate Scale Belt",
 		},
 		[8322] = {
-			["name"] = "Giaco del Bagliore Lunare",
+			["name"] = "Moonglow Vest",
 		},
 		[9058] = {
-			["name"] = "Mantello di Cuoio Cucito a Mano",
+			["name"] = "Handstitched Leather Cloak",
 		},
 		[9059] = {
-			["name"] = "Bracciali di Cuoio Cuciti a Mano",
+			["name"] = "Handstitched Leather Bracers",
 		},
 		[9060] = {
 			["name"] = "Light Leather Quiver",
@@ -209,37 +209,37 @@ lib:LoadNames(165, {
 			["name"] = "Small Leather Ammo Pouch",
 		},
 		[9064] = {
-			["name"] = "Pantaloni di Cuoio Duro",
+			["name"] = "Rugged Leather Pants",
 		},
 		[9065] = {
-			["name"] = "Bracciali di Cuoio Leggero",
+			["name"] = "Light Leather Bracers",
 		},
 		[9068] = {
-			["name"] = "Pantaloni di Cuoio Leggero",
+			["name"] = "Light Leather Pants",
 		},
 		[9070] = {
-			["name"] = "Mantello di Draghetto Nero",
+			["name"] = "Black Whelp Cloak",
 		},
 		[9072] = {
-			["name"] = "Guanti di Draghetto Rosso",
+			["name"] = "Red Whelp Gloves",
 		},
 		[9074] = {
-			["name"] = "Guanti di Cuoio Svelti",
+			["name"] = "Nimble Leather Gloves",
 		},
 		[9145] = {
-			["name"] = "Guanti da Arciere",
+			["name"] = "Fletcher's Gloves",
 		},
 		[9146] = {
-			["name"] = "Guanti da Erbalista",
+			["name"] = "Herbalist's Gloves",
 		},
 		[9147] = {
-			["name"] = "Spallacci di Cuoio Terrigeni",
+			["name"] = "Earthen Leather Shoulders",
 		},
 		[9148] = {
-			["name"] = "Guanti del Ladruncolo",
+			["name"] = "Pilferer's Gloves",
 		},
 		[9149] = {
-			["name"] = "Guanti Terrigeni Pesanti",
+			["name"] = "Heavy Earthen Gloves",
 		},
 		[9193] = {
 			["name"] = "Heavy Quiver",
@@ -248,142 +248,142 @@ lib:LoadNames(165, {
 			["name"] = "Heavy Leather Ammo Pouch",
 		},
 		[9195] = {
-			["name"] = "Gambiere di Cuoio Fosche",
+			["name"] = "Dusky Leather Leggings",
 		},
 		[9196] = {
-			["name"] = "Armatura di Cuoio Fosca",
+			["name"] = "Dusky Leather Armor",
 		},
 		[9197] = {
-			["name"] = "Armatura di Draghetto Verde",
+			["name"] = "Green Whelp Armor",
 		},
 		[9198] = {
-			["name"] = "Mantello di Cuoio del Gelo",
+			["name"] = "Frost Leather Cloak",
 		},
 		[9201] = {
-			["name"] = "Bracciali Foschi",
+			["name"] = "Dusky Bracers",
 		},
 		[9202] = {
-			["name"] = "Bracciali di Draghetto Verde",
+			["name"] = "Green Whelp Bracers",
 		},
 		[9206] = {
-			["name"] = "Cintura Fosca",
+			["name"] = "Dusky Belt",
 		},
 		[9207] = {
-			["name"] = "Stivali Foschi",
+			["name"] = "Dusky Boots",
 		},
 		[9208] = {
-			["name"] = "Stivali della Rapidità",
+			["name"] = "Swift Boots",
 		},
 		[10482] = {
-			["name"] = "Pelle Spessa Trattata",
+			["name"] = "Cured Thick Hide",
 		},
 		[10487] = {
-			["name"] = "Potenziamento d'Armatura Spesso",
+			["name"] = "Thick Armor Kit",
 		},
 		[10490] = {
-			["name"] = "Cappello di Cuoio Confortevole",
+			["name"] = "Comfortable Leather Hat",
 		},
 		[10499] = {
-			["name"] = "Giubba della Fuga Notturna",
+			["name"] = "Nightscape Tunic",
 		},
 		[10507] = {
-			["name"] = "Banda della Fuga Notturna",
+			["name"] = "Nightscape Headband",
 		},
 		[10509] = {
-			["name"] = "Guanti di Scaglie di Tartaruga",
+			["name"] = "Turtle Scale Gloves",
 		},
 		[10511] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Tartaruga",
+			["name"] = "Turtle Scale Breastplate",
 		},
 		[10516] = {
-			["name"] = "Spallacci Notturni",
+			["name"] = "Nightscape Shoulders",
 		},
 		[10518] = {
-			["name"] = "Bracciali di Scaglie di Tartaruga",
+			["name"] = "Turtle Scale Bracers",
 		},
 		[10520] = {
-			["name"] = "Tonaca del Grande Vudù",
+			["name"] = "Big Voodoo Robe",
 		},
 		[10525] = {
-			["name"] = "Pettorale Corazzato di Scorpione Indurito",
+			["name"] = "Tough Scorpid Breastplate",
 		},
 		[10529] = {
-			["name"] = "Spallacci di Cuoio Selvatico",
+			["name"] = "Wild Leather Shoulders",
 		},
 		[10531] = {
-			["name"] = "Maschera del Grande Vudù",
+			["name"] = "Big Voodoo Mask",
 		},
 		[10533] = {
-			["name"] = "Bracciali di Scorpione Induriti",
+			["name"] = "Tough Scorpid Bracers",
 		},
 		[10542] = {
-			["name"] = "Guanti di Scorpione Induriti",
+			["name"] = "Tough Scorpid Gloves",
 		},
 		[10544] = {
-			["name"] = "Veste di Cuoio Selvatico",
+			["name"] = "Wild Leather Vest",
 		},
 		[10546] = {
-			["name"] = "Elmetto di Cuoio Selvatico",
+			["name"] = "Wild Leather Helmet",
 		},
 		[10548] = {
-			["name"] = "Pantaloni della Fuga Notturna",
+			["name"] = "Nightscape Pants",
 		},
 		[10550] = {
-			["name"] = "Mantello Notturno",
+			["name"] = "Nightscape Cloak",
 		},
 		[10552] = {
-			["name"] = "Elmo di Scaglie di Tartaruga",
+			["name"] = "Turtle Scale Helm",
 		},
 		[10554] = {
-			["name"] = "Stivali di Scorpione Induriti",
+			["name"] = "Tough Scorpid Boots",
 		},
 		[10556] = {
-			["name"] = "Gambiere di Scaglie di Tartaruga",
+			["name"] = "Turtle Scale Leggings",
 		},
 		[10558] = {
-			["name"] = "Stivali della Fuga Notturna",
+			["name"] = "Nightscape Boots",
 		},
 		[10560] = {
-			["name"] = "Pantaloni del Grande Vudù",
+			["name"] = "Big Voodoo Pants",
 		},
 		[10562] = {
-			["name"] = "Mantello del Grande Vudù",
+			["name"] = "Big Voodoo Cloak",
 		},
 		[10564] = {
-			["name"] = "Spallacci di Scorpione Induriti",
+			["name"] = "Tough Scorpid Shoulders",
 		},
 		[10566] = {
-			["name"] = "Stivali di Cuoio Selvatico",
+			["name"] = "Wild Leather Boots",
 		},
 		[10568] = {
-			["name"] = "Gambiere di Scorpione Indurite",
+			["name"] = "Tough Scorpid Leggings",
 		},
 		[10570] = {
-			["name"] = "Elmo di Scorpione Indurito",
+			["name"] = "Tough Scorpid Helm",
 		},
 		[10572] = {
-			["name"] = "Gambiere di Cuoio Selvatico",
+			["name"] = "Wild Leather Leggings",
 		},
 		[10574] = {
-			["name"] = "Mantello di Cuoio Selvatico",
+			["name"] = "Wild Leather Cloak",
 		},
 		[10619] = {
-			["name"] = "Guanti Lunghi di Scaglie di Drago",
+			["name"] = "Dragonscale Gauntlets",
 		},
 		[10621] = {
-			["name"] = "Elmo Testa di Lupo",
+			["name"] = "Wolfshead Helm",
 		},
 		[10630] = {
-			["name"] = "Guanti Lunghi delle Maree",
+			["name"] = "Gauntlets of the Sea",
 		},
 		[10632] = {
-			["name"] = "Elmo del Fuoco",
+			["name"] = "Helm of Fire",
 		},
 		[10647] = {
-			["name"] = "Pettorale Corazzato Piumato",
+			["name"] = "Feathered Breastplate",
 		},
 		[10650] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Drago",
+			["name"] = "Dragonscale Breastplate",
 		},
 		[14930] = {
 			["name"] = "Quickdraw Quiver",
@@ -392,1159 +392,1159 @@ lib:LoadNames(165, {
 			["name"] = "Thick Leather Ammo Pouch",
 		},
 		[16650] = {
-			["name"] = "Pettorale di Maglia Selvaggio",
+			["name"] = "Wildthorn Mail",
 		},
 		[16661] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Storm Gauntlets",
 		},
 		[16728] = {
-			["name"] = "Elmo del Capo Superiore",
+			["name"] = "Helm of the Great Chief",
 		},
 		[16746] = {
-			["name"] = "Corazza di Maglia Invulnerabile",
+			["name"] = "Invulnerable Mail",
 		},
 		[19047] = {
-			["name"] = "Pelle Dura Trattata",
+			["name"] = "Cured Rugged Hide",
 		},
 		[19048] = {
-			["name"] = "Bracciali Pesanti di Scorpione",
+			["name"] = "Heavy Scorpid Bracers",
 		},
 		[19049] = {
-			["name"] = "Guanti Lunghi di Cuoio Perverso",
+			["name"] = "Wicked Leather Gauntlets",
 		},
 		[19050] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Drago Verde",
+			["name"] = "Green Dragonscale Breastplate",
 		},
 		[19051] = {
-			["name"] = "Veste Pesante di Scorpione",
+			["name"] = "Heavy Scorpid Vest",
 		},
 		[19052] = {
-			["name"] = "Bracciali di Cuoio Perverso",
+			["name"] = "Wicked Leather Bracers",
 		},
 		[19053] = {
-			["name"] = "Guanti della Chimera",
+			["name"] = "Chimeric Gloves",
 		},
 		[19054] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Drago Rosso",
+			["name"] = "Red Dragonscale Breastplate",
 		},
 		[19055] = {
-			["name"] = "Guanti Lunghi di Cuoio Runico",
+			["name"] = "Runic Leather Gauntlets",
 		},
 		[19058] = {
-			["name"] = "Potenziamento d'Armatura Duro",
+			["name"] = "Rugged Armor Kit",
 		},
 		[19059] = {
-			["name"] = "Gambiere Vulcaniche",
+			["name"] = "Volcanic Leggings",
 		},
 		[19060] = {
-			["name"] = "Gambiere di Scaglie di Drago Verde",
+			["name"] = "Green Dragonscale Leggings",
 		},
 		[19061] = {
-			["name"] = "Spallacci Viventi",
+			["name"] = "Living Shoulders",
 		},
 		[19062] = {
-			["name"] = "Spallacci di Piume di Ferro",
+			["name"] = "Ironfeather Shoulders",
 		},
 		[19063] = {
-			["name"] = "Stivali della Chimera",
+			["name"] = "Chimeric Boots",
 		},
 		[19064] = {
-			["name"] = "Guanti Lunghi Pesanti di Scorpione",
+			["name"] = "Heavy Scorpid Gauntlets",
 		},
 		[19065] = {
-			["name"] = "Bracciali di Cuoio Runico",
+			["name"] = "Runic Leather Bracers",
 		},
 		[19066] = {
-			["name"] = "Stivali della Fiera Glaciale",
+			["name"] = "Frostsaber Boots",
 		},
 		[19067] = {
-			["name"] = "Pantaloni del Manto Tempestoso",
+			["name"] = "Stormshroud Pants",
 		},
 		[19068] = {
-			["name"] = "Imbracatura dell'Orsoguerra",
+			["name"] = "Warbear Harness",
 		},
 		[19070] = {
-			["name"] = "Cintura Pesante di Scorpione",
+			["name"] = "Heavy Scorpid Belt",
 		},
 		[19071] = {
-			["name"] = "Banda di Cuoio Perverso",
+			["name"] = "Wicked Leather Headband",
 		},
 		[19072] = {
-			["name"] = "Cintura di Cuoio Runico",
+			["name"] = "Runic Leather Belt",
 		},
 		[19073] = {
-			["name"] = "Gambiere della Chimera",
+			["name"] = "Chimeric Leggings",
 		},
 		[19074] = {
-			["name"] = "Gambiere della Fiera Glaciale",
+			["name"] = "Frostsaber Leggings",
 		},
 		[19075] = {
-			["name"] = "Gambiere Pesanti di Scorpione",
+			["name"] = "Heavy Scorpid Leggings",
 		},
 		[19076] = {
-			["name"] = "Pettorale Corazzato Vulcanico",
+			["name"] = "Volcanic Breastplate",
 		},
 		[19077] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Drago Blu",
+			["name"] = "Blue Dragonscale Breastplate",
 		},
 		[19078] = {
-			["name"] = "Gambiere Viventi",
+			["name"] = "Living Leggings",
 		},
 		[19079] = {
-			["name"] = "Armatura del Manto Tempestoso",
+			["name"] = "Stormshroud Armor",
 		},
 		[19080] = {
-			["name"] = "Pantaloncini di Lana dell'Orsoguerra",
+			["name"] = "Warbear Woolies",
 		},
 		[19081] = {
-			["name"] = "Veste della Chimera",
+			["name"] = "Chimeric Vest",
 		},
 		[19082] = {
-			["name"] = "Banda di Cuoio Runico",
+			["name"] = "Runic Leather Headband",
 		},
 		[19083] = {
-			["name"] = "Pantaloni di Cuoio Perverso",
+			["name"] = "Wicked Leather Pants",
 		},
 		[19084] = {
-			["name"] = "Guanti Lunghi di Gigantosauro",
+			["name"] = "Devilsaur Gauntlets",
 		},
 		[19085] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Drago Nero",
+			["name"] = "Black Dragonscale Breastplate",
 		},
 		[19086] = {
-			["name"] = "Pettorale Corazzato di Piume di Ferro",
+			["name"] = "Ironfeather Breastplate",
 		},
 		[19087] = {
-			["name"] = "Guanti della Fiera Glaciale",
+			["name"] = "Frostsaber Gloves",
 		},
 		[19088] = {
-			["name"] = "Elmo Pesante di Scorpione",
+			["name"] = "Heavy Scorpid Helm",
 		},
 		[19089] = {
-			["name"] = "Spallacci di Scaglie di Drago Blu",
+			["name"] = "Blue Dragonscale Shoulders",
 		},
 		[19090] = {
-			["name"] = "Spallacci del Manto Tempestoso",
+			["name"] = "Stormshroud Shoulders",
 		},
 		[19091] = {
-			["name"] = "Pantaloni di Cuoio Runico",
+			["name"] = "Runic Leather Pants",
 		},
 		[19092] = {
-			["name"] = "Cintura di Cuoio Perverso",
+			["name"] = "Wicked Leather Belt",
 		},
 		[19093] = {
-			["name"] = "Mantello di Scaglie di Onyxia",
+			["name"] = "Onyxia Scale Cloak",
 		},
 		[19094] = {
-			["name"] = "Spallacci di Scaglie di Drago Nero",
+			["name"] = "Black Dragonscale Shoulders",
 		},
 		[19095] = {
-			["name"] = "Pettorale Corazzato Vivente",
+			["name"] = "Living Breastplate",
 		},
 		[19097] = {
-			["name"] = "Gambiere di Gigantosauro",
+			["name"] = "Devilsaur Leggings",
 		},
 		[19098] = {
-			["name"] = "Armatura di Cuoio Perverso",
+			["name"] = "Wicked Leather Armor",
 		},
 		[19100] = {
-			["name"] = "Spallacci Pesanti di Scorpione",
+			["name"] = "Heavy Scorpid Shoulders",
 		},
 		[19101] = {
-			["name"] = "Spallacci Vulcanici",
+			["name"] = "Volcanic Shoulders",
 		},
 		[19102] = {
-			["name"] = "Armatura di Cuoio Runico",
+			["name"] = "Runic Leather Armor",
 		},
 		[19103] = {
-			["name"] = "Spallacci di Cuoio Runico",
+			["name"] = "Runic Leather Shoulders",
 		},
 		[19104] = {
-			["name"] = "Giubba della Fiera Glaciale",
+			["name"] = "Frostsaber Tunic",
 		},
 		[19107] = {
-			["name"] = "Gambiere di Scaglie di Drago Nero",
+			["name"] = "Black Dragonscale Leggings",
 		},
 		[20648] = {
-			["name"] = "Cuoio Medio",
+			["name"] = "Medium Leather",
 		},
 		[20649] = {
-			["name"] = "Cuoio Pesante",
+			["name"] = "Heavy Leather",
 		},
 		[20650] = {
-			["name"] = "Cuoio Spesso",
+			["name"] = "Thick Leather",
 		},
 		[20853] = {
-			["name"] = "Stivali del Segugio del Nucleo",
+			["name"] = "Corehound Boots",
 		},
 		[20854] = {
-			["name"] = "Elmo Fuso",
+			["name"] = "Molten Helm",
 		},
 		[20855] = {
-			["name"] = "Stivali di Scaglie di Drago Nero",
+			["name"] = "Black Dragonscale Boots",
 		},
 		[21943] = {
-			["name"] = "Guanti del Nonno",
+			["name"] = "Gloves of the Greatfather",
 		},
 		[22331] = {
-			["name"] = "Cuoio Duro",
+			["name"] = "Rugged Leather",
 		},
 		[22711] = {
-			["name"] = "Guanti di Pelle d'Ombra",
+			["name"] = "Shadowskin Gloves",
 		},
 		[22727] = {
 			["name"] = "Core Armor Kit",
 		},
 		[22815] = {
-			["name"] = "Completo da Ogre Gordok",
+			["name"] = "Gordok Ogre Suit",
 		},
 		[22921] = {
-			["name"] = "Cinturone della Consapevolezza",
+			["name"] = "Girdle of Insight",
 		},
 		[22922] = {
-			["name"] = "Stivali della Mangusta",
+			["name"] = "Mongoose Boots",
 		},
 		[22923] = {
-			["name"] = "Bracciali del Volo Rapido",
+			["name"] = "Swift Flight Bracers",
 		},
 		[22926] = {
-			["name"] = "Mantello Cromatico",
+			["name"] = "Chromatic Cloak",
 		},
 		[22927] = {
-			["name"] = "Mantello delle Terre Selvagge",
+			["name"] = "Hide of the Wild",
 		},
 		[22928] = {
-			["name"] = "Mantello Mutevole",
+			["name"] = "Shifting Cloak",
 		},
 		[23190] = {
-			["name"] = "Palla di Cuoio Pesante",
+			["name"] = "Heavy Leather Ball",
 		},
 		[23399] = {
-			["name"] = "Bracciali della Barbarie",
+			["name"] = "Barbaric Bracers",
 		},
 		[23628] = {
-			["name"] = "Cintura Pesante dei Mordilegno",
+			["name"] = "Heavy Timbermaw Belt",
 		},
 		[23629] = {
-			["name"] = "Stivali Pesanti dei Mordilegno",
+			["name"] = "Heavy Timbermaw Boots",
 		},
 		[23703] = {
-			["name"] = "Cinta Vigorosa dei Mordilegno",
+			["name"] = "Might of the Timbermaw",
 		},
 		[23704] = {
-			["name"] = "Guanti Attaccabrighe dei Mordilegno",
+			["name"] = "Timbermaw Brawlers",
 		},
 		[23705] = {
-			["name"] = "Stivali dell'Alba",
+			["name"] = "Dawn Treaders",
 		},
 		[23706] = {
-			["name"] = "Coprispalle d'Oro dell'Alba",
+			["name"] = "Golden Mantle of the Dawn",
 		},
 		[23707] = {
-			["name"] = "Cintura Lavica",
+			["name"] = "Lava Belt",
 		},
 		[23708] = {
-			["name"] = "Guanti Lunghi Cromatici",
+			["name"] = "Chromatic Gauntlets",
 		},
 		[23709] = {
-			["name"] = "Cintura del Segugio del Nucleo",
+			["name"] = "Corehound Belt",
 		},
 		[23710] = {
-			["name"] = "Cintura Fusa",
+			["name"] = "Molten Belt",
 		},
 		[24121] = {
-			["name"] = "Giaco di Pelle di Pipistrello Primordiale",
+			["name"] = "Primal Batskin Jerkin",
 		},
 		[24122] = {
-			["name"] = "Guanti di Pelle di Pipistrello Primordiale",
+			["name"] = "Primal Batskin Gloves",
 		},
 		[24123] = {
-			["name"] = "Bracciali di Pelle di Pipistrello Primordiale",
+			["name"] = "Primal Batskin Bracers",
 		},
 		[24124] = {
-			["name"] = "Pettorale Corazzato della Tigre del Sangue",
+			["name"] = "Blood Tiger Breastplate",
 		},
 		[24125] = {
-			["name"] = "Spallacci della Tigre del Sangue",
+			["name"] = "Blood Tiger Shoulders",
 		},
 		[24654] = {
-			["name"] = "Gambiere di Scaglie di Drago Blu",
+			["name"] = "Blue Dragonscale Leggings",
 		},
 		[24655] = {
-			["name"] = "Guanti Lunghi di Scaglie di Drago Verde",
+			["name"] = "Green Dragonscale Gauntlets",
 		},
 		[24703] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Sogno",
+			["name"] = "Dreamscale Breastplate",
 		},
 		[24846] = {
-			["name"] = "Bracciali Sputafuoco",
+			["name"] = "Spitfire Bracers",
 		},
 		[24847] = {
-			["name"] = "Guanti Lunghi Sputafuoco",
+			["name"] = "Spitfire Gauntlets",
 		},
 		[24848] = {
-			["name"] = "Pettorale Corazzato Sputafuoco",
+			["name"] = "Spitfire Breastplate",
 		},
 		[24849] = {
-			["name"] = "Bracciali dell'Inseguitore delle Sabbie",
+			["name"] = "Sandstalker Bracers",
 		},
 		[24850] = {
-			["name"] = "Guanti Lunghi dell'Inseguitore delle Sabbie",
+			["name"] = "Sandstalker Gauntlets",
 		},
 		[24851] = {
-			["name"] = "Pettorale Corazzato dell'Inseguitore delle Sabbie",
+			["name"] = "Sandstalker Breastplate",
 		},
 		[24940] = {
-			["name"] = "Giubba di Draghetto Nero",
+			["name"] = "Black Whelp Tunic",
 		},
 		[26279] = {
-			["name"] = "Guanti del Manto Tempestoso",
+			["name"] = "Stormshroud Gloves",
 		},
 		[28219] = {
-			["name"] = "Giubba Polare",
+			["name"] = "Polar Tunic",
 		},
 		[28220] = {
-			["name"] = "Guanti Polari",
+			["name"] = "Polar Gloves",
 		},
 		[28221] = {
-			["name"] = "Bracciali Polari",
+			["name"] = "Polar Bracers",
 		},
 		[28222] = {
-			["name"] = "Pettorale Corazzato di Scaglie Ghiacciate",
+			["name"] = "Icy Scale Breastplate",
 		},
 		[28223] = {
-			["name"] = "Guanti Lunghi di Scaglie Ghiacciate",
+			["name"] = "Icy Scale Gauntlets",
 		},
 		[28224] = {
-			["name"] = "Bracciali di Scaglie Ghiacciate",
+			["name"] = "Icy Scale Bracers",
 		},
 		[28472] = {
-			["name"] = "Elmo della Foresta di Rovi",
+			["name"] = "Bramblewood Helm",
 		},
 		[28473] = {
-			["name"] = "Stivali della Foresta di Rovi",
+			["name"] = "Bramblewood Boots",
 		},
 		[28474] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Bramblewood Belt",
 		},
 		[44953] = {
-			["name"] = "Stivali di Grande Inverno",
+			["name"] = "Winter Boots",
 		},
 		[429354] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Void-Touched Leather Gloves",
 		},
 		[429869] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Void-Touched Leather Gauntlets",
 		},
 		[435819] = {
-			["name"] = "Stivali Foschi",
+			["name"] = "Faintly Glowing Leather",
 		},
 		[435904] = {
-			["name"] = "Stivali Foschi",
+			["name"] = "Glowing Gneuro-Linked Cowl",
 		},
 		[435949] = {
-			["name"] = "Stivali Foschi",
+			["name"] = "Glowing Hyperconductive Scale Coif",
 		},
 		[435951] = {
-			["name"] = "Stivali Foschi",
+			["name"] = "Gneuro-Conductive Channeler's Hood",
 		},
 		[435953] = {
-			["name"] = "Stivali Foschi",
+			["name"] = "Rad-Resistant Scale Hood",
 		},
 		[439105] = {
-			["name"] = "Maschera del Grande Vudù",
+			["name"] = "Big Voodoo Mask",
 		},
 		[439108] = {
-			["name"] = "Tonaca del Grande Vudù",
+			["name"] = "Big Voodoo Robe",
 		},
 		[439110] = {
-			["name"] = "Bracciali di Cuoio da Guardiano",
+			["name"] = "Guardian Leather Bracers",
 		},
 		[439112] = {
-			["name"] = "Cintura del Guardiano",
+			["name"] = "Guardian Belt",
 		},
 		[439114] = {
-			["name"] = "Pantaloni del Guardiano",
+			["name"] = "Guardian Pants",
 		},
 		[439116] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Tartaruga",
+			["name"] = "Turtle Scale Breastplate",
 		},
 		[439118] = {
-			["name"] = "Guanti di Scaglie di Tartaruga",
+			["name"] = "Turtle Scale Gloves",
 		},
 		[446183] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Paranoia Mantle",
 		},
 		[446185] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Shrieking Spaulders",
 		},
 		[446186] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Cacophonous Chain Shoulderguards",
 		},
 		[446189] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Shoulderpads of Obsession",
 		},
 		[446190] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Wailing Chain Mantle",
 		},
 		[446192] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Membrane of Dark Neurosis",
 		},
 		[451706] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Screaming Chain Pauldrons",
 		},
 		[461645] = {
-			["name"] = "Spallacci di Scaglie di Drago Blu",
+			["name"] = "Honed Blue Dragonscale Shoulders",
 		},
 		[461649] = {
-			["name"] = "Gambiere di Scaglie di Drago Verde",
+			["name"] = "Living Green Dragonscale Leggings",
 		},
 		[461653] = {
-			["name"] = "Mantello Cromatico",
+			["name"] = "Brilliant Chromatic Cloak",
 		},
 		[461655] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Drago Nero",
+			["name"] = "Hardened Black Dragonscale Breastplate",
 		},
 		[461657] = {
-			["name"] = "Gambiere di Scaglie di Drago Nero",
+			["name"] = "Hardened Black Dragonscale Leggings",
 		},
 		[461659] = {
-			["name"] = "Spallacci di Scaglie di Drago Nero",
+			["name"] = "Hardened Black Dragonscale Shoulders",
 		},
 		[461661] = {
-			["name"] = "Pettorale Corazzato Vulcanico",
+			["name"] = "Masterwork Volcanic Breastplate",
 		},
 		[461663] = {
-			["name"] = "Spallacci Vulcanici",
+			["name"] = "Masterwork Volcanic Shoulders",
 		},
 		[461665] = {
-			["name"] = "Gambiere Vulcaniche",
+			["name"] = "Masterwork Volcanic Leggings",
 		},
 		[461673] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Drago Blu",
+			["name"] = "Honed Blue Dragonscale Breastplate",
 		},
 		[461677] = {
-			["name"] = "Gambiere di Scaglie di Drago Verde",
+			["name"] = "Living Green Dragonscale Gauntlets",
 		},
 		[461690] = {
-			["name"] = "Mantello Mutevole",
+			["name"] = "Mastercrafted Shifting Cloak",
 		},
 		[461692] = {
-			["name"] = "Mantello Mutevole",
+			["name"] = "Synthetic Gordok Ogre Suit",
 		},
 		[461706] = {
-			["name"] = "Bracciali del Volo Rapido",
+			["name"] = "Swift Flight Vambraces",
 		},
 		[461720] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Drago Verde",
+			["name"] = "Living Green Dragonscale Breastplate",
 		},
 		[461722] = {
-			["name"] = "Guanti Lunghi di Gigantosauro",
+			["name"] = "Devilcore Gauntlets",
 		},
 		[461724] = {
-			["name"] = "Gambiere di Gigantosauro",
+			["name"] = "Devilcore Leggings",
 		},
 		[461754] = {
-			["name"] = "Cinturone della Consapevolezza",
+			["name"] = "Girdle of Arcane Insight",
 		},
 		[462227] = {
-			["name"] = "Gambiere di Scaglie di Drago Blu",
+			["name"] = "Honed Blue Dragonscale Leggings",
 		},
 		[1213513] = {
-			["name"] = "Potenziamento d'Armatura del Nucleo",
+			["name"] = "Glowing Chitin Armor Kit",
 		},
 		[1213519] = {
-			["name"] = "Potenziamento d'Armatura del Nucleo",
+			["name"] = "Sharpened Chitin Armor Kit",
 		},
 		[1213521] = {
-			["name"] = "Potenziamento d'Armatura del Nucleo",
+			["name"] = "Razorbramble Cowl",
 		},
 		[1213523] = {
-			["name"] = "Potenziamento d'Armatura del Nucleo",
+			["name"] = "Razorbramble Shoulderpads",
 		},
 		[1213525] = {
-			["name"] = "Potenziamento d'Armatura del Nucleo",
+			["name"] = "Razorbramble Leathers",
 		},
 		[1213717] = {
-			["name"] = "Bracciali dell'Inseguitore delle Sabbie",
+			["name"] = "Sandstalker Bracers",
 		},
 		[1213720] = {
-			["name"] = "Guanti Lunghi dell'Inseguitore delle Sabbie",
+			["name"] = "Sandstalker Gauntlets",
 		},
 		[1213723] = {
-			["name"] = "Pettorale Corazzato dell'Inseguitore delle Sabbie",
+			["name"] = "Sandstalker Breastplate",
 		},
 		[1213726] = {
-			["name"] = "Bracciali Sputafuoco",
+			["name"] = "Spitfire Bracers",
 		},
 		[1213728] = {
-			["name"] = "Guanti Lunghi Sputafuoco",
+			["name"] = "Spitfire Gauntlets",
 		},
 		[1213731] = {
-			["name"] = "Pettorale Corazzato Sputafuoco",
+			["name"] = "Spitfire Breastplate",
 		},
 		[1213734] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Bramblewood Belt",
 		},
 		[1213736] = {
-			["name"] = "Stivali della Foresta di Rovi",
+			["name"] = "Bramblewood Boots",
 		},
 		[1213738] = {
-			["name"] = "Elmo della Foresta di Rovi",
+			["name"] = "Bramblewood Helm",
 		},
 		[1213751] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Sogno",
+			["name"] = "Dreamscale Breastplate",
 		},
 		[1214303] = {
-			["name"] = "Pettorale Corazzato di Scaglie di Sogno",
+			["name"] = "Dreamscale Kilt",
 		},
 		[1223774] = {
-			["name"] = "Pettorale Corazzato di Scaglie Ghiacciate",
+			["name"] = "Icy Scale Breastplate",
 		},
 		[1223776] = {
-			["name"] = "Guanti Lunghi di Scaglie Ghiacciate",
+			["name"] = "Icy Scale Gauntlets",
 		},
 		[1223778] = {
-			["name"] = "Bracciali di Scaglie Ghiacciate",
+			["name"] = "Icy Scale Bracers",
 		},
 		[1223780] = {
-			["name"] = "Giubba Polare",
+			["name"] = "Polar Tunic",
 		},
 		[1223782] = {
-			["name"] = "Guanti Polari",
+			["name"] = "Polar Gloves",
 		},
 		[1223784] = {
-			["name"] = "Bracciali Polari",
+			["name"] = "Polar Bracers",
 		},
 		[1224615] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Infiltrator's Bandana",
 		},
 		[1224616] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Infiltrator's Shoulderpads",
 		},
 		[1224617] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Infiltrator's Vest",
 		},
 		[1224618] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Infiltrator's Bracers",
 		},
 		[1224619] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Infiltrator's Gloves",
 		},
 		[1224620] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Infiltrator's Belt",
 		},
 		[1224621] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Infiltrator's Trousers",
 		},
 		[1224622] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Infiltrator's Shoes",
 		},
 		[1224623] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Huntsman's Coif",
 		},
 		[1224624] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Huntsman's Pauldrons",
 		},
 		[1224625] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Huntsman's Chain",
 		},
 		[1224626] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Huntsman's Wristguards",
 		},
 		[1224627] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Huntsman's Handguards",
 		},
 		[1224628] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Huntsman's Clasp",
 		},
 		[1224629] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Huntsman's Legguards",
 		},
 		[1224630] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Huntsman's Boots",
 		},
 		[1226689] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Quiver",
 		},
 		[1226690] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Ammo Pouch",
 		},
 		[1229432] = {
 			["name"] = "Camp Tent",
 		},
 		[1252982] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252983] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252984] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252985] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252986] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252987] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252995] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252996] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252997] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252998] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252999] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1253000] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1254965] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Forceful Rugged Armor Kit",
 		},
 		[1254966] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mystic Rugged Armor Kit",
 		},
 		[1254967] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Pristine Scorpid Leggings",
 		},
 		[1254968] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Black Dragonscale Helm",
 		},
 		[1254969] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Dragonscale Helm",
 		},
 		[1254970] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Red Dragonscale Leggings",
 		},
 		[1254971] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Charged Scorpid Boots",
 		},
 		[1254972] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Supple Scorpid Sabatons",
 		},
 		[1254973] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Charged Scorpid Leggings",
 		},
 		[1254974] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Supple Scorpid Vest",
 		},
 		[1254975] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Charged Scorpid Vest",
 		},
 		[1254976] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Supple Scorpid Helm",
 		},
 		[1254977] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Charged Scorpid Gauntlets",
 		},
 		[1254978] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Supple Scorpid Belt",
 		},
 		[1254979] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Heavy Scorpid Boots",
 		},
 		[1254980] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Charged Scorpid Bracers",
 		},
 		[1254981] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Supple Scorpid Shoulders",
 		},
 		[1254982] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Mail Belt",
 		},
 		[1254983] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skirmisher's Mail Belt",
 		},
 		[1254984] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Mail Belt",
 		},
 		[1254985] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stalker's Mail Belt",
 		},
 		[1254986] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Mail Gauntlets",
 		},
 		[1254987] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skirmisher's Mail Gauntlets",
 		},
 		[1254988] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Mail Gauntlets",
 		},
 		[1254989] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stalker's Mail Gauntlets",
 		},
 		[1254990] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Charged Scorpid Shoulders",
 		},
 		[1254991] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Supple Scorpid Bracers",
 		},
 		[1254992] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Charged Scorpid Helm",
 		},
 		[1254993] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Supple Scorpid Leggings",
 		},
 		[1254994] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Mail Sabatons",
 		},
 		[1254995] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skirmisher's Mail Sabatons",
 		},
 		[1254996] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Mail Sabatons",
 		},
 		[1254997] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stalker's Mail Sabatons",
 		},
 		[1254998] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Charged Scorpid Belt",
 		},
 		[1254999] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Supple Scorpid Boots",
 		},
 		[1255000] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Mail Bracers",
 		},
 		[1255001] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skirmisher's Mail Bracers",
 		},
 		[1255002] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Mail Bracers",
 		},
 		[1255003] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stalker's Mail Bracers",
 		},
 		[1255004] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Mail Shoulders",
 		},
 		[1255005] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skirmisher's Mail Shoulders",
 		},
 		[1255006] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Mail Shoulders",
 		},
 		[1255007] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stalker's Mail Shoulders",
 		},
 		[1255008] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Mail Boots",
 		},
 		[1255009] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skirmisher's Mail Boots",
 		},
 		[1255010] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Mail Boots",
 		},
 		[1255011] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stalker's Mail Boots",
 		},
 		[1255012] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Ironfeather Leggings",
 		},
 		[1255013] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warbear Helm",
 		},
 		[1255014] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Timbermaw Tunic",
 		},
 		[1255015] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Dawn Armor",
 		},
 		[1255016] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Living Crown",
 		},
 		[1255017] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Suede Hat",
 		},
 		[1255018] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Tooled Leather Pants",
 		},
 		[1255019] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Suede Bracers",
 		},
 		[1255020] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Tooled Leather Epaulets",
 		},
 		[1255021] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Suede Belt",
 		},
 		[1255022] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Tooled Leather Bracers",
 		},
 		[1255023] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wicked Leather Shoulders",
 		},
 		[1255024] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Suede Armor",
 		},
 		[1255025] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Tooled Leather Crown",
 		},
 		[1255026] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Suede Shoulders",
 		},
 		[1255027] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Tooled Leather Gauntlets",
 		},
 		[1255028] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wicked Leather Boots",
 		},
 		[1255029] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Suede Pants",
 		},
 		[1255030] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Tooled Leather Armor",
 		},
 		[1255031] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Leather Waistguard",
 		},
 		[1255032] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Leather Waistguard",
 		},
 		[1255033] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warden's Leather Waistguard",
 		},
 		[1255034] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skulker's Leather Waistguard",
 		},
 		[1255035] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Prowler's Leather Waistguard",
 		},
 		[1255036] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Leather Gauntlets",
 		},
 		[1255037] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Leather Gauntlets",
 		},
 		[1255038] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warden's Leather Gauntlets",
 		},
 		[1255039] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skulker's Leather Gauntlets",
 		},
 		[1255040] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Prowler's Leather Gauntlets",
 		},
 		[1255041] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Suede Gloves",
 		},
 		[1255042] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Tooled Leather Boots",
 		},
 		[1255043] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Leather Boots",
 		},
 		[1255044] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Leather Boots",
 		},
 		[1255045] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warden's Leather Boots",
 		},
 		[1255046] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skulker's Leather Boots",
 		},
 		[1255047] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Prowler's Leather Boots",
 		},
 		[1255048] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Blue Suede Shoes",
 		},
 		[1255049] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Tooled Leather Belt",
 		},
 		[1255050] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Leather Bracers",
 		},
 		[1255051] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Leather Bracers",
 		},
 		[1255052] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warden's Leather Bracers",
 		},
 		[1255053] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skulker's Leather Bracers",
 		},
 		[1255054] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Prowler's Leather Bracers",
 		},
 		[1255055] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Leather Shoulders",
 		},
 		[1255056] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Leather Shoulders",
 		},
 		[1255057] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warden's Leather Shoulders",
 		},
 		[1255058] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skulker's Leather Shoulders",
 		},
 		[1255059] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Prowler's Leather Shoulders",
 		},
 		[1255060] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Leather Shoes",
 		},
 		[1255061] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Leather Shoes",
 		},
 		[1255062] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warden's Leather Shoes",
 		},
 		[1255063] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skulker's Leather Shoes",
 		},
 		[1255064] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Prowler's Leather Shoes",
 		},
 		[1255065] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Leather Gloves",
 		},
 		[1255066] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Leather Gloves",
 		},
 		[1255067] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skirmisher's Leather Gloves",
 		},
 		[1255068] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warden's Leather Gloves",
 		},
 		[1255069] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stalker's Leather Gloves",
 		},
 		[1255070] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skulker's Leather Gloves",
 		},
 		[1255071] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Prowler's Leather Gloves",
 		},
 		[1255073] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Forceful Thick Armor Kit",
 		},
 		[1255074] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mystic Thick Armor Kit",
 		},
 		[1255075] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mender's Leather Belt",
 		},
 		[1255076] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skycaller's Leather Belt",
 		},
 		[1255077] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skirmisher's Leather Belt",
 		},
 		[1255078] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Warden's Leather Belt",
 		},
 		[1255079] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stalker's Leather Belt",
 		},
 		[1255080] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Skulker's Leather Belt",
 		},
 		[1255081] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Prowler's Leather Belt",
 		},
 		[1255082] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Leggings",
 		},
 		[1255083] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Kilt",
 		},
 		[1255084] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Leggings",
 		},
 		[1255085] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Kilt",
 		},
 		[1255086] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Legguards",
 		},
 		[1255087] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Legguards",
 		},
 		[1255088] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Helm",
 		},
 		[1255089] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Helm",
 		},
 		[1255090] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Helm",
 		},
 		[1255091] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Helm",
 		},
 		[1255092] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Helm",
 		},
 		[1255093] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Helm",
 		},
 		[1255095] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Forceful Heavy Armor Kit",
 		},
 		[1255096] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mystic Heavy Armor Kit",
 		},
 		[1255097] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Tunic",
 		},
 		[1255098] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Tunic",
 		},
 		[1255099] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Tunic",
 		},
 		[1255100] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Tunic",
 		},
 		[1255101] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Tunic",
 		},
 		[1255102] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Tunic",
 		},
 		[1255103] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Hillman's Leather Boots",
 		},
 		[1255104] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Hood",
 		},
 		[1255105] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Hood",
 		},
 		[1255106] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Hood",
 		},
 		[1255107] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Hood",
 		},
 		[1255108] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Hood",
 		},
 		[1255109] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Hood",
 		},
 		[1255110] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Pants",
 		},
 		[1255111] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Pants",
 		},
 		[1255112] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Pants",
 		},
 		[1255113] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Pants",
 		},
 		[1255114] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Pants",
 		},
 		[1255115] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Pants",
 		},
 		[1255116] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Boots",
 		},
 		[1255117] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Boots",
 		},
 		[1255118] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Boots",
 		},
 		[1255119] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Boots",
 		},
 		[1255120] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Boots",
 		},
 		[1255121] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Boots",
 		},
 		[1255123] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Forceful Medium Armor Kit",
 		},
 		[1255124] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Mystic Medium Armor Kit",
 		},
 		[1255125] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Gloves",
 		},
 		[1255126] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Gloves",
 		},
 		[1255127] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Gloves",
 		},
 		[1255128] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Gloves",
 		},
 		[1255129] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Gloves",
 		},
 		[1255130] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Gloves",
 		},
 		[1255131] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Armor",
 		},
 		[1255132] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Armor",
 		},
 		[1255133] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Armor",
 		},
 		[1255134] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Armor",
 		},
 		[1255135] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Armor",
 		},
 		[1255136] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Armor",
 		},
 		[1255137] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Wisdom's Leather Belt",
 		},
 		[1255138] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Stormrider's Leather Belt",
 		},
 		[1255139] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Totemic Leather Belt",
 		},
 		[1255140] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Defender's Leather Belt",
 		},
 		[1255141] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Trapper's Leather Belt",
 		},
 		[1255142] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Brawler's Leather Belt",
 		},
 		[1255143] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Moonglow Boots",
 		},
 		[1255144] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Murloc Scale Shoes",
 		},
 		[1255145] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Dark Leather Boots",
 		},
 		[1255146] = {
-			["name"] = "Cintura della Foresta di Rovi",
+			["name"] = "Black Whelp Slippers",
 		},
 		[1263031] = {
 			["name"] = "Tanning Rack",
@@ -1625,16 +1625,16 @@ lib:LoadNames(165, {
 			["name"] = "Grimstitch Boots",
 		},
 		[1292969] = {
-			["name"] = "Spiritcaller Kilt",
+			["name"] = "Spiritcaller Leggings",
 		},
 		[1292970] = {
-			["name"] = "Spiritcaller Gloves",
+			["name"] = "Spiritcaller Grips",
 		},
 		[1292971] = {
-			["name"] = "Spiritcaller Mantle",
+			["name"] = "Spiritcaller Spaulders",
 		},
 		[1292972] = {
-			["name"] = "Spiritcaller Boots",
+			["name"] = "Spiritcaller Treads",
 		},
 		[1292973] = {
 			["name"] = "Spiritcaller Pants",
@@ -1685,16 +1685,16 @@ lib:LoadNames(165, {
 			["name"] = "Broodwatcher's Treaders",
 		},
 		[1299914] = {
-			["name"] = "Spiritcaller Leggings",
+			["name"] = "Spiritcaller Kilt",
 		},
 		[1299915] = {
-			["name"] = "Spiritcaller Grips",
+			["name"] = "Spiritcaller Gloves",
 		},
 		[1299916] = {
-			["name"] = "Spiritcaller Spaulders",
+			["name"] = "Spiritcaller Mantle",
 		},
 		[1299917] = {
-			["name"] = "Spiritcaller Treads",
+			["name"] = "Spiritcaller Boots",
 		},
 		[1301427] = {
 			["name"] = "Cloudy Gustwoven Harness",

@@ -710,10 +710,10 @@ lib:LoadNames(197, {
 			["name"] = "Epaulières sylvestres",
 		},
 		[44950] = {
-			["name"] = "Vêtements d'hiver verts",
+			["name"] = "Vêtements d’hiver vert",
 		},
 		[44958] = {
-			["name"] = "Vêtements d'hiver rouges",
+			["name"] = "Vêtements d’hiver rouge",
 		},
 		[428424] = {
 			["name"] = "Bandages du phénix",
@@ -890,22 +890,22 @@ lib:LoadNames(197, {
 			["name"] = "Bannière de faction",
 		},
 		[1252979] = {
-			["name"] = "Robe adaptable de tuerie de gelées",
+			["name"] = "",
 		},
 		[1252980] = {
-			["name"] = "Crispins adaptables de tuerie de gelées",
+			["name"] = "",
 		},
 		[1252981] = {
-			["name"] = "Corde adaptable de tuerie de gelées",
+			["name"] = "",
 		},
 		[1252991] = {
-			["name"] = "Tunique adaptable de soins de gelées",
+			["name"] = "",
 		},
 		[1252992] = {
-			["name"] = "Brassards adaptables de soins de gelée",
+			["name"] = "",
 		},
 		[1252993] = {
-			["name"] = "Ceinture adaptable de soins de gelées",
+			["name"] = "",
 		},
 		[1257013] = {
 			["name"] = "Sac de composants en lin",

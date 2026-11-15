@@ -425,9 +425,9 @@ function Compat.OpenCraftRequest(entry, crafter)
     end
     local display = Compat.RecipeDisplay(entry)
     local item = display.link or display.name:gsub("[|%c]", "")
-    local message = "Hi! Could you craft " .. item .. " for me? I can provide materials."
+    local message = "Hi! Could you please craft " .. item .. " for me? I can provide materials."
     if #message > 255 then
-        message = "Hi! Could you craft " .. display.name:gsub("[|%c]", ""):sub(1, 120)
+        message = "Hi! Could you please craft " .. display.name:gsub("[|%c]", ""):sub(1, 120)
             .. " for me? I can provide materials."
     end
     local recipient = crafter.name:match("^[^-]+")

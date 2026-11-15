@@ -1,6 +1,8 @@
 local _, addon = ...
 
-local PAGE_SIZE = 6
+local VISIBLE_ROWS = 6
+local ROW_HEIGHT = 39
+local ROW_WIDTH = 654
 local DISCORD_ICON = "Interface\\AddOns\\HordeEternal\\media\\Discord.tga"
 local MAIN_ICON = "Interface\\TargetingFrame\\UI-RaidTargetingIcon_1"
 local CLASS_STYLE = {
@@ -102,7 +104,7 @@ local function SortValue(character, key)
 end
 
 function addon.CreateGuildView(page, header, subheader)
-    local view = { rows = {}, statRows = {}, mainsOnly = true, page = 1, category = "classes", statsPage = 1 }
+    local view = { rows = {}, statRows = {}, mainsOnly = true, scrollOffset = 0, category = "classes", statsPage = 1 }
     local dirty, formMessage = false, ""
     local host = page
     page = CreateFrame("Frame", nil, host)
@@ -190,7 +192,7 @@ function addon.CreateGuildView(page, header, subheader)
     searchIcon:SetPoint("LEFT", filter, "LEFT", 4, 0)
     searchIcon:SetTexture("Interface\\Common\\UI-Searchbox-Icon")
     local placeholder = Label(filter, "Search characters", 24, -6, 330, "GameFontDisableSmall")
-    filter:SetScript("OnTextChanged", function() view.page = 1; view.Refresh() end)
+    filter:SetScript("OnTextChanged", function() view.scrollOffset = 0; view.Refresh() end)
     filter:SetScript("OnEscapePressed", function(self) self:SetText(""); self:ClearFocus() end)
     filter:SetScript("OnEnter", function(self) Tooltip(self, "Search characters", "Name, class, race, guild role, main, spec, or Discord server nickname") end)
     filter:SetScript("OnLeave", HideTooltip)
@@ -203,7 +205,7 @@ function addon.CreateGuildView(page, header, subheader)
         { key = "className", title = "Class / Race", x = 199, width = 108 },
         { key = "spec", title = "Talents", x = 315, width = 102 },
         { key = "rank", title = "Role", x = 425, width = 92 },
-        { key = "main", title = "Main / Nickname", x = 525, width = 144 },
+        { key = "main", title = "Main / Nickname", x = 525, width = 118 },
     }
     local sortHeaders = {}
     for _, column in ipairs(columns) do
@@ -219,7 +221,7 @@ function addon.CreateGuildView(page, header, subheader)
         button:SetScript("OnClick", function()
             if view.sortKey == column.key then view.sortAscending = not view.sortAscending
             else view.sortKey, view.sortAscending = column.key, true end
-            view.page = 1
+            view.scrollOffset = 0
             view.Refresh()
         end)
         button:SetScript("OnEnter", function(self)
@@ -230,15 +232,18 @@ function addon.CreateGuildView(page, header, subheader)
         button:SetScript("OnLeave", HideTooltip)
         sortHeaders[column.key] = button
     end
-    local content = CreateFrame("Frame", nil, page)
-    content:SetSize(680, PAGE_SIZE * 39)
-    content:SetPoint("TOPLEFT", page, "TOPLEFT", 10, -248)
+    local scroll = CreateFrame("ScrollFrame", nil, page, "UIPanelScrollFrameTemplate")
+    scroll:SetSize(ROW_WIDTH, VISIBLE_ROWS * ROW_HEIGHT)
+    scroll:SetPoint("TOPLEFT", page, "TOPLEFT", 10, -248)
+    local content = CreateFrame("Frame", nil, scroll)
+    content:SetSize(ROW_WIDTH, VISIBLE_ROWS * ROW_HEIGHT)
+    scroll:SetScrollChild(content)
     local empty = Label(content, "", 16, -30, 648)
     empty:SetJustifyH("CENTER")
-    for index = 1, PAGE_SIZE do
+    for index = 1, VISIBLE_ROWS + 1 do
         local row = CreateFrame("Button", nil, content)
-        row:SetSize(680, 39)
-        row:SetPoint("TOPLEFT", content, "TOPLEFT", 0, -(index - 1) * 39)
+        row:SetSize(ROW_WIDTH, ROW_HEIGHT)
+        row:SetPoint("TOPLEFT", content, "TOPLEFT", 0, -(index - 1) * ROW_HEIGHT)
         row.background = Fill(row, 0, 0, 0, index % 2 == 0 and 0.27 or 0.12)
         row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
         row.icon = row:CreateTexture(nil, "ARTWORK")
@@ -256,12 +261,13 @@ function addon.CreateGuildView(page, header, subheader)
         row.spec = Label(row, "", 315, -5, 102)
         row.report = Label(row, "", 315, -22, 102)
         row.role = Label(row, "", 425, -5, 92)
-        row.identity = Label(row, "", 541, -5, 128)
-        row.contact = Label(row, "", 541, -22, 128)
+        row.identity = Label(row, "", 541, -5, 102)
+        row.contact = Label(row, "", 541, -22, 102)
         row.discordIcon = Icon(row, DISCORD_ICON, 12, 525, -22)
         for _, label in ipairs({ row.presence, row.race, row.report, row.contact }) do label:SetTextColor(0.65, 0.65, 0.61) end
         row:SetScript("OnEnter", function(self)
             local member = self.member
+            if not member then return end
             local state = member.online == true and "Online" or member.online == false and "Offline" or "Online status unknown"
             local updated = member.updatedAt and member.updatedAt > 0 and date and date("%Y-%m-%d %H:%M", member.updatedAt) or "Unknown"
             Tooltip(self, Bare(member.name), state .. "\n" .. (member.rank or "") .. "\n"
@@ -274,19 +280,14 @@ function addon.CreateGuildView(page, header, subheader)
         row:SetScript("OnLeave", HideTooltip)
         view.rows[index] = row
     end
-    local previous, nextPage = Arrow(page, "Prev", "Previous characters"), Arrow(page, "Next", "Next characters")
-    previous:SetPoint("BOTTOMRIGHT", page, "BOTTOMRIGHT", -128, 5)
-    nextPage:SetPoint("BOTTOMRIGHT", page, "BOTTOMRIGHT", -12, 5)
-    local pagination = Label(page, "", 0, 0, 80)
-    pagination:ClearAllPoints()
-    pagination:SetPoint("BOTTOMRIGHT", page, "BOTTOMRIGHT", -42, 11)
-    pagination:SetJustifyH("CENTER")
+    local visibleRange = Label(page, "", 0, 0, 130)
+    visibleRange:ClearAllPoints()
+    visibleRange:SetPoint("BOTTOMRIGHT", page, "BOTTOMRIGHT", -14, 11)
+    visibleRange:SetJustifyH("RIGHT")
     local directoryCount = Label(page, "", 0, 0, 470)
     directoryCount:ClearAllPoints()
     directoryCount:SetPoint("BOTTOMLEFT", page, "BOTTOMLEFT", 14, 11)
     directoryCount:SetTextColor(0.72, 0.71, 0.66)
-    previous:SetScript("OnClick", function() view.page = view.page - 1; view.Refresh() end)
-    nextPage:SetScript("OnClick", function() view.page = view.page + 1; view.Refresh() end)
 
     local locked = CreateFrame("Frame", nil, host)
     locked:SetAllPoints(host)
@@ -387,6 +388,110 @@ function addon.CreateGuildView(page, header, subheader)
     editor:Hide()
     mains:SetScript("OnClick", function() view.mainsOnly = true; view.statsPage = 1; view.Refresh() end)
     everyone:SetScript("OnClick", function() view.mainsOnly = false; view.statsPage = 1; view.Refresh() end)
+    local function RenderRows(matches, firstIndex)
+        for index, row in ipairs(view.rows) do
+            local memberIndex = firstIndex + index - 1
+            local member = matches[memberIndex]
+            row.member = member
+            if member then
+                local style = CLASS_STYLE[member.classFile] or { 0.9, 0.85, 0.65 }
+                row.name:SetText(Bare(member.name))
+                row.name:SetTextColor(style[1], style[2], style[3])
+                local presence = {}
+                if member.state == "Main" or member.state == "Alt" then presence[#presence + 1] = member.state end
+                if member.online ~= true then presence[#presence + 1] = member.online == false and "Offline" or "Status unknown" end
+                if member.level then presence[#presence + 1] = tostring(member.level) end
+                row.presence:SetText(table.concat(presence, " / "))
+                row.className:SetText(member.className)
+                row.race:SetText(member.race)
+                row.role:SetText(member.rank and member.rank ~= "" and member.rank or "Unknown")
+                row.spec:SetText(member.spec == "Spec unknown" and "Unknown" or member.spec)
+                local points = {}
+                for spent in member.talents:gmatch(": (%d+)") do points[#points + 1] = spent end
+                row.report:SetText(#points > 0 and table.concat(points, " / ") or "-")
+                row.identity:SetText(member.main and Bare(member.main) or "No main selected")
+                row.identity:ClearAllPoints()
+                if member.main then
+                    row.mainIcon:Show()
+                    row.identity:SetPoint("TOPLEFT", row, "TOPLEFT", 541, -5)
+                    row.identity:SetWidth(102)
+                else
+                    row.mainIcon:Hide()
+                    row.identity:SetPoint("TOPLEFT", row, "TOPLEFT", 525, -5)
+                    row.identity:SetWidth(118)
+                end
+                row.identity:SetTextColor(member.state == "Main" and 0.95 or 0.7, member.state == "Main" and 0.8 or 0.7,
+                    member.state == "Main" and 0.35 or 0.65)
+                row.contact:SetText(member.discord ~= "" and member.discord or "-")
+                row.contact:ClearAllPoints()
+                if member.discord ~= "" then
+                    row.discordIcon:Show()
+                    row.contact:SetPoint("TOPLEFT", row, "TOPLEFT", 541, -22)
+                    row.contact:SetWidth(102)
+                else
+                    row.discordIcon:Hide()
+                    row.contact:SetPoint("TOPLEFT", row, "TOPLEFT", 525, -22)
+                    row.contact:SetWidth(118)
+                end
+                ClassIcon(row.icon, member.classFile)
+                addon.Compat.Call(row.icon.SetDesaturated, row.icon, false)
+                row:SetAlpha(1)
+                if member.online == true then
+                    row.background:SetColorTexture(0.025, 0.065, 0.035, memberIndex % 2 == 0 and 0.52 or 0.38)
+                    row.statusDot:SetVertexColor(0.35, 0.9, 0.45, 1)
+                    row.presence:SetTextColor(0.5, 0.85, 0.56)
+                elseif member.online == false then
+                    row.background:SetColorTexture(0.19, 0.19, 0.19, memberIndex % 2 == 0 and 0.72 or 0.58)
+                    row.statusDot:SetVertexColor(0.55, 0.55, 0.55, 1)
+                    row.presence:SetTextColor(0.64, 0.64, 0.64)
+                    row.name:SetTextColor(0.7, 0.7, 0.7)
+                    row.identity:SetTextColor(0.68, 0.68, 0.68)
+                else
+                    row.background:SetColorTexture(0.1, 0.085, 0.045, memberIndex % 2 == 0 and 0.45 or 0.3)
+                    row.statusDot:SetVertexColor(0.9, 0.7, 0.3, 1)
+                    row.presence:SetTextColor(0.83, 0.72, 0.43)
+                end
+                for _, text in ipairs({ row.className, row.role, row.spec }) do
+                    if member.online == false then text:SetTextColor(0.65, 0.65, 0.65)
+                    else text:SetTextColor(0.9, 0.89, 0.84) end
+                end
+                row:ClearAllPoints()
+                row:SetPoint("TOPLEFT", content, "TOPLEFT", 0, -(firstIndex + index - 2) * ROW_HEIGHT)
+                row:Show()
+            else row:Hide() end
+        end
+    end
+    local cachedMatches, updatingScroll = {}, false
+    function view.ScrollTo(offset)
+        if not addon.Compat.IsReadable(offset) or type(offset) ~= "number" or offset ~= offset then return end
+        local maximum = math.max(0, (#cachedMatches - VISIBLE_ROWS) * ROW_HEIGHT)
+        view.scrollOffset = math.max(0, math.min(offset, maximum))
+        updatingScroll = true
+        scroll:SetVerticalScroll(view.scrollOffset)
+        updatingScroll = false
+        HideTooltip()
+        local firstIndex = math.floor(view.scrollOffset / ROW_HEIGHT) + 1
+        RenderRows(cachedMatches, firstIndex)
+        local lastIndex = math.min(#cachedMatches, math.ceil((view.scrollOffset + VISIBLE_ROWS * ROW_HEIGHT) / ROW_HEIGHT))
+        visibleRange:SetText(#cachedMatches > 0 and (firstIndex .. "-"
+            .. lastIndex .. " / " .. #cachedMatches) or "0 / 0")
+    end
+    local function Scrolled(_, offset)
+        if not updatingScroll then view.ScrollTo(offset) end
+    end
+    if type(scroll.HookScript) == "function" then scroll:HookScript("OnVerticalScroll", Scrolled)
+    else scroll:SetScript("OnVerticalScroll", Scrolled) end
+    addon.Compat.Call(scroll.EnableMouseWheel, scroll, true)
+    local function MouseWheel(_, delta)
+        if not addon.Compat.IsReadable(delta) or type(delta) ~= "number" or delta ~= delta
+            or delta < -100 or delta > 100 then return end
+        view.ScrollTo(view.scrollOffset - delta * ROW_HEIGHT * 3)
+    end
+    scroll:SetScript("OnMouseWheel", MouseWheel)
+    for _, row in ipairs(view.rows) do
+        addon.Compat.Call(row.EnableMouseWheel, row, true)
+        row:SetScript("OnMouseWheel", MouseWheel)
+    end
     function view.Refresh()
         if not addon.Members then return end
         local settings, name = addon.Members.Settings(), addon.Members.Self()
@@ -497,80 +602,14 @@ function addon.CreateGuildView(page, header, subheader)
                 button.indicator:Show()
             else button.indicator:Hide() end
         end
-        local pages = math.max(1, math.ceil(#matches / PAGE_SIZE))
-        view.page = math.max(1, math.min(pages, view.page))
-        for index, row in ipairs(view.rows) do
-            local member = matches[(view.page - 1) * PAGE_SIZE + index]
-            row.member = member
-            if member then
-                local style = CLASS_STYLE[member.classFile] or { 0.9, 0.85, 0.65 }
-                row.name:SetText(Bare(member.name))
-                row.name:SetTextColor(style[1], style[2], style[3])
-                local presence = member.online == true and "Online" or member.online == false and "Offline" or "Status unknown"
-                local identity = member.state == "Main" and "Main / " or member.state == "Alt" and "Alt / " or ""
-                row.presence:SetText(identity .. presence .. (member.level and (" / " .. member.level) or ""))
-                row.className:SetText(member.className)
-                row.race:SetText(member.race)
-                row.role:SetText(member.rank and member.rank ~= "" and member.rank or "Unknown")
-                row.spec:SetText(member.spec == "Spec unknown" and "Unknown" or member.spec)
-                local points = {}
-                for spent in member.talents:gmatch(": (%d+)") do points[#points + 1] = spent end
-                row.report:SetText(#points > 0 and table.concat(points, " / ") or "-")
-                row.identity:SetText(member.main and Bare(member.main) or "No main selected")
-                row.identity:ClearAllPoints()
-                if member.main then
-                    row.mainIcon:Show()
-                    row.identity:SetPoint("TOPLEFT", row, "TOPLEFT", 541, -5)
-                    row.identity:SetWidth(128)
-                else
-                    row.mainIcon:Hide()
-                    row.identity:SetPoint("TOPLEFT", row, "TOPLEFT", 525, -5)
-                    row.identity:SetWidth(144)
-                end
-                row.identity:SetTextColor(member.state == "Main" and 0.95 or 0.7, member.state == "Main" and 0.8 or 0.7,
-                    member.state == "Main" and 0.35 or 0.65)
-                row.contact:SetText(member.discord ~= "" and member.discord or "-")
-                row.contact:ClearAllPoints()
-                if member.discord ~= "" then
-                    row.discordIcon:Show()
-                    row.contact:SetPoint("TOPLEFT", row, "TOPLEFT", 541, -22)
-                    row.contact:SetWidth(128)
-                else
-                    row.discordIcon:Hide()
-                    row.contact:SetPoint("TOPLEFT", row, "TOPLEFT", 525, -22)
-                    row.contact:SetWidth(144)
-                end
-                ClassIcon(row.icon, member.classFile)
-                addon.Compat.Call(row.icon.SetDesaturated, row.icon, false)
-                row:SetAlpha(1)
-                if member.online == true then
-                    row.background:SetColorTexture(0.025, 0.065, 0.035, index % 2 == 0 and 0.52 or 0.38)
-                    row.statusDot:SetVertexColor(0.35, 0.9, 0.45, 1)
-                    row.presence:SetTextColor(0.5, 0.85, 0.56)
-                elseif member.online == false then
-                    row.background:SetColorTexture(0.19, 0.19, 0.19, index % 2 == 0 and 0.72 or 0.58)
-                    row.statusDot:SetVertexColor(0.55, 0.55, 0.55, 1)
-                    row.presence:SetTextColor(0.64, 0.64, 0.64)
-                    row.name:SetTextColor(0.7, 0.7, 0.7)
-                    row.identity:SetTextColor(0.68, 0.68, 0.68)
-                else
-                    row.background:SetColorTexture(0.1, 0.085, 0.045, index % 2 == 0 and 0.45 or 0.3)
-                    row.statusDot:SetVertexColor(0.9, 0.7, 0.3, 1)
-                    row.presence:SetTextColor(0.83, 0.72, 0.43)
-                end
-                for _, text in ipairs({ row.className, row.role, row.spec }) do
-                    if member.online == false then text:SetTextColor(0.65, 0.65, 0.65)
-                    else text:SetTextColor(0.9, 0.89, 0.84) end
-                end
-                row:Show()
-            else row:Hide() end
-        end
+        cachedMatches = matches
+        updatingScroll = true
+        content:SetHeight(math.max(VISIBLE_ROWS * ROW_HEIGHT, #matches * ROW_HEIGHT))
+        updatingScroll = false
+        view.ScrollTo(view.scrollOffset)
         empty:SetText(settings and "No matching characters" or "Waiting for a complete readable guild roster")
         if #matches == 0 then empty:Show() else empty:Hide() end
-        pagination:SetText(view.page .. " / " .. pages)
         directoryCount:SetText(#matches .. " characters" .. (stats.unassigned > 0 and (" / " .. stats.unassigned .. " without a main") or ""))
-        previous:SetEnabled(view.page > 1)
-        nextPage:SetEnabled(view.page < pages)
         if allowed then page:Show(); locked:Hide() else page:Hide(); locked:Show() end
         setup:SetEnabled(settings ~= nil)
         requirements:SetText(settings and "Main character and Discord server nickname must both be saved."
@@ -591,7 +630,8 @@ function addon.CreateGuildView(page, header, subheader)
     view.profile, view.editor, view.close, view.shade = profile, editor, close, shade
     view.body, view.locked, view.setup, view.directoryCount = page, locked, setup, directoryCount
     view.mains, view.everyone, view.filter = mains, everyone, filter
-    view.nextPage, view.previous, view.coverage, view.status = nextPage, previous, coverage, status
+    view.scroll, view.content, view.visibleRange = scroll, content, visibleRange
+    view.coverage, view.status = coverage, status
     view.statTabs, view.statsNext, view.statsPrevious = statTabs, statsNext, statsPrevious
     view.sortHeaders = sortHeaders
     view.Refresh()

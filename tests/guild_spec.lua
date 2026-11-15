@@ -180,6 +180,7 @@ roster = { "Pod Cast-ForeverRealm", "Other Crafter-ForeverRealm", "Returning Mem
 
 local function NewClient(first, last, ids, account, character)
     local client = { first = first, last = last, ids = ids, sent = {}, timers = {}, messages = {}, buttons = 0 }
+    local firstFrame = #createdFrames + 1
     Activate(client)
     local instance = {
         Print = function(message) client.messages[#client.messages + 1] = message end,
@@ -191,6 +192,7 @@ local function NewClient(first, last, ids, account, character)
     for _, module in ipairs({ "Compat", "GuildState", "Catalog", "Sync", "Core" }) do
         assert(loadfile("HordeEternal/" .. module .. ".lua"))("HordeEternal", instance)
     end
+    client.syncFrame = createdFrames[firstFrame]
     local lifecycle = createdFrames[#createdFrames]
     lifecycle.scripts.OnEvent(lifecycle, "ADDON_LOADED", "HordeEternal")
     lifecycle.scripts.OnEvent(lifecycle, "PLAYER_LOGIN")
@@ -218,6 +220,42 @@ local function Deliver(message, sender, receiver)
     Activate(receiver)
     receiver.addon.Sync.Receive("HERC2", message, "GUILD", sender.first .. " " .. sender.last .. "-ForeverRealm")
 end
+
+local repeatedScan = NewClient("Pod", "Cast", { 1001, 1002, 1003, 1004, 1005, 1006 })
+local firstComplete = repeatedScan.addon.Catalog.Initialize().localProfile
+assert(repeatedScan.addon.Catalog.Scan() == 6
+    and repeatedScan.addon.Catalog.Initialize().localProfile == firstComplete,
+    "an unchanged complete rescan must not replace the profile object captured by queued chunks")
+assert(repeatedScan.addon.Sync.Publish())
+Flush(repeatedScan)
+local completeTransfers = {}
+for _, message in ipairs(repeatedScan.sent) do
+    local id, part, total = message:match("^2|P|[^|]+|%d+|([^|]+)|%d+|(%d+)|(%d+)|")
+    if id then
+        completeTransfers[id] = completeTransfers[id] or { parts = 0, total = tonumber(total) }
+        completeTransfers[id].parts = completeTransfers[id].parts + 1
+    end
+end
+local transferCount = 0
+for _, transfer in pairs(completeTransfers) do
+    transferCount = transferCount + 1
+    assert(transfer.parts == transfer.total, "repeated identical scans must not interrupt a queued transfer")
+end
+assert(transferCount == 1, "repeated publication of the same queued profile must coalesce instead of flooding the queue")
+local beforeRepeatedInventory = #repeatedScan.sent + 1
+for _ = 1, 4 do
+    Activate(repeatedScan)
+    clock = clock + 1
+    repeatedScan.addon.Catalog.Scan()
+    repeatedScan.addon.Sync.Publish()
+    repeatedScan.syncFrame.scripts.OnUpdate(nil, 1)
+end
+Flush(repeatedScan)
+local inventorySent = false
+for index = beforeRepeatedInventory, #repeatedScan.sent do
+    if repeatedScan.sent[index]:sub(1, 4) == "2|I|" then inventorySent = true end
+end
+assert(inventorySent, "repeated scans must not indefinitely postpone the inventory needed by upgraded peers")
 
 local account = {
     schemaVersion = 1, minimapPos = 42, minimapPositionVersion = 1, canvasTab = "guild",
@@ -429,3 +467,232 @@ assert(not outsider.addon.guildActive and outsider.buttons == 0 and #outsider.me
     and #outsider.sent == 0 and openings == 0 and not outsider.addon.Catalog.Initialize().localProfile,
     "another guild must neither activate the addon nor bypass eligibility with slash commands")
 print("PASS: reset cancels partial transfers, empty profession updates, alt isolation, and departed-member exclusion")
+
+inGuild, guildClubId, clock = true, 503775441, 2000
+roster = { "Pod Cast-ForeverRealm", "Other Crafter-ForeverRealm", "Returning Member-ForeverRealm", "Alt Character-ForeverRealm" }
+local source = NewClient("Pod", "Cast", { 1001, 1002 })
+local provider = NewClient("Other", "Crafter", { 2001 })
+local newcomer = NewClient("Returning", "Member", { 3001 })
+Flush(source); Flush(provider); Flush(newcomer)
+local function DeliverKind(sender, receiver, kind, start)
+    for index = start or 1, #sender.sent do
+        if sender.sent[index]:sub(1, 4) == "2|" .. kind .. "|" then Deliver(sender.sent[index], sender, receiver) end
+    end
+end
+local function Announce(client)
+    Activate(client)
+    local start = #client.sent + 1
+    assert(client.addon.Sync.Reconcile())
+    Flush(client)
+    return start
+end
+local function Recover(holder, receiver, start)
+    DeliverKind(holder, receiver, "I", start)
+    local requestStart, replyStart = #receiver.sent + 1, #holder.sent + 1
+    Flush(receiver)
+    DeliverKind(receiver, holder, "W", requestStart)
+    Flush(holder)
+    DeliverKind(holder, receiver, "R", replyStart)
+end
+Recover(source, provider, Announce(source))
+Activate(provider)
+local original = provider.addon.Catalog.Initialize().remoteProfiles[roster[1]]
+assert(original and original.revision == 1 and #original.recipes == 2,
+    "inventory/request exchange must recover the original owner's revisioned profile")
+Recover(provider, newcomer, Announce(provider))
+Activate(newcomer)
+local relayed = newcomer.addon.Catalog.Initialize().remoteProfiles[roster[1]]
+assert(relayed and relayed.revision == original.revision and relayed.updatedAt == original.updatedAt
+    and relayed.fingerprint == original.fingerprint and #relayed.recipes == 2,
+    "a retained peer must recover an absent owner's profile without inventing a newer revision or timestamp")
+Activate(source)
+local beforeWithdrawal = source.addon.Catalog.Initialize().localProfile.revision
+local learnedAPI = C_TradeSkillUI.GetRecipeInfo
+C_TradeSkillUI.IsRecipeProfessionLearned = function() return false end
+C_TradeSkillUI.GetRecipeInfo = function(id) return { recipeID = id, name = "Recipe " .. id, learned = false } end
+source.ids = { 1001, 1002 }
+assert(source.addon.Catalog.Scan() == 2)
+local withdrawal = source.addon.Catalog.Initialize().localProfile
+assert(#withdrawal.recipes == 0 and withdrawal.revision > beforeWithdrawal,
+    "confirmed profession removal must create an empty higher-revision withdrawal")
+C_TradeSkillUI.IsRecipeProfessionLearned, C_TradeSkillUI.GetRecipeInfo = nil, learnedAPI
+clock = clock + 11
+Recover(source, provider, Announce(source))
+clock = clock + 11
+Recover(provider, newcomer, Announce(provider))
+Activate(newcomer)
+assert(#newcomer.addon.Catalog.Initialize().remoteProfiles[roster[1]].recipes == 0,
+    "an offline owner withdrawal must propagate through a peer and remove stale crafting claims")
+local stale = "2|P|Horde Eternal@ForeverRealm|1|99-1|9999|1|1|1001~171~Alchemy~Stale item~Stale recipe"
+newcomer.addon.Sync.Receive("HERC2", stale, "GUILD", roster[1])
+assert(#newcomer.addon.Catalog.Initialize().remoteProfiles[roster[1]].recipes == 0,
+    "late legacy packets must not resurrect recipes after a revisioned withdrawal")
+Activate(source)
+source.ids = { 1001 }
+assert(source.addon.Catalog.Scan() == 1)
+clock = clock + 11
+local pendingStart = Announce(source)
+DeliverKind(source, newcomer, "I", pendingStart)
+Activate(newcomer)
+assert(newcomer.addon.Sync.Progress() >= 1)
+table.remove(roster, 1)
+assert(newcomer.addon.GuildState.RefreshRoster())
+assert(not newcomer.addon.Catalog.Initialize().remoteProfiles["Pod Cast-ForeverRealm"]
+    and newcomer.addon.Sync.Progress() == 0, "verified departure must prune profile and pending recovery")
+local sentBeforeDeparture = #newcomer.sent
+Flush(newcomer)
+assert(#newcomer.sent == sentBeforeDeparture, "departed owners must not leave queued recovery requests")
+print("PASS: revisioned peer recovery, original-owner preservation, profession withdrawals, stale rejection, and departure cancellation")
+
+roster = { "Pod Cast-ForeverRealm", "Other Crafter-ForeverRealm", "Returning Member-ForeverRealm", "Alt Character-ForeverRealm" }
+clock = clock + 20
+local retrySource = NewClient("Pod", "Cast", { 4101, 4102, 4103 })
+local backup = SavedCopy(retrySource.addon.db)
+local backupCharacter = SavedCopy(retrySource.addon.characterDB)
+local retryProvider = NewClient("Other", "Crafter", { 4201 })
+local retryReceiver = NewClient("Returning", "Member", { 4301 })
+Flush(retrySource); Flush(retryProvider); Flush(retryReceiver)
+Recover(retrySource, retryProvider, Announce(retrySource))
+local sourceInventory = Announce(retrySource)
+DeliverKind(retrySource, retryReceiver, "I", sourceInventory)
+local providerInventory = Announce(retryProvider)
+DeliverKind(retryProvider, retryReceiver, "I", providerInventory)
+Flush(retryReceiver)
+Activate(retryReceiver)
+clock = clock + 301
+retryReceiver.syncFrame.scripts.OnUpdate(nil, 1)
+local retryStart, responseStart = #retryReceiver.sent + 1, #retryProvider.sent + 1
+Flush(retryReceiver)
+DeliverKind(retryReceiver, retryProvider, "W", retryStart)
+Flush(retryProvider)
+local chunks = {}
+for index = responseStart, #retryProvider.sent do
+    if retryProvider.sent[index]:sub(1, 4) == "2|R|" then chunks[#chunks + 1] = retryProvider.sent[index] end
+end
+assert(#chunks > 1, "multi-part snapshots must exercise chunk reassembly")
+for index = #chunks, 1, -1 do Deliver(chunks[index], retryProvider, retryReceiver) end
+Deliver(chunks[1], retryProvider, retryReceiver)
+Activate(retryReceiver)
+local pending, applied, retries = retryReceiver.addon.Sync.Progress()
+assert(pending == 0 and applied >= 1 and retries >= 1
+    and #retryReceiver.addon.Catalog.Initialize().remoteProfiles[roster[1]].recipes == 3,
+    "a missing provider must fall back to a retained peer and accept reordered chunks once")
+Activate(retrySource)
+retrySource.ids = { 4101, 4102, 4103, 4104 }
+clock = clock - 200
+assert(retrySource.addon.Catalog.Scan() == 4)
+local latestRevision = retrySource.addon.Catalog.Initialize().localProfile.revision
+clock = clock + 11
+Recover(retrySource, retryProvider, Announce(retrySource))
+local newInventory = Announce(retrySource)
+DeliverKind(retrySource, retryReceiver, "I", newInventory)
+local requestIndex, chunkIndex = #retryReceiver.sent + 1, #retrySource.sent + 1
+Flush(retryReceiver)
+DeliverKind(retryReceiver, retrySource, "W", requestIndex)
+Flush(retrySource)
+local validChunks = {}
+for index = chunkIndex, #retrySource.sent do
+    if retrySource.sent[index]:sub(1, 4) == "2|R|" then validChunks[#validChunks + 1] = retrySource.sent[index] end
+end
+assert(#validChunks > 0)
+for index, chunk in ipairs(validChunks) do
+    Deliver(index == 1 and chunk:sub(1, -2) .. "X" or chunk, retrySource, retryReceiver)
+end
+Activate(retryReceiver)
+assert(retryReceiver.addon.Catalog.Initialize().remoteProfiles[roster[1]].revision < latestRevision,
+    "a checksum failure must preserve the last valid profile")
+clock = clock + 301
+retryReceiver.syncFrame.scripts.OnUpdate(nil, 1)
+local nextRequest, nextResponse = #retryReceiver.sent + 1, #retrySource.sent + 1
+Flush(retryReceiver)
+DeliverKind(retryReceiver, retrySource, "W", nextRequest)
+Flush(retrySource)
+DeliverKind(retrySource, retryReceiver, "R", nextResponse)
+Activate(retryReceiver)
+assert(retryReceiver.addon.Catalog.Initialize().remoteProfiles[roster[1]].revision == latestRevision,
+    "retry must recover the newer revision even with an older source timestamp")
+local restoredOwner = NewClient("Pod", "Cast", { 4101 }, backup, backupCharacter)
+Flush(restoredOwner)
+clock = clock + 11
+Recover(retryProvider, restoredOwner, Announce(retryProvider))
+Activate(restoredOwner)
+assert(restoredOwner.addon.Catalog.Initialize().localProfile.revision > latestRevision
+    and restoredOwner.addon.Catalog.scannedThisSession,
+    "a fresh owner restored from backup must recover above peer-retained revisions")
+print("PASS: provider fallback, reordered/checksummed snapshots, backward clocks, and restored-owner revision recovery")
+
+clock = clock + 20
+local missed = NewClient("Alt", "Character", { 4401 })
+Flush(missed)
+DeliverKind(retrySource, missed, "I", Announce(retrySource))
+Flush(missed)
+local initialRequests = #missed.sent
+for _ = 1, 3 do
+    Activate(missed)
+    clock = clock + 301
+    missed.syncFrame.scripts.OnUpdate(nil, 1)
+    Flush(missed)
+end
+Activate(missed)
+local waiting, _, retryCount, failureCount = missed.addon.Sync.Progress()
+assert(waiting == 0 and retryCount == 2 and failureCount == 1,
+    "missing providers must exhaust exactly three attempts without an immediate retry loop")
+local requestCount = 0
+for _, message in ipairs(missed.sent) do if message:sub(1, 4) == "2|W|" then requestCount = requestCount + 1 end end
+assert(requestCount == 3 and #missed.sent >= initialRequests, "recovery must emit only three requests in one retry round")
+local beforeCooldown = #missed.sent
+clock = clock + 10
+missed.syncFrame.scripts.OnUpdate(nil, 1)
+Flush(missed)
+local afterCount = 0
+for _, message in ipairs(missed.sent) do if message:sub(1, 4) == "2|W|" then afterCount = afterCount + 1 end end
+assert(afterCount == requestCount and #missed.sent >= beforeCooldown)
+missed.addon.Sync.SetSharing(false)
+DeliverKind(retrySource, missed, "I", Announce(retrySource))
+Activate(missed)
+assert(missed.addon.Sync.Progress() == 0, "sharing opt-out must cancel and refuse recipe recovery")
+local unavailableOwner = NewClient("Pod", "Cast", nil, SavedCopy(backup), SavedCopy(backupCharacter))
+Flush(unavailableOwner)
+local priorCounter = unavailableOwner.addon.characterDB.catalog.scanRevision
+clock = clock + 11
+Recover(retryProvider, unavailableOwner, Announce(retryProvider))
+Activate(unavailableOwner)
+assert(not unavailableOwner.addon.Catalog.scannedThisSession
+    and unavailableOwner.addon.characterDB.catalog.scanRevision == priorCounter
+    and not unavailableOwner.addon.Sync.Publish(),
+    "a restored unavailable owner may retain peer data but cannot issue or publish a fresh learned claim")
+print("PASS: bounded retry exhaustion/cooldown, consent cancellation, and unavailable-owner recovery safety")
+
+clock = clock + 20
+for index = 5, 180 do roster[index] = "Crafter " .. index .. "-ForeverRealm" end
+local largeGuild = NewClient("Other", "Crafter", { 4501 })
+Flush(largeGuild)
+Activate(largeGuild)
+local largeCache = largeGuild.addon.Catalog.Initialize().remoteProfiles
+for index = 5, #roster do
+    local profile = { recipes = {}, revision = 1, generation = 1, updatedAt = 1000 }
+    profile.fingerprint = largeGuild.addon.Catalog.Fingerprint(largeGuild.addon.Catalog.EncodeProfile(profile))
+    largeCache[roster[index]] = profile
+end
+local batchStart = Announce(largeGuild)
+local packets = 0
+for index = batchStart, #largeGuild.sent do if largeGuild.sent[index]:sub(1, 4) == "2|I|" then packets = packets + 1 end end
+assert(packets > 0 and packets <= 8, "large-guild inventory announcements must use bounded queue batches")
+clock = clock + 16
+Activate(largeGuild)
+local secondBatch = #largeGuild.sent + 1
+largeGuild.syncFrame.scripts.OnUpdate(nil, 1)
+Flush(largeGuild)
+assert(#largeGuild.sent >= secondBatch, "periodic maintenance must continue unfinished inventory batches")
+Activate(largeGuild)
+local primaryPayload = "601~171~Alchemy~A~A;602~333~Enchanting~B~B;603~202~Engineering~C~C"
+largeGuild.addon.Sync.Receive("HERC2", "2|P|Horde Eternal@ForeverRealm|1|700-1|1000|1|1|" .. primaryPayload,
+    "GUILD", roster[4])
+assert(not largeGuild.addon.Catalog.Initialize().remoteProfiles[roster[4]],
+    "an incoming profile with three primary professions must be rejected before storage")
+primaryPayload = "601~171~Alchemy~A~A;602~333~Enchanting~B~B"
+largeGuild.addon.Sync.Receive("HERC2", "2|P|Horde Eternal@ForeverRealm|1|700-2|1000|1|1|" .. primaryPayload,
+    "GUILD", roster[4])
+assert(#largeGuild.addon.Catalog.Initialize().remoteProfiles[roster[4]].recipes == 2,
+    "a valid two-primary legacy profile must remain compatible")
+print("PASS: large-guild inventory batching with reserved queue capacity")

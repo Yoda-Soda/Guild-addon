@@ -129,6 +129,11 @@ function methods:SetPoint(...) self.point = { ... } end
 function methods:SetSize(width, height) self.width, self.height = width, height end
 function methods:SetWidth(width) self.width = width end
 function methods:SetHeight(height) self.height = height end
+function methods:SetScrollChild(child) self.scrollChild = child end
+function methods:SetVerticalScroll(offset)
+    self.offset = offset
+    if self.scripts.OnVerticalScroll then self.scripts.OnVerticalScroll(self, offset) end
+end
 function methods:SetColorTexture(...) self.color = { ... } end
 function methods:SetTextColor(...) self.textColor = { ... } end
 function methods:SetVertexColor(...) self.vertexColor = { ... } end
@@ -147,7 +152,18 @@ function methods:Show() self.shown = true end
 function methods:Hide() self.shown = false end
 function methods:CreateFontString() return Widget() end
 function methods:CreateTexture() return Widget() end
-CreateFrame = function() return Widget() end
+CreateFrame = function(_, _, _, template)
+    local widget = Widget()
+    if template == "UIPanelScrollFrameTemplate" then
+        widget.ScrollBar = Widget()
+        widget.ScrollBar.scripts.OnValueChanged = function(_, offset) widget:SetVerticalScroll(offset) end
+    end
+    return widget
+end
+function methods:SetValue(value)
+    self.value = value
+    if self.scripts.OnValueChanged then self.scripts.OnValueChanged(self, value) end
+end
 GameTooltip = Widget()
 assert(loadfile("HordeEternal/GuildView.lua"))("HordeEternal", addon)
 local discordFile = assert(io.open("HordeEternal/media/Discord.tga", "rb"))
@@ -161,7 +177,7 @@ player = "Main Person-Realm"
 addon.Members.Capture()
 local header, subheader = Widget(), Widget()
 local view = addon.CreateGuildView(Widget(), header, subheader)
-assert(not view.editor.shown and #view.rows == 6, "profile editing must not occupy the member workspace or require nested list scrolling")
+assert(not view.editor.shown and #view.rows == 7, "the directory must use six visible rows plus one recycled buffer row")
 assert(view.profile:GetText() == "Edit" and view.profile.width == 64 and view.profile.height == 24
     and view.profile.point[1] == "TOPRIGHT" and view.profile.icon == nil,
     "profile editing must use a compact labelled Edit button instead of cog artwork")
@@ -172,7 +188,7 @@ assert(not GameTooltip.shown, "leaving the Edit button must hide the tooltip")
 view.profile.scripts.OnClick()
 assert(view.editor.shown and view.shade.shown, "the profile dialog must cover the directory with an input-blocking shade")
 for index, row in ipairs(view.rows) do
-    assert(row.width == 680 and row.height == 39 and row.point[5] == -(index - 1) * 39)
+    assert(row.width == 654 and row.height == 39)
     local cells = { row.name, row.className, row.spec, row.role, row.identity }
     for column = 1, #cells - 1 do
         assert(cells[column].point[4] + cells[column].width < cells[column + 1].point[4],
@@ -180,7 +196,8 @@ for index, row in ipairs(view.rows) do
     end
     assert(cells[5].point[4] + cells[5].width <= row.width)
 end
-assert(248 + #view.rows * 39 < 538 - 34, "the directory must fit above the footer without a scroll frame")
+assert(view.scroll.height == 6 * 39 and view.scroll.scrollChild == view.content,
+    "the fixed-height scrolling directory must fit above the footer")
 assert(view.mains:GetChecked() and not view.everyone:GetChecked() and view.locked.shown and not view.body.shown
     and header:GetText() == "Guild profile", "unconfigured users must see setup instead of counts or character data")
 view.main:SetChecked(true)
@@ -194,7 +211,7 @@ assert(addon.Members.Settings().main == player and addon.Members.Settings().disc
 assert(view.body.shown and not view.locked.shown, "saving a main and server nickname must unlock information")
 assert(view.coverage:GetText():find("1 counted", 1, true)
     and view.statRows[1].statName == "Shaman" and view.statRows[1].statCount == 1)
-assert(view.rows[1].identity:GetText() == "Main Person" and view.rows[1].presence:GetText():find("Main /", 1, true),
+assert(view.rows[1].identity:GetText() == "Main Person" and view.rows[1].presence:GetText() == "Main",
     "the selected main must show first name and surname without realm or a competing prefix")
 assert(view.rows[1].mainIcon.shown and view.rows[1].mainIcon.texture == "Interface\\TargetingFrame\\UI-RaidTargetingIcon_1"
     and view.rows[1].identity.point[4] > view.rows[1].mainIcon.point[4] + view.rows[1].mainIcon.width
@@ -210,6 +227,9 @@ assert(view.rows[2].discordIcon.shown and view.rows[2].mainIcon.shown and view.r
     "an alt's Main/Discord column must mark its referenced main name, while still identifying the character as an alt")
 assert(view.rows[1].statusDot.vertexColor[2] == 0.9 and view.rows[1].background.color[2] > view.rows[1].background.color[1],
     "online characters must have an unmistakable green presence indicator")
+assert(not view.rows[1].presence:GetText():find("Online", 1, true)
+    and not view.rows[1].presence:GetText():find(" / $"),
+    "online rows must not repeat the Online label or leave a dangling separator")
 assert(view.rows[2].presence:GetText():find("Status unknown", 1, true)
     and view.rows[2].statusDot.vertexColor[1] == 0.9, "unknown status must be amber, not styled as offline")
 roster[1].online = false
@@ -223,6 +243,8 @@ view.Refresh()
 assert(not view.rows[1].icon.desaturated and view.rows[1].statusDot.vertexColor[2] == 0.9
     and view.rows[1].name.textColor[1] ~= view.rows[1].name.textColor[2],
     "a reconnecting character must restore class colour and online styling on the reused row")
+assert(not view.rows[1].presence:GetText():find("Online", 1, true)
+    and not view.rows[1].presence:GetText():find("Offline", 1, true), "recycled online rows must clear stale presence words")
 assert(view.statRows[1].count:GetText() == "1 (100.0%)")
 view.everyone.scripts.OnClick()
 assert(not view.mains:GetChecked() and view.everyone:GetChecked() and view.coverage:GetText():find("2 counted", 1, true))
@@ -234,16 +256,40 @@ for index = 1, 53 do roster[#roster + 1] = { name = "Roster Person " .. index ..
 view.Refresh()
 assert(not view.rows[2].discordIcon.shown and not view.rows[2].mainIcon.shown,
     "a row reused for an unconfigured character must hide the nickname and main icons")
-assert(view.nextPage.enabled and not view.previous.enabled)
-view.nextPage.scripts.OnClick()
-assert(view.page == 2 and view.previous.enabled)
-view.nextPage.scripts.OnClick()
-assert(view.page == 3 and view.nextPage.enabled)
-for _ = 1, 7 do view.nextPage.scripts.OnClick() end
-assert(view.page == 10 and not view.nextPage.enabled and view.rows[1].shown and not view.rows[2].shown)
+assert(not view.nextPage and not view.previous and view.content.height == #roster * 39,
+    "member pagination controls must be replaced by a virtual scrolling extent")
+local firstMember = view.rows[1].member
+local savedRows, savedStats, savedCreateFrame = addon.Members.Rows, addon.Members.Stats, CreateFrame
+addon.Members.Rows = function() error("scrolling must not rebuild the roster") end
+addon.Members.Stats = function() error("scrolling must not rebuild statistics") end
+CreateFrame = function() error("scrolling must reuse pooled rows") end
+view.scroll.scripts.OnMouseWheel(view.scroll, -1)
+assert(view.scrollOffset == 3 * 39 and view.rows[1].member ~= firstMember)
+view.rows[1].scripts.OnMouseWheel(view.rows[1], -1)
+assert(view.scrollOffset == 6 * 39, "the mouse wheel must work over member rows")
+view.scroll.ScrollBar:SetValue(20)
+assert(view.scrollOffset == 20 and view.rows[7].shown and view.rows[1].point[5] == 0
+    and view.visibleRange:GetText():find("1-7 /", 1, true),
+    "scrollbar input must render a partial-row buffer and accurate visible range")
+view.ScrollTo(-100)
+assert(view.scrollOffset == 0, "scrolling must clamp at the first character")
+addon.Members.Rows, addon.Members.Stats, CreateFrame = savedRows, savedStats, savedCreateFrame
+view.ScrollTo(100000)
+assert(view.scrollOffset == (#roster - 6) * 39 and view.rows[6].shown and not view.rows[7].shown,
+    "scrolling must clamp at the final six characters without allocating extra rows")
+local oldOffset = view.scrollOffset
+view.Refresh()
+assert(view.scrollOffset == oldOffset, "roster refreshes must preserve the current scroll offset when possible")
+local oldRoster = roster
+roster = { oldRoster[1], oldRoster[2], oldRoster[3] }
+view.Refresh()
+assert(view.scrollOffset == 0 and not view.rows[4].shown,
+    "shrinking the roster must clamp scrolling and hide recycled rows")
+roster = oldRoster
+view.Refresh()
 view.filter:SetText("Unknown Person")
 view.filter.scripts.OnTextChanged()
-assert(view.page == 1 and view.rows[1].member.name == "Unknown Person-Realm" and not view.rows[2].shown)
+assert(view.scrollOffset == 0 and view.rows[1].member.name == "Unknown Person-Realm" and not view.rows[2].shown)
 view.rows[1].scripts.OnEnter(view.rows[1])
 assert(GameTooltip:GetText() == "Unknown Person")
 ready = false
@@ -290,10 +336,10 @@ view.statTabs.classes.scripts.OnClick()
 assert(view.statsPage == 1 and not view.statsNext.shown)
 view.filter:SetText("")
 view.filter.scripts.OnTextChanged()
-view.page = 5
+view.ScrollTo(5 * 39)
 view.sortHeaders.name.scripts.OnClick()
-assert(view.page == 1 and view.sortKey == "name" and view.sortAscending
-    and view.rows[1].member.name == "Main Person-Realm", "sorting a heading must reset pagination and sort all filtered characters")
+assert(view.scrollOffset == 0 and view.sortKey == "name" and view.sortAscending
+    and view.rows[1].member.name == "Main Person-Realm", "sorting a heading must reset scrolling and sort all filtered characters")
 view.sortHeaders.name.scripts.OnClick()
 assert(not view.sortAscending and view.rows[1].member.name == "Unknown Person-Realm")
 assert(view.sortHeaders.name.indicator.shown)
@@ -321,7 +367,7 @@ assert(not view.locked.shown and view.body.shown)
 player = "Unknown Person-Realm"
 assert(addon.Members.CanView(), "alts inherit completed main and server-nickname setup from their account")
 player = "Main Person-Realm"
-print("PASS: Guild view default mains radio, profile drafts/save, all-character statistics, directory pagination/filtering, and roster availability")
+print("PASS: Guild view pooled scrolling, profile drafts/save, statistics, search/sort, and roster availability")
 
 function methods:RegisterEvent(event) self.events = self.events or {}; self.events[event] = true end
 function methods:IsEventRegistered(event) return self.events and self.events[event] or false end

@@ -87,6 +87,8 @@ SlashCmdList[slashKey] = function(message)
         addon.Report()
     elseif command == "admin" then
         addon.Print("Application role: " .. addon.GuildState.AdminStatus())
+    elseif command == "professions" then
+        addon.ShowProfessionCorrection(true)
     elseif command == "logs" then
         addon.Diagnostics.ToggleWindow()
     elseif command == "logs clear" then
@@ -98,8 +100,9 @@ SlashCmdList[slashKey] = function(message)
     elseif command == "scan" then
         local scanned, learned, reason = addon.Catalog.Scan()
         if scanned then
-            addon.Print("Scanned " .. scanned .. " recipes; " .. learned .. " learned.")
-            if addon.Catalog.Initialize().shareEnabled then
+            if reason then addon.Print(reason .. ". Recipe sharing paused.")
+            else addon.Print("Scanned " .. scanned .. " recipes; " .. learned .. " learned.") end
+            if addon.Catalog.scannedThisSession and addon.Catalog.Initialize().shareEnabled then
                 addon.Sync.Publish()
             end
         else

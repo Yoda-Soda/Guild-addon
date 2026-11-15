@@ -161,6 +161,7 @@ function methods:SetTexture(texture) self.texture = texture end
 function methods:SetTexCoord(...) self.coordinates = { ... } end
 function methods:SetNormalTexture(texture) self.texture = texture end
 function methods:SetEnabled(enabled) self.enabled = enabled end
+function methods:RegisterForClicks(...) self.clicks = { ... } end
 function methods:SetChecked(checked) self.checked = checked end
 function methods:GetChecked() return self.checked end
 function methods:Show() self.shown = true end
@@ -183,7 +184,8 @@ end
 GameTooltip = Widget()
 addon.db = { canvasTab = "map" }
 local header, subheader = Widget(), Widget()
-local view = addon.CreateGuildMapView(Widget(), header, subheader)
+local mapPage = Widget()
+local view = addon.CreateGuildMapView(mapPage, header, subheader)
 assert(view.viewport.width == 684 and view.viewport.height == 372 and #view.zoneRows == 3,
     "the map should occupy the main width with a compact location strip instead of a narrow sidebar")
 for index, row in ipairs(view.zoneRows) do
@@ -208,6 +210,21 @@ view.zoneRows[1].scripts.OnClick(view.zoneRows[1])
 assert(view.mapID == 85 and view.pins[1].location.count == 2)
 view.back.scripts.OnClick()
 assert(view.mapID == 12)
+view.here.scripts.OnClick()
+assert(view.mapID == 85)
+view.canvas.scripts.OnMouseUp(view.canvas, "LeftButton")
+assert(view.mapID == 85, "left-clicking the background must not change map layers")
+view.canvas.scripts.OnMouseUp(view.canvas, "RightButton")
+assert(view.mapID == 12, "right-clicking map artwork must move up exactly one layer")
+view.viewport.scripts.OnMouseUp(view.viewport, "RightButton")
+assert(view.mapID == 947, "right-clicking the viewport must move from continent to world")
+view.viewport.scripts.OnMouseUp(view.viewport, "RightButton")
+assert(view.mapID == 947, "right-clicking the root map must be a no-op")
+view.pins[1].scripts.OnClick(view.pins[1], "LeftButton")
+assert(view.mapID == 12, "left-click marker drill-down must remain unchanged")
+assert(view.pins[1].clicks[2] == "RightButtonUp", "markers must receive right-clicks")
+view.pins[1].scripts.OnClick(view.pins[1], "RightButton")
+assert(view.mapID == 947, "right-clicking a marker must go to the parent instead of drilling down")
 view.world.scripts.OnClick()
 assert(view.mapID == 947)
 view.here.scripts.OnClick()
@@ -262,85 +279,67 @@ print("PASS: Darkspear Island remains visible, names are discoverable, BG artwor
 local worldCanvas = Widget()
 worldCanvas:SetSize(1000, 700)
 WorldMapFrame = Widget()
-local shownMap, scale = 947, 1
 WorldMapFrame.GetCanvas = function() return worldCanvas end
-WorldMapFrame.GetMapID = function() return shownMap end
-WorldMapFrame.SetMapID = function(_, id) shownMap = id end
+WorldMapFrame.GetMapID = function() return 947 end
+WorldMapFrame.SetMapID = function() end
 WorldMapFrame.ScrollContainer = Widget()
-WorldMapFrame.ScrollContainer.GetCanvasScale = function() return scale end
-local hook
-hooksecurefunc = function(target, method, callback)
-    assert(target == WorldMapFrame and method == "SetMapID")
-    hook = callback
-end
+WorldMapFrame.ScrollContainer.GetCanvasScale = function() return 1 end
+hooksecurefunc = function() error("Horde Eternal must not hook the native world map") end
 local now, rosterRequests = 100, 0
 GetTime = function() return now end
 C_GuildInfo = { GuildRoster = function() rosterRequests = rosterRequests + 1 end }
 addon.GuildMap.Start()
-assert(hook and WorldMapFrame.scripts.OnShow and addon.GuildMap.listener.events.GUILD_ROSTER_UPDATE)
-WorldMapFrame.scripts.OnShow()
+mapPage.scripts.OnShow()
+assert(addon.GuildMap.listener.events.GUILD_ROSTER_UPDATE)
+addon.GuildMap.Refresh()
+assert(not WorldMapFrame.scripts.OnShow and not WorldMapFrame.scripts.OnHide
+    and next(WorldMapFrame.ScrollContainer.scripts) == nil and not addon.GuildMap.nativeFilter,
+    "the addon must not install native map hooks or filters")
+for _, frame in ipairs(frames) do
+    assert(frame.parent ~= WorldMapFrame and frame.parent ~= worldCanvas
+        and frame.parent ~= WorldMapFrame.ScrollContainer, "native world-map overlays must not be created")
+end
 addon.GuildMap.RequestRoster()
-assert(rosterRequests == 1, "map-opening requests must be coalesced")
-local nativePins = {}
-for _, frame in ipairs(frames) do if frame.parent == worldCanvas then nativePins[#nativePins + 1] = frame end end
-assert(#nativePins == 1 and nativePins[1].shown and nativePins[1].location.count == 3)
-assert(nativePins[1].level == 101, "guild counts must sit above native map artwork and overlays")
-assert(addon.GuildMap.nativeFilter and addon.GuildMap.nativeFilter.button.shown)
-addon.GuildMap.nativeFilter.button.scripts.OnClick()
-assert(addon.GuildMap.nativeFilter.panel.shown)
-addon.GuildMap.nativeFilter.check:SetChecked(false)
-addon.GuildMap.nativeFilter.check.scripts.OnClick(addon.GuildMap.nativeFilter.check)
-assert(addon.db.showGuildMap == false and not nativePins[1].shown and not view.enabled:GetChecked(),
-    "the native map filter must hide guild markers and synchronize the addon toggle")
-addon.GuildMap.nativeFilter.check:SetChecked(true)
-addon.GuildMap.nativeFilter.check.scripts.OnClick(addon.GuildMap.nativeFilter.check)
-assert(nativePins[1].shown and view.enabled:GetChecked())
+addon.GuildMap.RequestRoster()
+assert(rosterRequests == 1, "internal map requests must remain coalesced")
+local refreshedRosters = 0
+addon.GuildState.RefreshRoster = function() refreshedRosters = refreshedRosters + 1; return true end
+local internalRefresh
+for _, frame in ipairs(frames) do
+    if frame.texture == "Interface\\Buttons\\UI-RefreshButton" then internalRefresh = frame end
+end
+assert(internalRefresh, "the internal map refresh control must remain available")
+internalRefresh.scripts.OnClick()
+assert(refreshedRosters == 1 and view.canvas.shown, "internal Refresh must update the roster/artwork without native map calls")
 view.enabled:SetChecked(false)
 view.enabled.scripts.OnClick()
-assert(not view.pins[1].shown and not nativePins[1].shown and not addon.GuildMap.nativeFilter.check:GetChecked(),
-    "the addon checkbox must synchronize the native filter and hide markers on both maps")
+assert(not view.pins[1].shown and addon.db.showGuildMap == false,
+    "the internal map marker toggle must remain functional")
 view.enabled:SetChecked(true)
 view.enabled.scripts.OnClick()
-assert(view.pins[1].shown and nativePins[1].shown and addon.GuildMap.nativeFilter.check:GetChecked())
-assert(nativePins[1].point[4] == 300 and nativePins[1].point[5] == -350)
-scale = 2
-WorldMapFrame.ScrollContainer.scripts.OnUpdate(nil, 0.5)
-assert(nativePins[1].scale == 0.5 and nativePins[1].point[4] == 600,
-    "world-map zoom must keep count-pin screen size stable")
-addon.db.showGuildMap = false
-addon.GuildMap.RefreshWorld()
-assert(not nativePins[1].shown and nativePins[1].location == nil)
-addon.db.showGuildMap = true
-shownMap = 12
-hook()
-assert(nativePins[1].location.count == 2)
+assert(view.pins[1].shown and addon.db.showGuildMap == true)
 configured = false
 addon.GuildMap.Refresh()
-assert(not nativePins[1].shown and nativePins[1].location == nil,
-    "losing profile access must clear native-map locations, not just the addon view")
+assert(not view.pins[1].shown and view.pins[1].location == nil,
+    "losing profile access must still clear internal map locations")
 configured = true
 ready = false
-addon.GuildMap.RefreshWorld()
-assert(not nativePins[1].shown)
+addon.GuildMap.Refresh()
+assert(not view.pins[1].shown)
 ready = true
-addon.GuildMap.RefreshWorld()
-WorldMapFrame.scripts.OnHide()
-assert(not nativePins[1].shown)
+addon.GuildMap.Refresh()
+assert(view.pins[1].shown)
 now = now + 11
 addon.GuildMap.listener.scripts.OnEvent(nil, "ZONE_CHANGED_NEW_AREA")
 assert(rosterRequests == 2)
 eligible = false
 addon.GuildMap.Refresh()
-assert(not nativePins[1].shown and nativePins[1].location == nil
-    and not view.pins[1].shown and view.pins[1].location == nil
-    and not addon.GuildMap.nativeFilter.button.shown and not addon.GuildMap.nativeFilter.panel.shown,
-    "guild-ineligible refreshes must remove map pins, payloads, and the native filter")
+assert(not view.pins[1].shown and view.pins[1].location == nil,
+    "guild-ineligible refreshes must remove internal pins and payloads")
 local beforeBlockedRequest = rosterRequests
-WorldMapFrame.scripts.OnShow()
-assert(not nativePins[1].shown and not addon.GuildMap.nativeFilter.button.shown
-    and rosterRequests == beforeBlockedRequest, "opening the native map outside the guild must show no addon controls")
+addon.GuildMap.RequestRoster()
+assert(rosterRequests == beforeBlockedRequest)
 eligible = true
 addon.GuildMap.Refresh()
-assert(nativePins[1].shown and addon.GuildMap.nativeFilter.button.shown,
-    "restoring guild eligibility must restore authorized native map controls")
-print("PASS: native world-map markers, toggle, scale correction, map switches, profile/roster invalidation, and bounded roster requests")
+assert(view.pins[1].shown, "restoring guild eligibility must restore the internal map")
+print("PASS: internal map toggle/access/refresh preserved without native world-map overlays or hooks")

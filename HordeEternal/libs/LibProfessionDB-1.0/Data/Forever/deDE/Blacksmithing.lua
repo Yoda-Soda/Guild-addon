@@ -662,7 +662,7 @@ lib:LoadNames(164, {
 			["name"] = "Finsterer Streiter",
 		},
 		[23653] = {
-			["name"] = "Nachtlauer",
+			["name"] = "Einbruch der Nacht",
 		},
 		[24136] = {
 			["name"] = "Blutseelenbrustplatte",
@@ -1361,22 +1361,22 @@ lib:LoadNames(164, {
 			["name"] = "Gleve des Legioniten",
 		},
 		[1252988] = {
-			["name"] = "Adaptive Brustplatte des Erdbrechers",
+			["name"] = "",
 		},
 		[1252989] = {
-			["name"] = "Adaptive Armschützer des Erdbrechers",
+			["name"] = "",
 		},
 		[1252990] = {
-			["name"] = "Adaptiver Gurt des Erdbrechers",
+			["name"] = "",
 		},
 		[1253001] = {
-			["name"] = "Adaptive Platte des Erdwebers",
+			["name"] = "",
 		},
 		[1253002] = {
-			["name"] = "Adaptive Bindungen des Erdwebers",
+			["name"] = "",
 		},
 		[1253003] = {
-			["name"] = "Adaptiver Taillenschutz des Erdwebers",
+			["name"] = "",
 		},
 		[1263041] = {
 			["name"] = "Amboss",
