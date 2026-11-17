@@ -16,21 +16,37 @@ client compatibility, so please read this before opening a pull request.
 
 ## Set up
 
+You contribute from a **fork**. You do not need push access to this repository,
+and there is no invite to accept.
+
 ```powershell
-git clone git@github.com:Yoda-Soda/Guild-addon.git
+# 1. Fork the repository on GitHub, then clone your fork.
+git clone git@github.com:<your-username>/Guild-addon.git
 cd Guild-addon
+
+# 2. Track the upstream repository so you can rebase onto current main.
+git remote add upstream git@github.com:Yoda-Soda/Guild-addon.git
+git fetch upstream
+
+# 3. Run the tests.
 .\tests\run-tests.ps1
 ```
 
 First run downloads MoonSharp 2.0.0 into `%TEMP%\HordeEternal-LuaTests`. You
 should see `PASS:` lines and no exceptions.
 
+On your **first** pull request GitHub holds the CI run until the maintainer
+approves it, because first-time contributors' workflows are not run
+automatically. The required check therefore blocks the merge until they click
+**Approve and run workflows** — that is expected, not a broken pipeline.
+
 ## Workflow
 
-1. Branch from `main`, one topic per branch:
+1. Branch from an up-to-date `main`, one topic per branch:
    `fix/guild-roster-empty-state`, `feature/map-filter`, `docs/readme`.
 2. Keep commits focused and write a real message — explain *why*, not just what.
-3. Push your branch and open a pull request into `main`.
+3. Push to **your fork** and open a pull request against
+   `Yoda-Soda/Guild-addon:main`.
 4. Make sure CI is green and answer review comments by pushing more commits.
 5. The maintainer squash-merges. Your branch is deleted automatically.
 
