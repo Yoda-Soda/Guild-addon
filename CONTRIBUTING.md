@@ -34,10 +34,14 @@ should see `PASS:` lines and no exceptions.
 4. Make sure CI is green and answer review comments by pushing more commits.
 5. The maintainer squash-merges. Your branch is deleted automatically.
 
-`main` is the release line and is protected: pushes go through a pull request
-that needs one approving review, a green CI run, and a resolved conversation
-list. Force-pushes and branch deletion are blocked. Do not rewrite history on a
-branch someone is reviewing.
+`main` is the release line and is protected. Pushes go through a pull request
+that needs a green CI run, a resolved conversation list, and **approval from the
+maintainer**, who is the only code owner. An approval from any other contributor
+does not satisfy the gate. Force-pushes and branch deletion are blocked, and
+history is linear (squash merges only). Do not rewrite history on a branch
+someone is reviewing.
+
+Only the maintainer merges. Expect to wait for their review — that is the point.
 
 ## Rules that will bite you
 

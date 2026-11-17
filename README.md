@@ -5,9 +5,9 @@ composition statistics, a searchable member directory, a shared profession
 catalogue, and a guild map.
 
 > **Public repository.** Anyone may contribute through a pull request to `main`,
-> which requires a passing CI run and one approving review. Players install the
-> addon from its CurseForge page — only the maintainer publishes releases.
-> See [Releasing](#releasing-maintainer-only).
+> which needs a passing CI run and approval from the maintainer — the only code
+> owner. Players install the addon from its CurseForge page; only the maintainer
+> publishes releases. See [Releasing](#releasing-maintainer-only).
 
 | | |
 |---|---|
