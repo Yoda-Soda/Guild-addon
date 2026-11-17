@@ -1,9 +1,12 @@
 # Review ownership.
 #
-# Branch protection on `main` requires one approving review. Code owner review is
-# NOT currently enforced (require_code_owner_reviews = false), so these entries
-# request the right reviewer automatically rather than blocking the merge. Flip
-# that on in Settings -> Branches if these paths must be gated on the owner.
+# Branch protection on `main` requires CODE OWNER approval, so every entry below
+# is an approval gate, not a hint. The maintainer is the only code owner, which
+# is deliberate: a pull request from anyone else cannot merge until the
+# maintainer approves it.
+#
+# Consequence: a pull request authored by the maintainer cannot be self-approved
+# and will need the admin bypass ("Merge without waiting for requirements").
 
 *                       @Yoda-Soda
 
