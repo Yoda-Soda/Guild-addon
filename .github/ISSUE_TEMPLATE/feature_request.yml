@@ -1,0 +1,51 @@
+name: Feature request
+description: Propose a change in behaviour or a new capability
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What is awkward or missing today, and who is affected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behaviour
+      description: What the addon should do. Describe user-visible behaviour, not implementation.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Guild overview / statistics
+        - Member directory
+        - Profession catalogue / crafting
+        - Guild map
+        - Sync between guild members
+        - Database / saved variables
+        - Minimap or options
+        - Test suite / tooling
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds you have tried, or other designs you rejected.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        Note: `HordeEternal/README.md` records the intended semantics of existing
+        behaviour. Please check it before proposing a change to something that may
+        be deliberate.

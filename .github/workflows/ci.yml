@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Addon tests (Windows PowerShell 5.1)
+    runs-on: windows-latest
+    defaults:
+      run:
+        # Windows PowerShell 5.1, matching the local development environment.
+        # The suite loads a .NET Framework 4.0 (net40-client) assembly, so pwsh
+        # on Linux cannot run it and ubuntu-latest is not an option.
+        shell: powershell
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore MoonSharp 2.0.0
+        id: moonsharp
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}\HordeEternal-LuaTests
+          key: moonsharp-2.0.0-net40-client
+
+      - name: Provision MoonSharp (cache miss)
+        if: steps.moonsharp.outputs.cache-hit != 'true'
+        run: .\tests\Get-MoonSharp.ps1
+
+      - name: Run tests
+        run: .\tests\run-tests.ps1
+
+      - name: Build addon package
+        run: .\tools\New-AddonPackage.ps1
+
+      - name: Upload testable package
+        uses: actions/upload-artifact@v4
+        with:
+          name: HordeEternal-package
+          path: dist/*.zip
+          retention-days: 7
+          if-no-files-found: error

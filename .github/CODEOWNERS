@@ -1,0 +1,16 @@
+# Review ownership.
+#
+# NOTE: CODEOWNERS only *blocks* merges when branch protection requires code
+# owner review. This repository is private on a GitHub Free account, where branch
+# protection is unavailable, so these rules are advisory today: they request the
+# right reviewer automatically. Turn on "Require review from Code Owners" if the
+# account is upgraded or the repository becomes public.
+
+*                       @Yoda-Soda
+
+# Vendored, hash-pinned third-party code - maintainer only.
+/HordeEternal/libs/     @Yoda-Soda
+
+# Release tooling and CI.
+/tools/                 @Yoda-Soda
+/.github/               @Yoda-Soda

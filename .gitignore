@@ -1,0 +1,13 @@
+# Packaged addon output (built by tools/New-AddonPackage.ps1)
+dist/
+*.zip
+
+# Test scratch space
+tests/.tmp/
+*.trx
+
+# Editor / OS noise
+.vs/
+*.user
+.DS_Store
+Thumbs.db
