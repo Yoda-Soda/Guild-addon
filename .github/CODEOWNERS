@@ -1,0 +1,15 @@
+# Review ownership.
+#
+# Branch protection on `main` requires one approving review. Code owner review is
+# NOT currently enforced (require_code_owner_reviews = false), so these entries
+# request the right reviewer automatically rather than blocking the merge. Flip
+# that on in Settings -> Branches if these paths must be gated on the owner.
+
+*                       @Yoda-Soda
+
+# Vendored, hash-pinned third-party code - maintainer only.
+/HordeEternal/libs/     @Yoda-Soda
+
+# Release tooling and CI.
+/tools/                 @Yoda-Soda
+/.github/               @Yoda-Soda
