@@ -26,11 +26,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Restore MoonSharp 2.0.0
         id: moonsharp
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}\HordeEternal-LuaTests
           key: moonsharp-2.0.0-net40-client
@@ -46,7 +46,7 @@ jobs:
         run: .\tools\New-AddonPackage.ps1
 
       - name: Upload testable package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: HordeEternal-package
           path: dist/*.zip
