@@ -1,7 +1,7 @@
 # Contributing to HordeEternal
 
-Thanks for helping. This is a small, private project with a strict quality bar
-around client compatibility, so please read this before opening a pull request.
+Thanks for helping. This is a small project with a strict quality bar around
+client compatibility, so please read this before opening a pull request.
 
 ## Before you start
 
@@ -34,8 +34,10 @@ should see `PASS:` lines and no exceptions.
 4. Make sure CI is green and answer review comments by pushing more commits.
 5. The maintainer squash-merges. Your branch is deleted automatically.
 
-`main` is the release line. Do not commit directly to it, do not force-push it,
-and do not rewrite history on a branch someone is reviewing.
+`main` is the release line and is protected: pushes go through a pull request
+that needs one approving review, a green CI run, and a resolved conversation
+list. Force-pushes and branch deletion are blocked. Do not rewrite history on a
+branch someone is reviewing.
 
 ## Rules that will bite you
 

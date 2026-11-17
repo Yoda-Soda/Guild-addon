@@ -4,9 +4,10 @@ A guild management addon for the **World of Warcraft Forever** client: guild
 composition statistics, a searchable member directory, a shared profession
 catalogue, and a guild map.
 
-> **This is a private repository.** Source is shared with invited contributors
-> only. Players install the addon from its CurseForge page — only the
-> maintainer publishes releases. See [Releasing](#releasing-maintainer-only).
+> **Public repository.** Anyone may contribute through a pull request to `main`,
+> which requires a passing CI run and one approving review. Players install the
+> addon from its CurseForge page — only the maintainer publishes releases.
+> See [Releasing](#releasing-maintainer-only).
 
 | | |
 |---|---|

@@ -1,10 +1,9 @@
 # Review ownership.
 #
-# NOTE: CODEOWNERS only *blocks* merges when branch protection requires code
-# owner review. This repository is private on a GitHub Free account, where branch
-# protection is unavailable, so these rules are advisory today: they request the
-# right reviewer automatically. Turn on "Require review from Code Owners" if the
-# account is upgraded or the repository becomes public.
+# Branch protection on `main` requires one approving review. Code owner review is
+# NOT currently enforced (require_code_owner_reviews = false), so these entries
+# request the right reviewer automatically rather than blocking the merge. Flip
+# that on in Settings -> Branches if these paths must be gated on the owner.
 
 *                       @Yoda-Soda
 
