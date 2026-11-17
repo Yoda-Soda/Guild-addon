@@ -12,7 +12,7 @@ catalogue, and a guild map.
 | | |
 |---|---|
 | Addon folder | `HordeEternal/` |
-| TOC | `Interface: 16001`, `Version: 0.1.0` |
+| TOC | `Interface: 16001`, `Version: 1.0.2` |
 | Client | WoW Forever, pinned data build `1.60.1.69977` |
 | Saved variables | `HordeEternalDB` (account), `HordeEternalCharacterDB` (per character) |
 | Licence | MIT — see [LICENSE](LICENSE), plus the bundled `LibProfessionDB-1.0` |
@@ -92,18 +92,27 @@ releases from that account only.
 # 1. Tests and CI must be green on main.
 git switch main; git pull
 
-# 2. Build the upload artifact (folder-rooted zip, as CurseForge expects).
+# 2. Bump ## Version in HordeEternal/HordeEternal.toc via a pull request and
+#    merge it. The TOC is the single source of truth for the release version.
+
+# 3. Build the upload artifact (folder-rooted zip, as CurseForge expects).
 .\tools\New-AddonPackage.ps1
 ```
 
-The script writes `dist/HordeEternal-<version>.zip`, verifies the TOC
-`## Version` matches, and prints the SHA-256. Upload that file to the CurseForge
-project page by hand, then tag the release:
+The script names the file `dist/HordeEternal-<TOC version>.zip` and prints the
+SHA-256. Upload that file to the CurseForge project page by hand, then tag the
+merged commit:
 
 ```powershell
-git tag -a v0.1.0 -m "HordeEternal 0.1.0"
-git push origin v0.1.0
+git tag -a v1.0.2 -m "HordeEternal 1.0.2"
+git push origin v1.0.2
 ```
+
+The TOC version must be bumped as part of each release, not after it. It sat at
+`0.1.0` while CurseForge shipped `1.0.0`–`1.0.2`, which meant the in-game version
+string was wrong and any package built from the repository would have been
+mislabelled. `New-AddonPackage.ps1` reads the version from the TOC precisely so a
+stale value cannot be silently packaged under the wrong name.
 
 CI builds the same zip on every pull request as a downloadable artifact, so
 contributors can test a real package without touching the release channel.
