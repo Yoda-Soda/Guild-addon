@@ -95,6 +95,7 @@ success.
 .\tests\run-tests.ps1                         # everything contributors can run
 .\tests\run-tests.ps1 -SkipLua                # integrity/TOC checks only
 .\tests\embedded_library_spec.ps1             # one suite
+.\tools\Test-AddonVersion.ps1                 # version/tag consistency
 ```
 
 Add a spec when you change behaviour covered by an existing spec, and keep the

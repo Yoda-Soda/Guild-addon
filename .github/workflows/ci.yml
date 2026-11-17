@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
@@ -27,6 +28,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          # Full history and tags: the version guard compares the TOC against the
+          # newest release tag, and a tag build checks the tag itself.
+          fetch-depth: 0
+
+      - name: Verify addon version
+        run: .\tools\Test-AddonVersion.ps1
 
       - name: Restore MoonSharp 2.0.0
         id: moonsharp
