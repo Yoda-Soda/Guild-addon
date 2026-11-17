@@ -1,7 +1,7 @@
 ## Interface: 16001
 ## Title: HordeEternal
 ## Notes: Horde Eternal guild canvas prototype.
-## Version: 1.0.2
+## Version: 1.0.1
 ## SavedVariables: HordeEternalDB
 ## SavedVariablesPerCharacter: HordeEternalCharacterDB
 ## IconTexture: Interface\AddOns\HordeEternal\media\HordeEternalEmblem.tga
