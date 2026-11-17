@@ -111,8 +111,16 @@ git push origin v1.0.2
 The TOC version must be bumped as part of each release, not after it. It sat at
 `0.1.0` while CurseForge shipped `1.0.0`–`1.0.2`, which meant the in-game version
 string was wrong and any package built from the repository would have been
-mislabelled. `New-AddonPackage.ps1` reads the version from the TOC precisely so a
-stale value cannot be silently packaged under the wrong name.
+mislabelled.
+
+`tools/Test-AddonVersion.ps1` enforces this in CI:
+
+- the TOC version must be a plain `MAJOR.MINOR.PATCH`;
+- on a `v*` tag build, the tag must equal the TOC version exactly;
+- on every other build, the TOC version must not be behind the newest release tag.
+
+So a release cannot be tagged with a mismatched TOC, and a stale TOC cannot
+quietly reach the packager. `New-AddonPackage.ps1` reads the same value.
 
 CI builds the same zip on every pull request as a downloadable artifact, so
 contributors can test a real package without touching the release channel.
