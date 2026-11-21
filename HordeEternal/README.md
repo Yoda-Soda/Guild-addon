@@ -61,11 +61,20 @@ One confirmed access blocker is an explicitly empty `GetNormalizedRealmName()`
 result with no guild-realm return from `GetGuildInfo("player")`. The reported
 client loads the addon and registers its command, but the old realm check then
 silently hides both the minimap button and window despite the correct guild ID.
-Readable empty realms now retain realm-less roster identities and use a
-`<guild name>@club:503775441` cache scope, without inventing a realm or relaxing
-the required guild ID. Missing or restricted realm results still fail closed.
-Previous realm-qualified guild caches remain separate and are not deleted; the
-realm-less scope populates through fresh scans, member setup, and guild sync.
+For this single-guild addon, an explicitly empty realm now falls back to the
+confirmed historical realm identity `CAMWOWAU1Realm2PvP`. The user verified that
+the existing member and crafting records remain under
+`The Horde Eternal@CAMWOWAU1Realm2PvP`. The shared realm helper reconnects that
+original cache scope and preserves the same realm-qualified roster/player names,
+so saved main/alt links, nicknames, recipe ownership, and reset metadata remain
+available without repeating setup. Nonempty realm returns are unchanged, and
+missing or restricted results still fail closed. The required guild ID is not
+relaxed.
+
+An earlier empty-realm fix incorrectly selected `<guild name>@club:503775441`,
+opening fresh member and crafting records instead of reconnecting the old ones.
+Recovery now selects the original tables directly: it does not merge, rename,
+delete, or overwrite either the original or the newer club-scoped records.
 Use `/reload`, then verify the minimap button and `/hordeeternal` on the affected
 character. Current build metadata and post-fix client verification are still
 outstanding; passing offline tests does not establish that the live UI recovered.

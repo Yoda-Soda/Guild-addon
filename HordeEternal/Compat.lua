@@ -78,6 +78,12 @@ function Compat.Value(callback, ...)
     return results[2], "available"
 end
 
+function Compat.HomeRealm()
+    local home, state = Compat.Value(GetNormalizedRealmName)
+    if state ~= "available" or type(home) ~= "string" then return nil end
+    return home ~= "" and home or "CAMWOWAU1Realm2PvP"
+end
+
 function Compat.AddOnStatus(name)
     local api = C_AddOns
     if Compat.Value(api and api.DoesAddOnExist, name) == false then
@@ -250,8 +256,8 @@ function Compat.IsPlayerName(name)
     if not identity or type(identity[2]) ~= "string" or identity[2] == "" then return false end
     local playerName, realm = identity[2], identity[3]
     if type(GetNormalizedRealmName) == "function" then
-        local home, state = Compat.Value(GetNormalizedRealmName)
-        if state ~= "available" or type(home) ~= "string" then return false end
+        local home = Compat.HomeRealm()
+        if not home then return false end
         if type(realm) == "string" and realm ~= "" and realm ~= home
             and not playerName:find(" ", 1, true) then
             playerName, realm = playerName .. " " .. realm, home

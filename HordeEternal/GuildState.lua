@@ -50,13 +50,12 @@ local function CurrentContext()
     if type(clubId) ~= "number" and type(clubId) ~= "string" then return nil end
     if clubId ~= GUILD_CLUB_ID and clubId ~= tostring(GUILD_CLUB_ID) then return false end
     local info = addon.Compat.Call(GetGuildInfo, "player")
-    local home = addon.Compat.Value(GetNormalizedRealmName)
+    local home = addon.Compat.HomeRealm()
     if not info or type(info[2]) ~= "string" or info[2] == ""
         or type(home) ~= "string" then return nil end
     local guildRealm = info[5]
     if type(guildRealm) ~= "string" or guildRealm == "" then guildRealm = home end
-    local scopeRealm = guildRealm ~= "" and guildRealm or "club:" .. tostring(GUILD_CLUB_ID)
-    return info[2] .. "@" .. scopeRealm, home
+    return info[2] .. "@" .. guildRealm, home
 end
 
 function Guild.IsAllowed()
@@ -91,7 +90,7 @@ end
 
 local function Canonical(name)
     if type(name) ~= "string" or name == "" or #name > 100 or name:find("[%c|]") then return nil end
-    if name:find("-", 1, true) or Guild.home == "" then return name end
+    if name:find("-", 1, true) then return name end
     return name .. "-" .. Guild.home
 end
 

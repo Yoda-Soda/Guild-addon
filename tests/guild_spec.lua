@@ -142,22 +142,65 @@ local savedRoster, savedOnline = roster, onlineByName
 local savedFirst, savedLast = playerFirst, playerLast
 local savedGuildKey = addon.GuildState.key
 local savedGuildCache = addon.db.craftingGuilds[savedGuildKey]
+local recoveryScope, clubScope = guildName .. "@CAMWOWAU1Realm2PvP", guildName .. "@club:503775441"
+local recoveredProfile = { recipes = { { recipeID = 1001, itemName = "Recovered item" } }, generation = 7 }
+local recoveredCrafting = {
+    remoteProfiles = { ["Other Crafter-CAMWOWAU1Realm2PvP"] = recoveredProfile },
+    recipeIndex = {}, generation = 7, resetIssuer = "Pod Cast-CAMWOWAU1Realm2PvP",
+}
+local recoveredMembers = {
+    profiles = {
+        ["Pod Cast-CAMWOWAU1Realm2PvP"] = { id = "saved-account", race = "Orc", spec = "Enhancement", talents = "", updatedAt = 10 },
+        ["Other Crafter-CAMWOWAU1Realm2PvP"] = { id = "saved-account", race = "Tauren", spec = "Restoration", talents = "", updatedAt = 10 },
+    },
+    groups = { ["saved-account"] = { revision = 9, main = "Pod Cast-CAMWOWAU1Realm2PvP", discord = "Saved Nickname" } },
+    own = { id = "saved-account", main = "Pod Cast-CAMWOWAU1Realm2PvP", discord = "Saved Nickname", revision = 9, discordNicknameVersion = 1 },
+}
+local newClubCrafting, newClubMembers = { remoteProfiles = {}, generation = 1 }, { profiles = {}, groups = {} }
+addon.db.craftingGuilds[recoveryScope], addon.db.craftingGuilds[clubScope] = recoveredCrafting, newClubCrafting
+addon.db.memberGuilds = { [recoveryScope] = recoveredMembers, [clubScope] = newClubMembers }
 GetNormalizedRealmName = function() return "" end
 GetGuildInfo = function() return guildName, "Member", 5, nil end
 assert(addon.GuildState.IsAllowed(), "an explicitly empty home realm must not block the verified guild")
+assert(addon.GuildState.CheckContext() and addon.GuildState.key == recoveryScope,
+    "an empty realm must reconnect the confirmed historical guild scope instead of an empty club scope")
 roster, onlineByName = { "Pod Cast", "Other Crafter" }, { ["Pod Cast"] = true, ["Other Crafter"] = false }
 playerFirst, playerLast = "Pod", "Cast"
 assert(addon.Compat.IsPlayerName("Pod Cast") and not addon.Compat.IsPlayerName("Pod"),
     "realm-less player matching must retain the full surname")
 assert(not addon.Compat.IsPlayerName("Pod Cast-OtherRealm"),
     "an empty realm must not authorize an arbitrary realm-qualified identity")
+assert(addon.Compat.IsPlayerName("Pod Cast-CAMWOWAU1Realm2PvP"),
+    "an empty realm must still recognize the confirmed historical player identity")
 assert(addon.GuildState.RefreshRoster(), "a readable realm-less guild roster must become ready")
-assert(addon.GuildState.key == guildName .. "@club:503775441" and addon.GuildState.home == "",
-    "realm-less storage must use the verified club scope without inventing a realm")
-assert(addon.GuildState.Resolve("Pod Cast") == "Pod Cast"
-    and addon.GuildState.Resolve("Other Crafter") == "Other Crafter"
+assert(addon.GuildState.key == recoveryScope and addon.GuildState.home == "CAMWOWAU1Realm2PvP",
+    "an empty realm must preserve the established guild storage and roster realm")
+assert(addon.GuildState.Resolve("Pod Cast") == "Pod Cast-CAMWOWAU1Realm2PvP"
+    and addon.GuildState.Resolve("Other Crafter") == "Other Crafter-CAMWOWAU1Realm2PvP"
     and addon.GuildState.IsAdmin() == true,
-    "realm-less roster and administrator identities must not gain a trailing hyphen")
+    "roster and administrator identities must retain their historical realm suffix")
+assert(addon.Catalog.Initialize().remoteProfiles["Other Crafter-CAMWOWAU1Realm2PvP"] == recoveredProfile
+    and addon.Catalog.Initialize().generation == 7
+    and addon.Catalog.Initialize().resetIssuer == "Pod Cast-CAMWOWAU1Realm2PvP",
+    "reconnecting a populated crafting cache must preserve its records and reset metadata")
+assert(addon.Catalog.Search("Recovered item")[1].crafters[1].name == "Other Crafter-CAMWOWAU1Realm2PvP",
+    "the recovered crafting records must be visible, not merely retained in an unused table")
+assert(addon.db.memberGuilds[addon.GuildState.key] == recoveredMembers
+    and recoveredMembers.own.main == "Pod Cast-CAMWOWAU1Realm2PvP"
+    and recoveredMembers.own.discord == "Saved Nickname" and recoveredMembers.own.revision == 9,
+    "reconnecting member storage must preserve the existing main, nickname, and revision")
+local savedMembers = addon.Members
+assert(loadfile("HordeEternal/Members.lua"))("HordeEternal", addon)
+assert(addon.Members.Settings() == recoveredMembers.own and addon.Members.CanView(),
+    "the real member view must reuse the saved setup rather than create a new account group")
+local recoveredRows = addon.Members.Rows()
+assert(#recoveredRows == 2 and recoveredRows[1].state == "Alt" and recoveredRows[2].state == "Main"
+    and recoveredRows[1].main == "Pod Cast-CAMWOWAU1Realm2PvP" and recoveredRows[1].discord == "Saved Nickname"
+    and recoveredRows[2].race == "Orc" and addon.Members.Stats(false).all == 2,
+    "restored member facts, main/alt links, nickname, and directory statistics must be visible")
+addon.Members = savedMembers
+assert(addon.db.craftingGuilds[clubScope] == newClubCrafting and addon.db.memberGuilds[clubScope] == newClubMembers,
+    "recovery must leave the newer club-scoped records untouched rather than merging or deleting them")
 assert(addon.db.craftingGuilds[savedGuildKey] == savedGuildCache,
     "a realm-less scope must preserve the separate realm-qualified guild cache")
 guildClubId = 123456
@@ -177,7 +220,7 @@ assert(addon.GuildState.RefreshRoster() and addon.GuildState.key == savedGuildKe
     and addon.db.craftingGuilds[savedGuildKey] == savedGuildCache,
     "restoring realm-qualified identity must reuse its original guild cache")
 print("PASS: complete guild rosters, departure cleanup, context changes, and unique owner authorization")
-print("PASS: empty-realm guild access, roster/self/admin identity, isolated cache scopes, and restricted/missing realm rejection")
+print("PASS: empty-realm legacy cache recovery, visible recipes, saved member settings, stable identities, and non-destructive scope isolation")
 
 local active, clock = nil, 100
 local createdFrames = {}
