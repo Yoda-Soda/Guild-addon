@@ -1,5 +1,66 @@
 # Horde Eternal
 
+## Missing Addon After A Client Update
+
+First distinguish a missing AddOns-list entry from a loaded addon whose controls
+are hidden. Do not delete SavedVariables or reset guild data to troubleshoot
+loading.
+
+1. Fully exit WoW, then confirm the client being launched has
+  `Interface\AddOns\HordeEternal\HordeEternal.toc`. Extract the packaged
+  `HordeEternal` folder there, not a nested repository folder. An existing
+  shortcut or symbolic link must still target the correct client and workspace.
+  Restart WoW after installing files or changing a manifest; `/reload` alone
+  does not establish that the addon was discovered.
+2. At character selection, check the AddOns list and enable HordeEternal for
+  the affected character. If it is specifically marked **Out of date**, record
+  that status. **Load out of date AddOns** can be used for a controlled smoke
+  check, but is not proof of compatibility. A completely absent entry needs a
+  folder/discovery check before an interface-number change.
+3. Record the running build, including the fourth `GetBuildInfo()` return, and
+  project ID before proposing a new `## Interface` value:
+
+  ```text
+  /dump GetBuildInfo()
+  /dump WOW_PROJECT_ID
+  ```
+
+  The manifest remains pinned to `16001`. Public sources refreshed on
+  2026-11-21 report UI build
+  [1.60.1.71037](https://github.com/Gethe/wow-ui-source/blob/734f065329cff4992835b01a84f210a297db91b6/version.txt);
+  the separate
+  [resource dump](https://github.com/Ketho/BlizzardInterfaceResources/blob/e230342a476eb4ef484ba7b34adc0da6ecc6acc1/README.md)
+  reports build `70938`, interface `16001`, and project ID `18`. Neither source
+  identifies the currently running client or verifies this reported regression.
+4. If listed but not loading, capture the first Lua error and the game's
+  load-failure reason. On clients exposing `C_AddOns`, these read-only probes
+  distinguish unavailable APIs from load status; run the second block only
+  when all three first-block results are `function`:
+
+  ```text
+  /dump C_AddOns and type(C_AddOns.IsAddOnLoaded)
+  /dump C_AddOns and type(C_AddOns.IsAddOnLoadable)
+  /dump C_AddOns and type(C_AddOns.GetScriptsDisallowedForBeta)
+  ```
+
+  ```text
+  /dump C_AddOns.IsAddOnLoaded("HordeEternal")
+  /dump C_AddOns.IsAddOnLoadable("HordeEternal")
+  /dump C_AddOns.GetScriptsDisallowedForBeta()
+  ```
+
+  If the client reports that addon scripts are disallowed, stop; changing TOC
+  metadata cannot bypass that restriction.
+5. If loaded but the minimap button/window is absent, use a character in
+  **The Horde Eternal**. Controls intentionally stay hidden while guild
+  identity is unavailable or unverified. On an eligible character, try
+  `/hordeeternal` and `/hordeeternal report`; include their outcome with the
+  build and load status. Do not weaken the guild check to make controls appear.
+
+The post-update client reproduction and build collection are still outstanding.
+Offline tests and a valid package cannot certify that this visibility problem
+is fixed.
+
 ## Guild Restriction
 
 The addon is restricted to **The Horde Eternal**, guild club ID `503775441`.
