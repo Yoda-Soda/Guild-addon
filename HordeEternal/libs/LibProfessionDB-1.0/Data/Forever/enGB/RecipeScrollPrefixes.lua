@@ -29,15 +29,15 @@ lib:LoadRecipeScrollPrefixes({
 -- own header if it would rather -- the builder does not decide that here.
 lib:LoadRecipeScrollPrefixSamples({
 [129]=13,
-[164]=356,
-[165]=447,
-[171]=115,
+[164]=365,
+[165]=460,
+[171]=117,
 [182]=2,
 [185]=111,
 [186]=2,
-[197]=353,
-[202]=173,
-[333]=153,
+[197]=347,
+[202]=163,
+[333]=156,
 [356]=2,
 [393]=2,
 })

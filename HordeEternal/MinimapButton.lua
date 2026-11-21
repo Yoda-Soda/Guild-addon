@@ -30,7 +30,15 @@ local function CursorAngle()
 end
 
 function addon.CreateMinimapButton()
-    if addon.minimapButton or not Minimap then
+    if not addon.GuildState or not addon.GuildState.IsAllowed() then
+        if addon.minimapButton then addon.minimapButton:Hide() end
+        return
+    end
+    if addon.minimapButton then
+        addon.minimapButton:Show()
+        return
+    end
+    if not Minimap then
         return
     end
 

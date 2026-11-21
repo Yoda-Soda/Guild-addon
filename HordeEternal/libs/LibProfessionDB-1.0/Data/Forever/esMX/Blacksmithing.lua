@@ -1361,22 +1361,22 @@ lib:LoadNames(164, {
 			["name"] = "Guja de legionita",
 		},
 		[1252988] = {
-			["name"] = "Peto adaptable de aplastatierra",
+			["name"] = "",
 		},
 		[1252989] = {
-			["name"] = "Guardabrazos adaptables de aplastatierra",
+			["name"] = "",
 		},
 		[1252990] = {
-			["name"] = "Faja adaptable de aplastatierra",
+			["name"] = "",
 		},
 		[1253001] = {
-			["name"] = "Peto adaptable de tejetierra",
+			["name"] = "",
 		},
 		[1253002] = {
-			["name"] = "Muñequeras adaptables de tejetierra",
+			["name"] = "",
 		},
 		[1253003] = {
-			["name"] = "Guardarrenes adaptables de tejetierra",
+			["name"] = "",
 		},
 		[1263041] = {
 			["name"] = "Yunque",

@@ -227,13 +227,13 @@ lib:LoadNames(164, {
 			["name"] = "Bâtonnet d'argent",
 		},
 		[8366] = {
-			["name"] = "Cotte d'anneaux d'Ironforge",
+			["name"] = "Cotte d'anneaux de Forgefer",
 		},
 		[8367] = {
-			["name"] = "Cuirasse d'Ironforge",
+			["name"] = "Cuirasse de Forgefer",
 		},
 		[8368] = {
-			["name"] = "Gantelets d'Ironforge",
+			["name"] = "Gantelets de Forgefer",
 		},
 		[8768] = {
 			["name"] = "Boucle en fer",
@@ -1361,22 +1361,22 @@ lib:LoadNames(164, {
 			["name"] = "Glaive en légionite",
 		},
 		[1252988] = {
-			["name"] = "Pansière adaptable de cogneterre",
+			["name"] = "",
 		},
 		[1252989] = {
-			["name"] = "Garde-bras adaptables de cogneterre",
+			["name"] = "",
 		},
 		[1252990] = {
-			["name"] = "Ceinturon adaptable de cogneterre",
+			["name"] = "",
 		},
 		[1253001] = {
-			["name"] = "Armure de plaques adaptable de tisse-terre",
+			["name"] = "",
 		},
 		[1253002] = {
-			["name"] = "Liens adaptables de tisse-terre",
+			["name"] = "",
 		},
 		[1253003] = {
-			["name"] = "Sangle adaptable de tisse-terre",
+			["name"] = "",
 		},
 		[1263041] = {
 			["name"] = "Enclume",

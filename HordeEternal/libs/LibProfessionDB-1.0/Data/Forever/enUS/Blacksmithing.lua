@@ -1361,22 +1361,22 @@ lib:LoadNames(164, {
 			["name"] = "Legionite Glaive",
 		},
 		[1252988] = {
-			["name"] = "Earthcrusher's Adaptive Chestplate",
+			["name"] = "",
 		},
 		[1252989] = {
-			["name"] = "Earthcrusher's Adaptive Armguards",
+			["name"] = "",
 		},
 		[1252990] = {
-			["name"] = "Earthcrusher's Adaptive Girdle",
+			["name"] = "",
 		},
 		[1253001] = {
-			["name"] = "Earthweaver's Adaptive Plate",
+			["name"] = "",
 		},
 		[1253002] = {
-			["name"] = "Earthweaver's Adaptive Links",
+			["name"] = "",
 		},
 		[1253003] = {
-			["name"] = "Earthweaver's Adaptive Waistguard",
+			["name"] = "",
 		},
 		[1263041] = {
 			["name"] = "Anvil",

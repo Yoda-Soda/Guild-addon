@@ -8,745 +8,745 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(164, {
 		[2660] = {
-			["name"] = "Pietra da Affilatura Grezza",
+			["name"] = "Rough Sharpening Stone",
 		},
 		[2661] = {
-			["name"] = "Cintura Inanellata di Rame",
+			["name"] = "Copper Chain Belt",
 		},
 		[2662] = {
-			["name"] = "Pantaloni Inanellati di Rame",
+			["name"] = "Copper Chain Pants",
 		},
 		[2663] = {
-			["name"] = "Bracciali di Rame",
+			["name"] = "Copper Bracers",
 		},
 		[2664] = {
-			["name"] = "Bracciali di Rame Runico",
+			["name"] = "Runed Copper Bracers",
 		},
 		[2665] = {
-			["name"] = "Pietra da Affilatura Comune",
+			["name"] = "Coarse Sharpening Stone",
 		},
 		[2666] = {
-			["name"] = "Cintura di Rame Runica",
+			["name"] = "Runed Copper Belt",
 		},
 		[2667] = {
-			["name"] = "Pettorale Corazzato di Rame Runico",
+			["name"] = "Runed Copper Breastplate",
 		},
 		[2668] = {
-			["name"] = "Gambiere di Bronzo Grezzo",
+			["name"] = "Rough Bronze Leggings",
 		},
 		[2670] = {
-			["name"] = "Corazza di Bronzo Grezzo",
+			["name"] = "Rough Bronze Cuirass",
 		},
 		[2671] = {
-			["name"] = "Bracciali di Bronzo Grezzo",
+			["name"] = "Rough Bronze Bracers",
 		},
 		[2672] = {
-			["name"] = "Bracciali di Bronzo Decorato",
+			["name"] = "Patterned Bronze Bracers",
 		},
 		[2673] = {
-			["name"] = "Pettorale Corazzato di Bronzo Argentato",
+			["name"] = "Silvered Bronze Breastplate",
 		},
 		[2674] = {
-			["name"] = "Pietra da Affilatura Pesante",
+			["name"] = "Heavy Sharpening Stone",
 		},
 		[2675] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Shining Silver Breastplate",
 		},
 		[2737] = {
-			["name"] = "Mazza di Rame",
+			["name"] = "Copper Mace",
 		},
 		[2738] = {
-			["name"] = "Ascia di Rame",
+			["name"] = "Copper Axe",
 		},
 		[2739] = {
-			["name"] = "Spada Corta di Rame",
+			["name"] = "Copper Shortsword",
 		},
 		[2740] = {
-			["name"] = "Mazza di Bronzo",
+			["name"] = "Bronze Mace",
 		},
 		[2741] = {
-			["name"] = "Ascia di Bronzo",
+			["name"] = "Bronze Axe",
 		},
 		[2742] = {
-			["name"] = "Spada Corta di Bronzo",
+			["name"] = "Bronze Shortsword",
 		},
 		[3115] = {
-			["name"] = "Pietra da Contrappeso Grezza",
+			["name"] = "Rough Weightstone",
 		},
 		[3116] = {
-			["name"] = "Pietra da Contrappeso Comune",
+			["name"] = "Coarse Weightstone",
 		},
 		[3117] = {
-			["name"] = "Pietra da Contrappeso Pesante",
+			["name"] = "Heavy Weightstone",
 		},
 		[3292] = {
-			["name"] = "Spadone di Rame Pesante",
+			["name"] = "Heavy Copper Broadsword",
 		},
 		[3293] = {
-			["name"] = "Ascia da Battaglia di Rame",
+			["name"] = "Copper Battle Axe",
 		},
 		[3294] = {
-			["name"] = "Ascia Guerresca Spessa",
+			["name"] = "Thick War Axe",
 		},
 		[3295] = {
-			["name"] = "Pugnale Mortale di Bronzo",
+			["name"] = "Deadly Bronze Poniard",
 		},
 		[3296] = {
-			["name"] = "Mazza di Bronzo Pesante",
+			["name"] = "Heavy Bronze Mace",
 		},
 		[3297] = {
-			["name"] = "Martello di Ferro Vigoroso",
+			["name"] = "Mighty Iron Hammer",
 		},
 		[3319] = {
-			["name"] = "Stivali Inanellati di Rame",
+			["name"] = "Copper Chain Boots",
 		},
 		[3320] = {
-			["name"] = "Pietra da Molatura Grezza",
+			["name"] = "Rough Grinding Stone",
 		},
 		[3321] = {
-			["name"] = "Veste Inanellata di Rame",
+			["name"] = "Copper Chain Vest",
 		},
 		[3323] = {
-			["name"] = "Guanti Lunghi di Rame Runici",
+			["name"] = "Runed Copper Gauntlets",
 		},
 		[3324] = {
-			["name"] = "Pantaloni di Rame Runici",
+			["name"] = "Runed Copper Pants",
 		},
 		[3325] = {
-			["name"] = "Guanti Lunghi di Rame Gemmati",
+			["name"] = "Gemmed Copper Gauntlets",
 		},
 		[3326] = {
-			["name"] = "Pietra da Molatura Comune",
+			["name"] = "Coarse Grinding Stone",
 		},
 		[3328] = {
-			["name"] = "Spallacci di Bronzo Grezzo",
+			["name"] = "Rough Bronze Shoulders",
 		},
 		[3330] = {
-			["name"] = "Spallacci di Bronzo Argentato",
+			["name"] = "Silvered Bronze Shoulders",
 		},
 		[3331] = {
-			["name"] = "Stivali di Bronzo Argentato",
+			["name"] = "Silvered Bronze Boots",
 		},
 		[3333] = {
-			["name"] = "Guanti di Bronzo Argentato",
+			["name"] = "Silvered Bronze Gauntlets",
 		},
 		[3334] = {
-			["name"] = "Stivali di Ferro Verdi",
+			["name"] = "Green Iron Boots",
 		},
 		[3336] = {
-			["name"] = "Guanti Lunghi di Ferro Verdi",
+			["name"] = "Green Iron Gauntlets",
 		},
 		[3337] = {
-			["name"] = "Pietra da molatura pesante",
+			["name"] = "Heavy Grinding Stone",
 		},
 		[3491] = {
-			["name"] = "Grande Coltello di Bronzo",
+			["name"] = "Big Bronze Knife",
 		},
 		[3492] = {
-			["name"] = "Spada Corta di Ferro Indurito",
+			["name"] = "Hardened Iron Shortsword",
 		},
 		[3493] = {
-			["name"] = "Spada del Serpente di Giada",
+			["name"] = "Jade Serpentblade",
 		},
 		[3494] = {
-			["name"] = "Maglio di Ferro Solido",
+			["name"] = "Solid Iron Maul",
 		},
 		[3495] = {
-			["name"] = "Distruttore Dorato di Ferro",
+			["name"] = "Golden Iron Destroyer",
 		},
 		[3496] = {
-			["name"] = "Spadone d'Acciaio Lunare",
+			["name"] = "Moonsteel Broadsword",
 		},
 		[3497] = {
-			["name"] = "Lama della Tigre del Freddo",
+			["name"] = "Frost Tiger Blade",
 		},
 		[3498] = {
-			["name"] = "Ascia Massiva di Ferro",
+			["name"] = "Massive Iron Axe",
 		},
 		[3500] = {
-			["name"] = "Ascia dell'Ombra Crescente",
+			["name"] = "Shadow Crescent Axe",
 		},
 		[3501] = {
-			["name"] = "Bracciali di Ferro Verdi",
+			["name"] = "Green Iron Bracers",
 		},
 		[3502] = {
-			["name"] = "Elmo di Ferro Verde",
+			["name"] = "Green Iron Helm",
 		},
 		[3503] = {
-			["name"] = "Camaglio di Scaglie d'Oro",
+			["name"] = "Golden Scale Coif",
 		},
 		[3504] = {
-			["name"] = "Spallacci di Ferro Verdi",
+			["name"] = "Green Iron Shoulders",
 		},
 		[3505] = {
-			["name"] = "Spallacci di Scaglie d'Oro",
+			["name"] = "Golden Scale Shoulders",
 		},
 		[3506] = {
-			["name"] = "Gambiere di Ferro Verdi",
+			["name"] = "Green Iron Leggings",
 		},
 		[3507] = {
-			["name"] = "Gambiere di Scaglie d'Oro",
+			["name"] = "Golden Scale Leggings",
 		},
 		[3508] = {
-			["name"] = "Usbergo di Ferro Verde",
+			["name"] = "Green Iron Hauberk",
 		},
 		[3511] = {
-			["name"] = "Corazza di Scaglie d'Oro",
+			["name"] = "Golden Scale Cuirass",
 		},
 		[3513] = {
-			["name"] = "Stivali d'Acciaio Lucidi",
+			["name"] = "Polished Steel Boots",
 		},
 		[3515] = {
-			["name"] = "Stivali di Scaglie d'Oro",
+			["name"] = "Golden Scale Boots",
 		},
 		[6517] = {
-			["name"] = "Pugnale con Impugnatura di Perla",
+			["name"] = "Pearl-handled Dagger",
 		},
 		[6518] = {
-			["name"] = "Martello Iridescente",
+			["name"] = "Iridescent Hammer",
 		},
 		[7221] = {
-			["name"] = "Punta per Scudo di Ferro",
+			["name"] = "Iron Shield Spike",
 		},
 		[7222] = {
-			["name"] = "Contrappeso di Ferro",
+			["name"] = "Iron Counterweight",
 		},
 		[7223] = {
-			["name"] = "Bracciali di Scaglie d'Oro",
+			["name"] = "Golden Scale Bracers",
 		},
 		[7224] = {
-			["name"] = "Catena per Arma d'Acciaio",
+			["name"] = "Steel Weapon Chain",
 		},
 		[7408] = {
-			["name"] = "Maglio di Rame Pesante",
+			["name"] = "Heavy Copper Maul",
 		},
 		[7817] = {
-			["name"] = "Stivali di Bronzo Grezzo",
+			["name"] = "Rough Bronze Boots",
 		},
 		[7818] = {
-			["name"] = "Verga d'Argento",
+			["name"] = "Silver Rod",
 		},
 		[8366] = {
-			["name"] = "Corazza di Maglia di Forgiardente",
+			["name"] = "Ironforge Chain",
 		},
 		[8367] = {
-			["name"] = "Pettorale Corazzato di Forgiardente",
+			["name"] = "Ironforge Breastplate",
 		},
 		[8368] = {
-			["name"] = "Guanti Lunghi di Forgiardente",
+			["name"] = "Ironforge Gauntlets",
 		},
 		[8768] = {
-			["name"] = "Fibbia di Ferro",
+			["name"] = "Iron Buckle",
 		},
 		[8880] = {
-			["name"] = "Pugnale di Rame",
+			["name"] = "Copper Dagger",
 		},
 		[9811] = {
-			["name"] = "Spallacci di Ferro della Barbarie",
+			["name"] = "Barbaric Iron Shoulders",
 		},
 		[9813] = {
-			["name"] = "Pettorale Corazzato di Ferro della Barbarie",
+			["name"] = "Barbaric Iron Breastplate",
 		},
 		[9814] = {
-			["name"] = "Copricapo di Ferro della Barbarie",
+			["name"] = "Barbaric Iron Helm",
 		},
 		[9818] = {
-			["name"] = "Stivali di Ferro della Barbarie",
+			["name"] = "Barbaric Iron Boots",
 		},
 		[9820] = {
-			["name"] = "Guanti di Ferro della Barbarie",
+			["name"] = "Barbaric Iron Gloves",
 		},
 		[9916] = {
-			["name"] = "Pettorale Corazzato d'Acciaio",
+			["name"] = "Steel Breastplate",
 		},
 		[9918] = {
-			["name"] = "Pietra da Affilatura Solida",
+			["name"] = "Solid Sharpening Stone",
 		},
 		[9920] = {
-			["name"] = "Pietra da Molatura Solida",
+			["name"] = "Solid Grinding Stone",
 		},
 		[9921] = {
-			["name"] = "Pietra da Contrappeso Solida",
+			["name"] = "Solid Weightstone",
 		},
 		[9926] = {
-			["name"] = "Spallacci Pesanti di Mithril",
+			["name"] = "Heavy Mithril Shoulder",
 		},
 		[9928] = {
-			["name"] = "Guanti Lunghi Pesanti di Mithril",
+			["name"] = "Heavy Mithril Gauntlet",
 		},
 		[9931] = {
 			["name"] = "Mithril Plate Pants",
 		},
 		[9933] = {
-			["name"] = "Pantaloni Pesanti di Mithril",
+			["name"] = "Heavy Mithril Pants",
 		},
 		[9935] = {
-			["name"] = "Elmo d'Acciaio Runico",
+			["name"] = "Steel Plate Helm",
 		},
 		[9937] = {
 			["name"] = "Mithril Plate Bracers",
 		},
 		[9939] = {
-			["name"] = "Punta per Scudo di Mithril",
+			["name"] = "Mithril Shield Spike",
 		},
 		[9942] = {
 			["name"] = "Mithril Plate Gloves",
 		},
 		[9945] = {
-			["name"] = "Pantaloni di Mithril Decorati",
+			["name"] = "Ornate Mithril Pants",
 		},
 		[9950] = {
-			["name"] = "Guanti di Mithril Decorati",
+			["name"] = "Ornate Mithril Gloves",
 		},
 		[9952] = {
 			["name"] = "Ornate Mithril Shoulders",
 		},
 		[9954] = {
-			["name"] = "Guanti Lunghi di Verargento",
+			["name"] = "Truesilver Gauntlets",
 		},
 		[9957] = {
-			["name"] = "Gambiere da Guerra Orchesche",
+			["name"] = "Orcish War Leggings",
 		},
 		[9959] = {
-			["name"] = "Pettorale Corazzato Pesante di Mithril",
+			["name"] = "Heavy Mithril Breastplate",
 		},
 		[9961] = {
-			["name"] = "Camaglio di Mithril",
+			["name"] = "Mithril Coif",
 		},
 		[9964] = {
-			["name"] = "Speroni di Mithril",
+			["name"] = "Mithril Spurs",
 		},
 		[9966] = {
 			["name"] = "Mithril Plate Shoulders",
 		},
 		[9968] = {
-			["name"] = "Stivali Pesanti di Mithril",
+			["name"] = "Heavy Mithril Boots",
 		},
 		[9970] = {
-			["name"] = "Elmo Pesante di Mithril",
+			["name"] = "Heavy Mithril Helm",
 		},
 		[9972] = {
-			["name"] = "Pettorale Corazzato di Mithril Decorato",
+			["name"] = "Ornate Mithril Breastplate",
 		},
 		[9974] = {
-			["name"] = "Pettorale Corazzato di Verargento",
+			["name"] = "Truesilver Breastplate",
 		},
 		[9979] = {
-			["name"] = "Stivali di Mithril Decorati",
+			["name"] = "Ornate Mithril Boots",
 		},
 		[9980] = {
-			["name"] = "Elmo di Mithril Decorato",
+			["name"] = "Ornate Mithril Helm",
 		},
 		[9983] = {
-			["name"] = "Spadone di Rame",
+			["name"] = "Copper Claymore",
 		},
 		[9985] = {
-			["name"] = "Martello da Guerra di Bronzo",
+			["name"] = "Bronze Warhammer",
 		},
 		[9986] = {
-			["name"] = "Granspada di Bronzo",
+			["name"] = "Bronze Greatsword",
 		},
 		[9987] = {
-			["name"] = "Ascia da Battaglia di Bronzo",
+			["name"] = "Bronze Battle Axe",
 		},
 		[9993] = {
-			["name"] = "Ascia Pesante di Mithril",
+			["name"] = "Heavy Mithril Axe",
 		},
 		[9995] = {
-			["name"] = "Ascia Splendente Blu",
+			["name"] = "Blue Glittering Axe",
 		},
 		[9997] = {
-			["name"] = "Lama di Mithril Perversa",
+			["name"] = "Wicked Mithril Blade",
 		},
 		[10001] = {
-			["name"] = "Grossa Mazza Nera",
+			["name"] = "Big Black Mace",
 		},
 		[10003] = {
-			["name"] = "Sbriciolatore",
+			["name"] = "The Shatterer",
 		},
 		[10005] = {
-			["name"] = "Stocco di Mithril Luccicante",
+			["name"] = "Dazzling Mithril Rapier",
 		},
 		[10007] = {
-			["name"] = "Lama Fantasma",
+			["name"] = "Phantom Blade",
 		},
 		[10009] = {
-			["name"] = "Martello di Mithril Runico",
+			["name"] = "Runed Mithril Hammer",
 		},
 		[10011] = {
-			["name"] = "Calamità",
+			["name"] = "Blight",
 		},
 		[10013] = {
-			["name"] = "Daghetta d'Ebano",
+			["name"] = "Ebon Shiv",
 		},
 		[10015] = {
-			["name"] = "Spadone Campione di Verargento",
+			["name"] = "Truesilver Champion",
 		},
 		[11454] = {
-			["name"] = "Cilindro di Mithril Intarsiato",
+			["name"] = "Inlaid Mithril Cylinder",
 		},
 		[11643] = {
-			["name"] = "Guanti Lunghi di Scaglie d'Oro",
+			["name"] = "Golden Scale Gauntlets",
 		},
 		[12259] = {
-			["name"] = "Gambiere di Bronzo Argentato",
+			["name"] = "Silvered Bronze Leggings",
 		},
 		[12260] = {
-			["name"] = "Veste di Rame Grezzo",
+			["name"] = "Rough Copper Vest",
 		},
 		[14379] = {
-			["name"] = "Verga d'Oro",
+			["name"] = "Golden Rod",
 		},
 		[14380] = {
-			["name"] = "Verga di Verargento",
+			["name"] = "Truesilver Rod",
 		},
 		[15292] = {
-			["name"] = "Polverizzatore di Ferroscuro",
+			["name"] = "Dark Iron Pulverizer",
 		},
 		[15293] = {
-			["name"] = "Corazza di Maglia di Ferroscuro",
+			["name"] = "Dark Iron Mail",
 		},
 		[15294] = {
-			["name"] = "Fenditore di Ferroscuro",
+			["name"] = "Dark Iron Sunderer",
 		},
 		[15295] = {
-			["name"] = "Spallacci di Ferroscuro",
+			["name"] = "Dark Iron Shoulders",
 		},
 		[15296] = {
-			["name"] = "Corazza di Piastre di Ferroscuro",
+			["name"] = "Dark Iron Plate",
 		},
 		[15972] = {
-			["name"] = "Pugnale d'Acciaio Scintillante",
+			["name"] = "Glinting Steel Dagger",
 		},
 		[15973] = {
-			["name"] = "Lama d'Oro Rovente",
+			["name"] = "Searing Golden Blade",
 		},
 		[16639] = {
-			["name"] = "Pietra da Molatura Densa",
+			["name"] = "Dense Grinding Stone",
 		},
 		[16640] = {
-			["name"] = "Pietra da Contrappeso Densa",
+			["name"] = "Dense Weightstone",
 		},
 		[16641] = {
-			["name"] = "Pietra da Affilatura Densa",
+			["name"] = "Dense Sharpening Stone",
 		},
 		[16642] = {
-			["name"] = "Armatura di Torio",
+			["name"] = "Thorium Armor",
 		},
 		[16643] = {
-			["name"] = "Cintura di Torio",
+			["name"] = "Thorium Belt",
 		},
 		[16644] = {
-			["name"] = "Bracciali di Torio",
+			["name"] = "Thorium Bracers",
 		},
 		[16645] = {
-			["name"] = "Cintura Radiosa",
+			["name"] = "Radiant Belt",
 		},
 		[16646] = {
-			["name"] = "Spallacci di Piastre Imperiali",
+			["name"] = "Imperial Plate Shoulders",
 		},
 		[16647] = {
-			["name"] = "Cintura di Piastre Imperiale",
+			["name"] = "Imperial Plate Belt",
 		},
 		[16648] = {
-			["name"] = "Pettorale Corazzato Radioso",
+			["name"] = "Radiant Breastplate",
 		},
 		[16649] = {
-			["name"] = "Bracciali di Piastre Imperiali",
+			["name"] = "Imperial Plate Bracers",
 		},
 		[16651] = {
-			["name"] = "Punta per Scudo di Torio",
+			["name"] = "Thorium Shield Spike",
 		},
 		[16652] = {
-			["name"] = "Stivali di Torio",
+			["name"] = "Thorium Boots",
 		},
 		[16653] = {
-			["name"] = "Elmo di Torio",
+			["name"] = "Thorium Helm",
 		},
 		[16654] = {
-			["name"] = "Guanti Radiosi",
+			["name"] = "Radiant Gloves",
 		},
 		[16655] = {
-			["name"] = "Guanti Lunghi di Piastre Ardenti",
+			["name"] = "Fiery Plate Gauntlets",
 		},
 		[16656] = {
-			["name"] = "Stivali Radiosi",
+			["name"] = "Radiant Boots",
 		},
 		[16657] = {
-			["name"] = "Stivali di Piastre Imperiali",
+			["name"] = "Imperial Plate Boots",
 		},
 		[16658] = {
-			["name"] = "Elmo di Piastre Imperiale",
+			["name"] = "Imperial Plate Helm",
 		},
 		[16659] = {
-			["name"] = "Tiara Radiosa",
+			["name"] = "Radiant Circlet",
 		},
 		[16660] = {
-			["name"] = "Spallacci dell'Araldo dell'Alba",
+			["name"] = "Dawnbringer Shoulders",
 		},
 		[16662] = {
-			["name"] = "Gambiere di Torio",
+			["name"] = "Thorium Leggings",
 		},
 		[16663] = {
-			["name"] = "Corazza di Piastre Imperiale",
+			["name"] = "Imperial Plate Chest",
 		},
 		[16664] = {
-			["name"] = "Spallacci di Piastre Runiche",
+			["name"] = "Runic Plate Shoulders",
 		},
 		[16665] = {
-			["name"] = "Stivali di Piastre Runiche",
+			["name"] = "Runic Plate Boots",
 		},
 		[16667] = {
-			["name"] = "Pettorale Corazzato Forgiato dal Demone",
+			["name"] = "Demon Forged Breastplate",
 		},
 		[16724] = {
-			["name"] = "Elmo Biancanima",
+			["name"] = "Whitesoul Helm",
 		},
 		[16725] = {
-			["name"] = "Gambiere Radiose",
+			["name"] = "Radiant Leggings",
 		},
 		[16726] = {
-			["name"] = "Elmo di Piastre Runiche",
+			["name"] = "Runic Plate Helm",
 		},
 		[16729] = {
-			["name"] = "Elmo Cuor di Leone",
+			["name"] = "Lionheart Helm",
 		},
 		[16730] = {
-			["name"] = "Gambiere di Piastre Imperiali",
+			["name"] = "Imperial Plate Leggings",
 		},
 		[16731] = {
-			["name"] = "Pettorale Corazzato Runico",
+			["name"] = "Runic Breastplate",
 		},
 		[16732] = {
-			["name"] = "Gambiere di Piastre Runiche",
+			["name"] = "Runic Plate Leggings",
 		},
 		[16741] = {
-			["name"] = "Guanti Lunghi della Roccaforte",
+			["name"] = "Stronghold Gauntlets",
 		},
 		[16742] = {
-			["name"] = "Elmo di Torio Incantato",
+			["name"] = "Enchanted Thorium Helm",
 		},
 		[16744] = {
-			["name"] = "Gambiere di Torio Incantate",
+			["name"] = "Enchanted Thorium Leggings",
 		},
 		[16745] = {
-			["name"] = "Pettorale Corazzato di Torio Incantato",
+			["name"] = "Enchanted Thorium Breastplate",
 		},
 		[16960] = {
-			["name"] = "Granspada di Torio",
+			["name"] = "Thorium Greatsword",
 		},
 		[16965] = {
-			["name"] = "Grandascia Spaccalegna",
+			["name"] = "Bleakwood Hew",
 		},
 		[16967] = {
-			["name"] = "Martello di Torio Intarsiato",
+			["name"] = "Inlaid Thorium Hammer",
 		},
 		[16969] = {
-			["name"] = "Ascia Maneggevole di Torio Decorata",
+			["name"] = "Ornate Thorium Handaxe",
 		},
 		[16970] = {
-			["name"] = "Incisore dell'Alba",
+			["name"] = "Dawn's Edge",
 		},
 		[16971] = {
-			["name"] = "Ascia Feroce Gigante di Torio",
+			["name"] = "Huge Thorium Battleaxe",
 		},
 		[16973] = {
-			["name"] = "Martello Feroce Incantato",
+			["name"] = "Enchanted Battlehammer",
 		},
 		[16978] = {
-			["name"] = "Stocco Fiammeggiante",
+			["name"] = "Blazing Rapier",
 		},
 		[16980] = {
-			["name"] = "Ascia Affilata Runica",
+			["name"] = "Rune Edge",
 		},
 		[16983] = {
-			["name"] = "Serenità",
+			["name"] = "Serenity",
 		},
 		[16984] = {
-			["name"] = "Martello Vulcanico",
+			["name"] = "Volcanic Hammer",
 		},
 		[16985] = {
-			["name"] = "Corruzione",
+			["name"] = "Corruption",
 		},
 		[16986] = {
-			["name"] = "Artigli di Sangue",
+			["name"] = "Blood Talon",
 		},
 		[16987] = {
-			["name"] = "Puntascura",
+			["name"] = "Darkspear",
 		},
 		[16988] = {
-			["name"] = "Martello dei Titani",
+			["name"] = "Hammer of the Titans",
 		},
 		[16990] = {
-			["name"] = "Spadone d'Arcanite",
+			["name"] = "Arcanite Champion",
 		},
 		[16991] = {
-			["name"] = "Annientatore",
+			["name"] = "Annihilator",
 		},
 		[16992] = {
-			["name"] = "Guardiagelo",
+			["name"] = "Frostguard",
 		},
 		[16993] = {
-			["name"] = "Martello Capolavoro della Tempesta",
+			["name"] = "Masterwork Stormhammer",
 		},
 		[16994] = {
-			["name"] = "Mietimorte d'Arcanite",
+			["name"] = "Arcanite Reaper",
 		},
 		[16995] = {
-			["name"] = "Centracuori",
+			["name"] = "Heartseeker",
 		},
 		[19666] = {
-			["name"] = "Chiave Universale d'Argento",
+			["name"] = "Silver Skeleton Key",
 		},
 		[19667] = {
-			["name"] = "Chiave Universale d'Oro",
+			["name"] = "Golden Skeleton Key",
 		},
 		[19668] = {
-			["name"] = "Chiave Universale di Verargento",
+			["name"] = "Truesilver Skeleton Key",
 		},
 		[19669] = {
-			["name"] = "Chiave Universale d'Arcanite",
+			["name"] = "Arcanite Skeleton Key",
 		},
 		[20201] = {
-			["name"] = "Verga d'Arcanite",
+			["name"] = "Arcanite Rod",
 		},
 		[20872] = {
-			["name"] = "Cinturone Inanellato Ardente",
+			["name"] = "Fiery Chain Girdle",
 		},
 		[20873] = {
-			["name"] = "Spallacci Inanellati Ardenti",
+			["name"] = "Fiery Chain Shoulders",
 		},
 		[20874] = {
-			["name"] = "Bracciali di Ferroscuro",
+			["name"] = "Dark Iron Bracers",
 		},
 		[20876] = {
-			["name"] = "Gambiere di Ferroscuro",
+			["name"] = "Dark Iron Leggings",
 		},
 		[20890] = {
-			["name"] = "Razziatore di Ferroscuro",
+			["name"] = "Dark Iron Reaver",
 		},
 		[20897] = {
-			["name"] = "Distruttore di Ferroscuro",
+			["name"] = "Dark Iron Destroyer",
 		},
 		[21161] = {
-			["name"] = "Martello di Sulfuron",
+			["name"] = "Sulfuron Hammer",
 		},
 		[21913] = {
-			["name"] = "Incisore dell'Inverno",
+			["name"] = "Edge of Winter",
 		},
 		[22757] = {
-			["name"] = "Pietra da Affilatura Elementale",
+			["name"] = "Elemental Sharpening Stone",
 		},
 		[23632] = {
-			["name"] = "Cinturone dell'Alba",
+			["name"] = "Girdle of the Dawn",
 		},
 		[23633] = {
-			["name"] = "Ganti dell'Alba",
+			["name"] = "Gloves of the Dawn",
 		},
 		[23636] = {
-			["name"] = "Elmo di Ferroscuro",
+			["name"] = "Dark Iron Helm",
 		},
 		[23637] = {
-			["name"] = "Guanti di Ferroscuro",
+			["name"] = "Dark Iron Gauntlets",
 		},
 		[23638] = {
-			["name"] = "Amnistia Nera",
+			["name"] = "Black Amnesty",
 		},
 		[23639] = {
-			["name"] = "Furianera",
+			["name"] = "Blackfury",
 		},
 		[23650] = {
-			["name"] = "Martello d'Ebano",
+			["name"] = "Ebon Hand",
 		},
 		[23652] = {
-			["name"] = "Guardianera",
+			["name"] = "Blackguard",
 		},
 		[23653] = {
-			["name"] = "Notte Fonda",
+			["name"] = "Nightfall",
 		},
 		[24136] = {
-			["name"] = "Pettorale Corazzato dell'Anima del Sangue",
+			["name"] = "Bloodsoul Breastplate",
 		},
 		[24137] = {
-			["name"] = "Spallacci dell'Anima del Sangue",
+			["name"] = "Bloodsoul Shoulders",
 		},
 		[24138] = {
-			["name"] = "Guanti Lunghi dell'Anima del Sangue",
+			["name"] = "Bloodsoul Gauntlets",
 		},
 		[24139] = {
-			["name"] = "Pettorale Corazzato dell'Animanera",
+			["name"] = "Darksoul Breastplate",
 		},
 		[24140] = {
-			["name"] = "Gambiere dell'Animanera",
+			["name"] = "Darksoul Leggings",
 		},
 		[24141] = {
-			["name"] = "Spallacci dell'Animanera",
+			["name"] = "Darksoul Shoulders",
 		},
 		[24399] = {
-			["name"] = "Stivali di Ferroscuro",
+			["name"] = "Dark Iron Boots",
 		},
 		[24912] = {
-			["name"] = "Guanti della Runa Oscura",
+			["name"] = "Darkrune Gauntlets",
 		},
 		[24913] = {
-			["name"] = "Elmo della Runa Oscura",
+			["name"] = "Darkrune Helm",
 		},
 		[24914] = {
-			["name"] = "Pettorale Corazzato della Runa Oscura",
+			["name"] = "Darkrune Breastplate",
 		},
 		[27585] = {
-			["name"] = "Cintura d'Ossidiana Pesante",
+			["name"] = "Heavy Obsidian Belt",
 		},
 		[27586] = {
-			["name"] = "Scudo d'Ossidiana Scheggiata",
+			["name"] = "Jagged Obsidian Shield",
 		},
 		[27587] = {
-			["name"] = "Pettorale Corazzato d'Ossidiana Spessa",
+			["name"] = "Thick Obsidian Breastplate",
 		},
 		[27588] = {
-			["name"] = "Cintura d'Ossidiana Leggera",
+			["name"] = "Light Obsidian Belt",
 		},
 		[27589] = {
-			["name"] = "Guanti Neri del Distruttore",
+			["name"] = "Black Grasp of the Destroyer",
 		},
 		[27590] = {
-			["name"] = "Tunica di Maglia d'Ossidiana",
+			["name"] = "Obsidian Mail Tunic",
 		},
 		[27829] = {
-			["name"] = "Gambiere Titaniche",
+			["name"] = "Titanic Leggings",
 		},
 		[27830] = {
-			["name"] = "Persuasore",
+			["name"] = "Persuader",
 		},
 		[27832] = {
-			["name"] = "Lama Saggia",
+			["name"] = "Sageblade",
 		},
 		[28242] = {
-			["name"] = "Pettorale Corazzato della Rovina dei Ghiacci",
+			["name"] = "Icebane Breastplate",
 		},
 		[28243] = {
-			["name"] = "Guanti Lunghi della Rovina dei Ghiacci",
+			["name"] = "Icebane Gauntlets",
 		},
 		[28244] = {
-			["name"] = "Bracciali della Rovina dei Ghiacci",
+			["name"] = "Icebane Bracers",
 		},
 		[28461] = {
-			["name"] = "Pettorale Corazzato di Ferrofoglia",
+			["name"] = "Ironvine Breastplate",
 		},
 		[28462] = {
-			["name"] = "Guanti di Ferrofoglia",
+			["name"] = "Ironvine Gloves",
 		},
 		[28463] = {
-			["name"] = "Cintura di Ferrofoglia",
+			["name"] = "Ironvine Belt",
 		},
 		[427061] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Mantle of the Second War",
 		},
 		[429348] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Shifting Silver Breastplate",
 		},
 		[430397] = {
-			["name"] = "Pietra da Affilatura Elementale",
+			["name"] = "Blackfathom Sharpening Stone",
 		},
 		[435906] = {
 			["name"] = "Reflective Truesilver Braincage",
@@ -758,187 +758,187 @@ lib:LoadNames(164, {
 			["name"] = "Low-Background Truesilver Plates",
 		},
 		[439120] = {
-			["name"] = "Guanti Lunghi di Scaglie d'Oro",
+			["name"] = "Golden Scale Gauntlets",
 		},
 		[439122] = {
-			["name"] = "Stivali di Scaglie d'Oro",
+			["name"] = "Golden Scale Boots",
 		},
 		[439124] = {
-			["name"] = "Corazza di Scaglie d'Oro",
+			["name"] = "Golden Scale Cuirass",
 		},
 		[439126] = {
-			["name"] = "Camaglio di Scaglie d'Oro",
+			["name"] = "Golden Scale Coif",
 		},
 		[439128] = {
-			["name"] = "Spadone d'Acciaio Lunare",
+			["name"] = "Moonsteel Broadsword",
 		},
 		[439130] = {
-			["name"] = "Spallacci di Scaglie d'Oro",
+			["name"] = "Golden Scale Shoulders",
 		},
 		[439132] = {
-			["name"] = "Gambiere di Scaglie d'Oro",
+			["name"] = "Golden Scale Leggings",
 		},
 		[446179] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Shoulderplates of Dread",
 		},
 		[446188] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Fearmonger's Shoulderguards",
 		},
 		[446191] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Baleful Pauldrons",
 		},
 		[460460] = {
-			["name"] = "Martello di Sulfuron",
+			["name"] = "Sulfuron Hammer",
 		},
 		[461647] = {
-			["name"] = "Martello Capolavoro della Tempesta",
+			["name"] = "Skyrider's Masterwork Stormhammer",
 		},
 		[461651] = {
-			["name"] = "Guanti Lunghi di Piastre Ardenti",
+			["name"] = "Fiery Plate Gauntlets of the Hidden Technique",
 		},
 		[461667] = {
-			["name"] = "Corazza di Piastre di Ferroscuro",
+			["name"] = "Tempered Dark Iron Plate",
 		},
 		[461669] = {
-			["name"] = "Spadone d'Arcanite",
+			["name"] = "Refined Arcanite Champion",
 		},
 		[461671] = {
-			["name"] = "Guanti Lunghi della Roccaforte",
+			["name"] = "Stronger-hold Gauntlets",
 		},
 		[461675] = {
-			["name"] = "Mietimorte d'Arcanite",
+			["name"] = "Refined Arcanite Reaper",
 		},
 		[461712] = {
-			["name"] = "Martello dei Titani",
+			["name"] = "Refined Hammer of the Titans",
 		},
 		[461714] = {
-			["name"] = "Corruzione",
+			["name"] = "Desecration",
 		},
 		[461716] = {
-			["name"] = "Centracuori",
+			["name"] = "Deadly Heartseeker",
 		},
 		[461718] = {
-			["name"] = "Serenità",
+			["name"] = "Tranquility",
 		},
 		[461730] = {
-			["name"] = "Guardiagelo",
+			["name"] = "Hardened Frostguard",
 		},
 		[461733] = {
-			["name"] = "Martello Feroce Incantato",
+			["name"] = "Finely-Enchanted Battlehammer",
 		},
 		[461735] = {
-			["name"] = "Corazza di Maglia Invulnerabile",
+			["name"] = "Invincible Mail",
 		},
 		[461737] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Tempest Gauntlets",
 		},
 		[461739] = {
-			["name"] = "Elmo del Capo Superiore",
+			["name"] = "Warcrest of the Great Chief",
 		},
 		[461743] = {
-			["name"] = "Lama Saggia",
+			["name"] = "Sageblade of the Archmagus",
 		},
 		[1213481] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Razorspike Headcage",
 		},
 		[1213484] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Razorspike Shoulderplate",
 		},
 		[1213490] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Razorspike Battleplate",
 		},
 		[1213492] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Reaver",
 		},
 		[1213498] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Champion",
 		},
 		[1213500] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Destroyer",
 		},
 		[1213502] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Stormhammer",
 		},
 		[1213504] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Sageblade",
 		},
 		[1213506] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Defender",
 		},
 		[1213643] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Grinding Stone",
 		},
 		[1213709] = {
-			["name"] = "Cintura di Ferrofoglia",
+			["name"] = "Ironvine Belt",
 		},
 		[1213711] = {
-			["name"] = "Guanti di Ferrofoglia",
+			["name"] = "Ironvine Gloves",
 		},
 		[1213715] = {
-			["name"] = "Pettorale Corazzato di Ferrofoglia",
+			["name"] = "Ironvine Breastplate",
 		},
 		[1213746] = {
-			["name"] = "Cintura d'Ossidiana Pesante",
+			["name"] = "Heavy Obsidian Belt",
 		},
 		[1213748] = {
-			["name"] = "Cintura d'Ossidiana Leggera",
+			["name"] = "Light Obsidian Belt",
 		},
 		[1214137] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Heartseeker",
 		},
 		[1214257] = {
-			["name"] = "Guanti Neri del Distruttore",
+			["name"] = "Black Grasp of the Destroyer",
 		},
 		[1214270] = {
-			["name"] = "Scudo d'Ossidiana Scheggiata",
+			["name"] = "Jagged Obsidian Shield",
 		},
 		[1214274] = {
-			["name"] = "Tunica di Maglia d'Ossidiana",
+			["name"] = "Obsidian Mail Tunic",
 		},
 		[1214309] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Dreamscale Visor",
 		},
 		[1215507] = {
-			["name"] = "Pettorale Corazzato d'Ossidiana Spessa",
+			["name"] = "Thick Obsidian Breastplate",
 		},
 		[1223787] = {
-			["name"] = "Pettorale Corazzato della Rovina dei Ghiacci",
+			["name"] = "Icebane Breastplate",
 		},
 		[1223789] = {
-			["name"] = "Guanti Lunghi della Rovina dei Ghiacci",
+			["name"] = "Icebane Gauntlets",
 		},
 		[1223791] = {
-			["name"] = "Bracciali della Rovina dei Ghiacci",
+			["name"] = "Icebane Bracers",
 		},
 		[1224631] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Soldier's Helmet",
 		},
 		[1224632] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Soldier's Spaulders",
 		},
 		[1224633] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Soldier's Chestplate",
 		},
 		[1224635] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Soldier's Protectors",
 		},
 		[1224636] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Soldier's Grips",
 		},
 		[1224637] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Soldier's Waistguard",
 		},
 		[1224638] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Soldier's Legplates",
 		},
 		[1224639] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Soldier's Stompers",
 		},
 		[1230171] = {
 			["name"] = "Sharpening Wheel",
 		},
 		[1245287] = {
-			["name"] = "Verga d'Argento",
+			["name"] = "Copper Rod",
 		},
 		[1252229] = {
 			["name"] = "Gemmed Copper Boots",
@@ -1361,22 +1361,22 @@ lib:LoadNames(164, {
 			["name"] = "Legionite Glaive",
 		},
 		[1252988] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252989] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252990] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1253001] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1253002] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1253003] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1263041] = {
 			["name"] = "Anvil",

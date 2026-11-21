@@ -404,6 +404,6 @@ lib:LoadNames(185, {
 			["name"] = "Palitusco Basicão",
 		},
 		[1319313] = {
-			["name"] = "Plated Armorfish",
+			["name"] = "Peixe-armadura de Placas",
 		},
 	})

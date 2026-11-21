@@ -6,7 +6,7 @@
 -- teaches these and no source database lists them.
 --
 -- Value 0 is OMITTED, not zero: it is the default and the large majority.
--- build 1.60.1.69977 - 2510 recipes, distribution {'0': 2473, '1': 33, '3': 4}
+-- build 1.60.1.70938 - 2516 recipes, distribution {'0': 2479, '1': 33, '3': 4}
 
 local lib = LibStub and LibStub("LibProfessionDB-1.0", true)
 if not lib then return end

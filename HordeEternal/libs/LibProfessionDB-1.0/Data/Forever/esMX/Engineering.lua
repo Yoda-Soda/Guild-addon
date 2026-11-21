@@ -599,13 +599,13 @@ lib:LoadNames(202, {
 			["name"] = "Lija",
 		},
 		[1253004] = {
-			["name"] = "Supresor de fango",
+			["name"] = "",
 		},
 		[1253005] = {
-			["name"] = "Dardo sedante enorme",
+			["name"] = "",
 		},
 		[1253006] = {
-			["name"] = "G.R.R. Nada",
+			["name"] = "",
 		},
 		[1263034] = {
 			["name"] = "Robot de reparación",

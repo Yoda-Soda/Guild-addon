@@ -416,7 +416,7 @@ lib:LoadNames(202, {
 			["name"] = "Dichtes Dynamit",
 		},
 		[23071] = {
-			["name"] = "Echtsilber-Umwandler",
+			["name"] = "Echtsilberumwandler",
 		},
 		[23077] = {
 			["name"] = "Gyrofrosteisreflektor",
@@ -599,13 +599,13 @@ lib:LoadNames(202, {
 			["name"] = "Sandpapier",
 		},
 		[1253004] = {
-			["name"] = "Schleimunterdrücker",
+			["name"] = "",
 		},
 		[1253005] = {
-			["name"] = "Gigantischer Betäubungspfeil",
+			["name"] = "",
 		},
 		[1253006] = {
-			["name"] = "G.R.R.-Nate",
+			["name"] = "",
 		},
 		[1263034] = {
 			["name"] = "Reparaturbot",
@@ -704,13 +704,13 @@ lib:LoadNames(202, {
 			["name"] = "SAF-T-Notzerfetzer: Everlook",
 		},
 		[1266934] = {
-			["name"] = "EZ- und SAF-Feldtransporter: Hyjal",
+			["name"] = "EZ- und SAF-Feldtransporter: Hyjalgipfel",
 		},
 		[1266935] = {
 			["name"] = "Ultrasichere wiederaufladbare Batterie",
 		},
 		[1266936] = {
-			["name"] = "Dimensionstransporter: Hyjal",
+			["name"] = "Dimensionstransporter: Hyjalgipfel",
 		},
 		[1266937] = {
 			["name"] = "Gnomischer Geflügelisierer",

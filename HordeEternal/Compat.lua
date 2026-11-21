@@ -18,6 +18,7 @@ function Compat.SafeText(value)
     if not Compat.IsReadable(value) then
         return "<restricted>"
     end
+
     local valueType = type(value)
     if valueType == "nil" then
         return "<nil>"
@@ -26,6 +27,16 @@ function Compat.SafeText(value)
         return tostring(value)
     end
     return "<non-scalar>"
+end
+
+function Compat.Fingerprint(payload)
+    if not Compat.IsReadable(payload) or type(payload) ~= "string" or #payload > 16320 then return nil end
+    local first, second = 1, 0
+    for index = 1, #payload do
+        first = (first + payload:byte(index)) % 65521
+        second = (second + first) % 65521
+    end
+    return tostring(first) .. "-" .. tostring(second)
 end
 
 function Compat.CharacterLabel(name)
@@ -65,6 +76,12 @@ function Compat.Value(callback, ...)
         return nil, state
     end
     return results[2], "available"
+end
+
+function Compat.HomeRealm()
+    local home, state = Compat.Value(GetNormalizedRealmName)
+    if state ~= "available" or type(home) ~= "string" then return nil end
+    return home ~= "" and home or "CAMWOWAU1Realm2PvP"
 end
 
 function Compat.AddOnStatus(name)
@@ -239,8 +256,8 @@ function Compat.IsPlayerName(name)
     if not identity or type(identity[2]) ~= "string" or identity[2] == "" then return false end
     local playerName, realm = identity[2], identity[3]
     if type(GetNormalizedRealmName) == "function" then
-        local home, state = Compat.Value(GetNormalizedRealmName)
-        if state ~= "available" or type(home) ~= "string" or home == "" then return false end
+        local home = Compat.HomeRealm()
+        if not home then return false end
         if type(realm) == "string" and realm ~= "" and realm ~= home
             and not playerName:find(" ", 1, true) then
             playerName, realm = playerName .. " " .. realm, home
@@ -425,9 +442,9 @@ function Compat.OpenCraftRequest(entry, crafter)
     end
     local display = Compat.RecipeDisplay(entry)
     local item = display.link or display.name:gsub("[|%c]", "")
-    local message = "Hi! Could you craft " .. item .. " for me? I can provide materials."
+    local message = "Hi! Could you please craft " .. item .. " for me? I can provide materials."
     if #message > 255 then
-        message = "Hi! Could you craft " .. display.name:gsub("[|%c]", ""):sub(1, 120)
+        message = "Hi! Could you please craft " .. display.name:gsub("[|%c]", ""):sub(1, 120)
             .. " for me? I can provide materials."
     end
     local recipient = crafter.name:match("^[^-]+")

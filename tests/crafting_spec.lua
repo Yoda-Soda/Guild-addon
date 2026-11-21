@@ -1,5 +1,41 @@
 local addon = { db = {} }
 assert(loadfile("HordeEternal/Compat.lua"))("HordeEternal", addon)
+assert(loadfile("HordeEternal/Diagnostics.lua"))("HordeEternal", addon)
+local diagnostics = addon.Diagnostics
+local diagnosticClock = 1
+GetTime = function() return diagnosticClock end
+assert(not addon.LogEvent("PRIVATE_MEMBER_NAME"), "unrecognized event text must not enter the log")
+assert(not addon.LogEvent("SEND_ACCEPTED", { bytes = 12 }), "routine transport tracing must default off")
+assert(addon.LogEvent("SCAN_UNAVAILABLE", { reason = "source", name = "Private Name", payload = "private nickname" }))
+assert(addon.LogEvent("SCAN_UNAVAILABLE", { reason = "source" }) and diagnostics.Count() == 1)
+assert(diagnostics.Lines()[1]:find("(x2)", 1, true), "repeated events must coalesce")
+local privateValue = {}
+canaccessvalue = function(value) return value ~= privateValue end
+assert(not addon.LogEvent("SCAN_COMPLETE", privateValue), "restricted field tables must be rejected before ordinary use")
+assert(not diagnostics.SetTrace(privateValue), "restricted values must not become log settings")
+addon.LogEvent("SEND_REJECTED", { result = privateValue })
+assert(not diagnostics.Lines()[2]:find("result=", 1, true), "restricted log fields must not be converted or formatted")
+canaccessvalue = nil
+addon.LogEvent("SCAN_UNAVAILABLE", { reason = "Private Name" })
+local logText = table.concat(diagnostics.Lines(), "\n")
+assert(not logText:find("Private Name", 1, true) and not logText:find("private nickname", 1, true),
+    "unapproved fields and non-enum text must never be logged")
+assert(#diagnostics.Lines("ERROR") == 1 and #diagnostics.Lines("WARN") == 3,
+    "diagnostic filtering must distinguish errors and warnings")
+diagnostics.Clear()
+for index = 1, 210 do
+    diagnosticClock = index * 6
+    addon.LogEvent("SCAN_COMPLETE", { scanned = index, learned = 1, unavailable = 0 })
+end
+assert(diagnostics.Count() == 200 and diagnostics.Lines()[1]:find("scanned=11", 1, true),
+    "the diagnostic log must evict oldest records at its fixed capacity")
+diagnostics.Clear()
+assert(diagnostics.Count() == 0 and diagnostics.SetTrace(true))
+assert(addon.LogEvent("SEND_ACCEPTED", { bytes = 12 }) and diagnostics.Count() == 1)
+diagnostics.SetTrace(false)
+diagnostics.Clear()
+GetTime = nil
+print("PASS: bounded diagnostic history, repeat coalescing, severity filters, restricted values, and private-data exclusion")
 assert(loadfile("HordeEternal/Catalog.lua"))("HordeEternal", addon)
 
 assert(addon.Catalog.Initialize().shareEnabled == true, "new installs must share automatically")
@@ -21,8 +57,49 @@ C_TradeSkillUI = {
 
 local scanned, learned, reason = addon.Catalog.Scan()
 assert(scanned == 2 and learned == 1 and reason == nil, "fallback IDs must survive and deduplicate")
+local firstProfile = addon.Catalog.Initialize().localProfile
+assert(firstProfile.revision == 1 and firstProfile.fingerprint == addon.Catalog.Fingerprint(addon.Catalog.EncodeProfile(firstProfile)))
+assert(addon.Catalog.Scan() == 2 and addon.Catalog.Initialize().localProfile.revision == firstProfile.revision,
+    "unchanged scans must retain their persistent revision")
+local originalRecipeInfo = C_TradeSkillUI.GetRecipeInfo
+C_TradeSkillUI.GetRecipeInfo = function(id)
+    local info = originalRecipeInfo(id)
+    info.learned = true
+    return info
+end
+time = function() return 500 end
+addon.Catalog.Scan()
+assert(addon.Catalog.Initialize().localProfile.revision == 2,
+    "changed recipes must advance revision even when wall-clock time moves backwards")
+C_TradeSkillUI.GetRecipeInfo = originalRecipeInfo
+time = function() return 1000 end
+addon.Catalog.Scan()
+assert(addon.Catalog.Initialize().localProfile.revision == 3, "a withdrawal must issue a newer profile revision")
 local results = addon.Catalog.Search("wizard")
 assert(#results == 1 and results[1].crafters[1].name == "You", "local recipes must appear without sharing")
+do
+    local database = addon.Catalog.Initialize()
+    local previousProfiles, originalIpairs = database.remoteProfiles, ipairs
+    local recipe = database.localProfile.recipes[1]
+    database.remoteProfiles = {}
+    for index = 1, 150 do
+        database.remoteProfiles["Crafter " .. index] = { recipes = { recipe, recipe } }
+    end
+    local crafterVisits = 0
+    ipairs = function(values)
+        local iterator, state, first = originalIpairs(values)
+        return function(list, index)
+            local key, value = iterator(list, index)
+            if value and type(value) == "table" and value.isLocal ~= nil then crafterVisits = crafterVisits + 1 end
+            return key, value
+        end, state, first
+    end
+    local shared = addon.Catalog.Search("wizard")
+    ipairs = originalIpairs
+    assert(#shared == 1 and #shared[1].crafters == 151, "duplicate recipe rows must not duplicate a crafter")
+    assert(crafterVisits == 0, "aggregation must not rescan accumulated crafters for every shared recipe")
+    database.remoteProfiles = previousProfiles
+end
 assert(addon.db.catalog.shareEnabled == true, "sharing must default to enabled")
 assert(addon.db.catalog.localProfile.recipes[1].skillLineID == 333)
 local browse, total = addon.Catalog.Browse("", 333)
@@ -30,6 +107,16 @@ assert(total == 2 and #browse == 2, "browser must retain client-visible unlearne
 assert(#addon.db.catalog.localProfile.recipes == 1, "unlearned recipes must not be advertised as craftable")
 local professions, known, catalogued = addon.Catalog.Overview()
 assert(#professions == 12 and known == 1 and catalogued == 2)
+local primaryExample = { recipes = {
+    { skillLineID = 171, professionName = "Alchemy" }, { skillLineID = 333, professionName = "Enchanting" },
+    { skillLineID = 129, professionName = "First Aid" }, { skillLineID = 185, professionName = "Cooking" },
+    { skillLineID = 356, professionName = "Fishing" }, { skillLineID = 9001, professionName = "Alchemy" },
+    { skillLineID = 9002, professionName = "[DNT] Test skill" },
+} }
+assert(#addon.Catalog.PrimaryProfessions(primaryExample) == 2,
+    "primary counts must exclude secondary/test professions and deduplicate Forever/base aliases")
+primaryExample.recipes[#primaryExample.recipes + 1] = { skillLineID = 186, professionName = "Mining" }
+assert(#addon.Catalog.PrimaryProfessions(primaryExample) == 3, "gathering professions count toward the primary limit")
 addon.db.catalog.remoteProfiles.Peer = { updatedAt = 900, recipes = {
     { recipeID = 25124, skillLineID = 333, itemName = "Minor Wizard Oil", professionName = "Enchanting" },
 } }
@@ -71,6 +158,15 @@ assert(#browse == 21 and total == 121 and pages == 3 and page == 3,
     "all recipes must remain reachable beyond the old 100-result cap")
 browse, total, pages, page = addon.Catalog.Browse("Pagination", 171, 999)
 assert(page == 3)
+local allPages, allCount = addon.Catalog.BrowseAll("Pagination", 171)
+assert(allCount == 121 and #allPages == 121, "the scrolling query must expose all filtered recipes without truncation")
+local orderingRecipe = { recipeID = 100122, skillLineID = 171, itemName = "Pagination Zeta available", professionName = "Alchemy" }
+addon.db.catalog.recipeIndex["100122"] = orderingRecipe
+addon.db.catalog.remoteProfiles.OrderingPeer = { updatedAt = 900, recipes = { orderingRecipe } }
+allPages = addon.Catalog.BrowseAll("Pagination", 171)
+assert(allPages[1].recipeID == 100122 and #allPages[2].crafters == 0,
+    "guild-known recipes must precede alphabetically earlier unknown recipes")
+addon.db.catalog.remoteProfiles.OrderingPeer = nil
 addon.db.catalog.recipeIndex = {}
 
 local libraryVersion, libraryReady = "Forever", true
@@ -101,6 +197,41 @@ assert(#readyReport == 2 and readyReport[2]:find("ready: 1 recipes", 1, true)
     and readyReport[2]:find("Standalone ProfessionDB is not required", 1, true),
     "an embedded library must not report a missing standalone addon as a failure")
 assert(libraryRecipe.recipeID == nil, "library-owned records must remain untouched")
+local originalCount, originalIterate = library.Count, library.Iterate
+local gatheringRecipes = {
+    { profession = 182, id = 1229705, data = { name = "Incense Candle", craftedItemId = 279962 } },
+    { profession = 182, id = 1262980, data = { name = "Greenhouse", craftedItemId = 279964 } },
+    { profession = 182, id = 1263070, data = { name = "Seed Hybridizer", craftedItemId = 279947 } },
+    { profession = 393, id = 1229517, data = { name = "Camp Chair", craftedItemId = 279979 } },
+    { profession = 393, id = 1262982, data = { name = "Trapper's Workbench", craftedItemId = 279938 } },
+    { profession = 393, id = 1262985, data = { name = "Field Guide", craftedItemId = 279969 } },
+}
+library.Count = function() return #gatheringRecipes end
+library.Iterate = function()
+    local index = 0
+    return function()
+        index = index + 1
+        local recipe = gatheringRecipes[index]
+        if recipe then return recipe.profession, recipe.id, recipe.data end
+    end
+end
+assert(addon.Catalog.RefreshLibrary(true))
+local herbalismRecipes, herbalismTotal = addon.Catalog.BrowseAll("", 182)
+local skinningRecipes, skinningTotal = addon.Catalog.BrowseAll("", 393)
+assert(herbalismTotal == 3 and skinningTotal == 3,
+    "new Herbalism and Skinning camp recipes must be browsable despite gathering flags")
+local incense = addon.Catalog.BrowseAll("Incense Candle", 182)
+assert(#incense == 1 and incense[1].itemID == 279962 and #incense[1].crafters == 0,
+    "camp recipe catalogue data must not invent learned ownership")
+local gatheringOverview = addon.Catalog.Overview()
+for _, profession in ipairs(gatheringOverview) do
+    if profession.id == 182 or profession.id == 393 then
+        assert(profession.total == 3 and profession.known == 0 and profession.gathering,
+            "gathering profession overview counts must include its camp crafts")
+    end
+end
+library.Count, library.Iterate = originalCount, originalIterate
+assert(addon.Catalog.RefreshLibrary(true))
 local getLibrary = LibStub.GetLibrary
 LibStub.GetLibrary = function() return nil end
 C_AddOns = {
@@ -297,6 +428,14 @@ IsInGuild = function() return true end
 ChatFrameUtil = { SendTellWithMessage = function(name, text) whisperedName, whisperedText = name, text end }
 assert(addon.Compat.OpenCraftRequest(displayEntry, { name = "Crafter-Realm" }))
 assert(whisperedName == "Crafter" and whisperedText:find(displayEntry.itemLink, 1, true))
+assert(whisperedText:find("Could you please craft", 1, true), "crafting requests must include please")
+local longRequestEntry = {
+    recipeID = 25124, itemName = "Requested item",
+    itemLink = "|Hitem:20744|h[" .. string.rep("Long item name ", 40) .. "]|h",
+}
+assert(addon.Compat.OpenCraftRequest(longRequestEntry, { name = "Crafter-Realm" }))
+assert(#whisperedText <= 255 and whisperedText:find("Could you please craft", 1, true),
+    "shortened long-item requests must stay polite and within the chat limit")
 local qualifiedCrafter = { name = "Other Crafter-Beta ClassicBetaPvP2" }
 assert(addon.Compat.OpenCraftRequest(displayEntry, qualifiedCrafter))
 assert(whisperedName == "Other Crafter", "whisper recipients must keep the surname but omit the realm")
@@ -323,6 +462,7 @@ for _, name in ipairs({
     "UnlockHighlight", "SetNormalFontObject", "SetID",
     "SetWidth", "SetScale", "SetNormalTexture", "SetPushedTexture", "SetDisabledTexture", "SetHitRectInsets",
     "SetEnabled", "SetVerticalScroll", "ClearFocus", "SetTextColor", "SetColorTexture", "SetVertexColor",
+    "SetMultiLine", "SetFontObject",
 }) do
     methods[name] = function() end
 end
@@ -330,6 +470,7 @@ local function Widget(name)
     return setmetatable({ name = name, shown = true, scripts = {} }, { __index = methods })
 end
 function methods:SetText(text) self.text = text end
+function methods:SetTitle(title) self.titleText = title end
 function methods:GetText() return self.text or "" end
 function methods:GetName() return self.name end
 function methods:SetPoint(...) self.point = { ... } end
@@ -344,7 +485,17 @@ function methods:SetEnabled(enabled) self.enabled = enabled end
 function methods:Enable() self.enabled = true end
 function methods:Disable() self.enabled = false end
 function methods:SetTexture(texture) self.texture = texture end
+function methods:SetDesaturated(desaturated) self.desaturated = desaturated end
+function methods:SetTextColor(...) self.textColor = { ... } end
 function methods:SetScript(event, callback) self.scripts[event] = callback end
+function methods:SetVerticalScroll(offset)
+    self.offset = offset
+    if self.scripts.OnVerticalScroll then self.scripts.OnVerticalScroll(self, offset) end
+end
+function methods:SetFocus() self.focused = true end
+function methods:ClearFocus() self.focused = false end
+function methods:HasFocus() return self.focused == true end
+function methods:HighlightText() self.highlighted = true end
 function methods:SetChecked(checked) self.checked = checked end
 function methods:GetChecked() return self.checked end
 function methods:Show() self.shown = true end
@@ -413,7 +564,12 @@ assert(canvas.scale == 1)
 assert(canvas.tabs[1].point[2] == canvas and canvas.tabs[1].point[3] == "BOTTOMLEFT")
 assert(canvas.tabs[1].point[4] == 5 and canvas.tabs[1].point[5] == 2)
 assert(canvas.tabs[2].point[1] == "TOPLEFT" and canvas.tabs[2].point[4] == 3)
-assert(frames[2].point[1] == "BOTTOMRIGHT" and frames[2].point[5] == 6, "no empty internal tab footer")
+local anchoredPageHost
+for _, widget in ipairs(frames) do
+    if widget.parent == canvas and widget.point and widget.point[1] == "BOTTOMRIGHT"
+        and widget.point[3] == "BOTTOMRIGHT" then anchoredPageHost = widget end
+end
+assert(anchoredPageHost and anchoredPageHost.point[5] == 6, "no empty internal tab footer")
 canvas.tabs[1].scripts.OnClick()
 assert(addon.db.canvasTab == "guild")
 assert(canvas.selectedTab == 1)
@@ -475,6 +631,18 @@ end
 assert(enchantingRow)
 enchantingRow.scripts.OnClick(enchantingRow)
 assert(crafting.detail:IsShown() and crafting.rows[1].entry.recipeID == 25124)
+local enchantingCoverage
+for _, profession in ipairs(addon.Catalog.Overview()) do
+    if profession.id == 333 then enchantingCoverage = profession end
+end
+local expectedCoverage = enchantingCoverage.known .. " / " .. enchantingCoverage.total .. " Enchanting recipes"
+assert(crafting.headerTotal:GetText() == expectedCoverage, "opening a profession must show its known/total recipe coverage")
+crafting.search:SetText("No matching enchantment")
+crafting.search.scripts.OnTextChanged()
+assert(crafting.headerTotal:GetText() == expectedCoverage and not crafting.rows[1]:IsShown(),
+    "recipe filters must not replace full profession coverage with only matching totals")
+crafting.search:SetText("")
+crafting.search.scripts.OnTextChanged()
 assert(not crafting.crafters[1].request:IsShown(), "do not whisper yourself")
 addon.db.catalog.remoteProfiles["Crafter-Realm"] = {
     updatedAt = 900, recipes = addon.db.catalog.localProfile.recipes,
@@ -491,6 +659,27 @@ addon.db.catalog.remoteProfiles["Absent Crafter-Realm"] = {
 addon.db.catalog.remoteProfiles["Unknown Crafter-Realm"] = {
     updatedAt = 900, recipes = addon.db.catalog.localProfile.recipes,
 }
+local unownedRecipe = { recipeID = 730001, skillLineID = 333, professionName = "Enchanting",
+    itemName = "Unowned example", recipeName = "Unowned example" }
+addon.db.catalog.recipeIndex["730001"] = unownedRecipe
+crafting.search:SetText("Unowned example")
+crafting.search.scripts.OnTextChanged()
+assert(crafting.rows[1].icon.desaturated and crafting.rows[1].label.textColor[1] == crafting.rows[1].label.textColor[2]
+    and crafting.rows[1].detail:GetText() == "No known guild crafter",
+    "recipes with no known guild crafter must be visually gray")
+crafting.rows[1].scripts.OnClick(crafting.rows[1])
+assert(crafting.detail:IsShown(), "unknown recipes must remain inspectable")
+local previousAbsentProfile = addon.db.catalog.remoteProfiles["Absent Crafter-Realm"]
+addon.db.catalog.remoteProfiles["Absent Crafter-Realm"] = { updatedAt = 900, recipes = { unownedRecipe } }
+addon.RefreshCatalog()
+assert(not crafting.rows[1].icon.desaturated
+    and crafting.rows[1].label.textColor[1] ~= crafting.rows[1].label.textColor[2]
+    and crafting.rows[1].entry.crafters[1].isOnline == false,
+    "an offline known crafter must restore normal recipe styling on a reused row")
+addon.db.catalog.remoteProfiles["Absent Crafter-Realm"] = previousAbsentProfile
+addon.db.catalog.recipeIndex["730001"] = nil
+crafting.search:SetText("")
+crafting.search.scripts.OnTextChanged()
 addon.RefreshCatalog()
 local request
 for _, row in ipairs(crafting.crafters) do
@@ -550,14 +739,25 @@ for _, row in ipairs(crafting.rows) do
     if row.profession and row.profession.id == 171 then alchemyRow = row end
 end
 alchemyRow.scripts.OnClick(alchemyRow)
-assert(crafting.pageLabel:GetText():find("1 / 3", 1, true) and not crafting.previousButton.enabled)
-crafting.nextButton.scripts.OnClick()
+assert(crafting.pageLabel:GetText():find("121 recipes", 1, true) and not crafting.previousButton and not crafting.nextButton)
+local previousOverview, previousBrowseAll, previousCreateFrame = addon.Catalog.Overview, addon.Catalog.BrowseAll, CreateFrame
+addon.Catalog.Overview = function() error("scrolling must not recalculate profession counts") end
+addon.Catalog.BrowseAll = function() error("scrolling must not rebuild the recipe catalog") end
+CreateFrame = function() error("scrolling must recycle the recipe rows") end
+crafting.ScrollTo(50 * 46)
 assert(crafting.rows[1].entry.recipeID == 100051)
-crafting.nextButton.scripts.OnClick()
-assert(crafting.rows[21]:IsShown() and not crafting.rows[22]:IsShown() and not crafting.nextButton.enabled)
+crafting.scroll.scripts.OnVerticalScroll(crafting.scroll, 100000)
+local lastRecipe
+for _, row in ipairs(crafting.rows) do if row:IsShown() and row.entry then lastRecipe = row.entry end end
+assert(lastRecipe and lastRecipe.recipeID == 100121 and #crafting.rows <= 48,
+    "the scrolling list must reach the final recipe through a bounded row pool")
+crafting.ScrollTo(0)
+crafting.rows[1].scripts.OnMouseWheel(crafting.rows[1], -1)
+assert(crafting.rows[1].entry.recipeID == 100004, "recipe-row mouse wheel must scroll three rows")
+addon.Catalog.Overview, addon.Catalog.BrowseAll, CreateFrame = previousOverview, previousBrowseAll, previousCreateFrame
 crafting.search:SetText("100121")
 crafting.search.scripts.OnTextChanged()
-assert(crafting.rows[1].entry.recipeID == 100121 and crafting.pageLabel:GetText():find("1 / 1", 1, true))
+assert(crafting.rows[1].entry.recipeID == 100121 and crafting.pageLabel:GetText():find("1 recipes", 1, true))
 crafting.backButton.scripts.OnClick()
 local previousItem, previousTooltip, previousUnitLevel, previousEnum, previousTimer = C_Item, C_TooltipInfo, UnitLevel, Enum, C_Timer
 local filterLevel, hasEngineering, loadedItems, filterTimers, loadRequests = 20, false, {}, {}, {}
@@ -631,13 +831,123 @@ for recipeID = 910001, 910015 do addon.db.catalog.recipeIndex[tostring(recipeID)
 C_Item, C_TooltipInfo, UnitLevel, Enum, C_Timer = previousItem, previousTooltip, previousUnitLevel, previousEnum, previousTimer
 crafting.backButton.scripts.OnClick()
 print("PASS: saved top-toolbar usability filter, unknown labels, bounded loading, unselected-item refresh, and current-character level/skill updates")
+do
+    local originalTimer, originalOverview, originalRows = C_Timer, addon.Catalog.Overview, addon.Members.Rows
+    local callbacks, overviews, rowBuilds = {}, 0, 0
+    C_Timer = { After = function(delay, callback)
+        assert(delay == 0.1)
+        callbacks[#callbacks + 1] = callback
+    end }
+    addon.Catalog.Overview = function(...) overviews = overviews + 1; return originalOverview(...) end
+    addon.Members.Rows = function(...) rowBuilds = rowBuilds + 1; return originalRows(...) end
+    canvas:Hide()
+    for _ = 1, 10 do addon.RefreshCatalog(); addon.RefreshGuild() end
+    assert(overviews == 0 and rowBuilds == 0 and #callbacks == 0,
+        "hidden windows must not build recipe or member results or schedule refresh work")
+    canvas:Show()
+    canvas.tabs[1].scripts.OnClick()
+    overviews, rowBuilds = 0, 0
+    for _ = 1, 10 do addon.RefreshCatalog(); addon.RefreshGuild() end
+    assert(#callbacks == 1 and overviews == 0 and rowBuilds == 0, "guild refresh bursts must coalesce")
+    table.remove(callbacks, 1)()
+    assert(rowBuilds == 1 and overviews == 0, "only the visible guild page may rebuild")
+    canvas.tabs[2].scripts.OnClick()
+    overviews, rowBuilds = 0, 0
+    for _ = 1, 10 do addon.RefreshCatalog(); addon.RefreshGuild() end
+    assert(#callbacks == 1 and overviews == 0 and rowBuilds == 0, "crafting refresh bursts must coalesce")
+    table.remove(callbacks, 1)()
+    assert(overviews == 1 and rowBuilds == 0, "only the visible crafting page may rebuild")
+    addon.RefreshCatalog()
+    canvas:Hide()
+    table.remove(callbacks, 1)()
+    assert(overviews == 1, "closing the window must discard delayed rendering")
+    canvas:Show()
+    canvas.tabs[1].scripts.OnClick()
+    overviews = 0
+    canvas.scripts.OnShow()
+    assert(overviews == 0, "opening on Guild must not rebuild the hidden crafting catalogue")
+    while #callbacks > 0 do table.remove(callbacks, 1)() end
+    canvas.tabs[2].scripts.OnClick()
+    C_Timer, addon.Catalog.Overview, addon.Members.Rows = originalTimer, originalOverview, originalRows
+end
+print("PASS: hidden-page rendering skipped, visible refresh bursts coalesced, and delayed rendering cancelled on close")
 ChatFrameUtil = nil
+local previousGuildState = addon.GuildState
+local guildAllowed = false
+local applicationRole = "Application admin"
+addon.GuildState = {
+    IsAllowed = function() return guildAllowed end,
+    IsReady = function() return guildAllowed end,
+    Rows = function() return {} end,
+    AdminStatus = function() return applicationRole end,
+}
+addon.ToggleCanvas()
+assert(not canvas:IsShown(), "guild-ineligible toggles must hide an already open canvas")
+local frameCount = #frames
+addon.ToggleCanvas()
+assert(not canvas:IsShown() and #frames == frameCount, "blocked toggles must not create or open addon UI")
+diagnostics.ToggleWindow()
+assert(not diagnostics.window and #frames == frameCount, "diagnostics must create no UI outside the eligible guild")
+canvas:Show()
+canvas.scripts.OnShow()
+assert(not canvas:IsShown(), "direct window shows must also honor guild eligibility")
+guildAllowed = true
+addon.ToggleCanvas()
+assert(canvas:IsShown(), "eligible guild access must restore the same window")
+canvas.RefreshAdminStatus()
+assert(canvas.titleText == "Horde Eternal - Application admin", "administrator role must be explicit in the window title")
+applicationRole = "Guild member"
+addon.RefreshGuild()
+assert(canvas.titleText == "Horde Eternal - Guild member", "member views must not retain an administrator label")
+applicationRole = "Admin status unavailable"
+canvas.RefreshAdminStatus()
+assert(canvas.titleText == "Horde Eternal - Admin status unavailable", "unverified administrator status must remain explicit")
+applicationRole = "Application admin"
+canvas.RefreshAdminStatus()
+assert(canvas.logsButton, "the main window must expose the diagnostic viewer")
+canvas.logsButton.scripts.OnClick()
+local logWindow = diagnostics.window
+assert(logWindow:IsShown() and logWindow.edit:GetText():find("current session", 1, true))
+assert(logWindow.edit:GetText():find("ApplicationRole=Application admin", 1, true),
+    "diagnostic reports must include the same local application role without identifying the player")
+addon.LogEvent("SEND_REJECTED", { result = 9 })
+addon.LogEvent("SCAN_UNAVAILABLE", { reason = "source" })
+logWindow.filters[2].scripts.OnClick()
+assert(logWindow.filter == "WARN" and logWindow.edit:GetText():find("SCAN_UNAVAILABLE", 1, true)
+    and logWindow.edit:GetText():find("SEND_REJECTED", 1, true), "the warning filter must include errors")
+logWindow.filters[3].scripts.OnClick()
+assert(logWindow.edit:GetText():find("SEND_REJECTED", 1, true) and not logWindow.edit:GetText():find("SCAN_COMPLETE", 1, true))
+logWindow.filters[1].scripts.OnClick()
+assert(logWindow.filter == nil and logWindow.edit:GetText():find("SCAN_UNAVAILABLE", 1, true), "All must restore the full log")
+logWindow.trace:SetChecked(true)
+logWindow.trace.scripts.OnClick()
+assert(diagnostics.traceEnabled, "the detailed checkbox must enable trace events")
+logWindow.trace:SetChecked(false)
+logWindow.trace.scripts.OnClick()
+assert(not diagnostics.traceEnabled)
+UIParent.width, UIParent.height = 640, 480
+logWindow.scripts.OnEvent()
+assert(logWindow.scale <= 640 / 700, "diagnostics must fit small UI viewports")
+UIParent.width, UIParent.height = nil, nil
+logWindow.scripts.OnEvent()
+logWindow.selectAll.scripts.OnClick()
+assert(logWindow.edit.highlighted and logWindow.edit:HasFocus(), "diagnostic reports must be selectable for copying")
+local selectedText = logWindow.edit:GetText()
+addon.LogEvent("DATABASE_UNAVAILABLE")
+assert(logWindow.edit:GetText() == selectedText, "new events must not replace a focused report being copied")
+logWindow.clear.scripts.OnClick()
+assert(diagnostics.Count() == 0 and logWindow.edit:GetText():find("No matching events", 1, true))
+guildAllowed = false
+diagnostics.Refresh()
+assert(not logWindow:IsShown(), "diagnostic windows must hide when guild access is lost")
+guildAllowed = true
+addon.GuildState = previousGuildState
 addon.GuildState = nil
 addon.ToggleCanvas()
 assert(not canvas:IsShown())
 addon.ToggleCanvas()
 assert(canvas:IsShown() and frames[1] == canvas)
-print("PASS: profession home, paginated search, item-load refresh, whisper buttons, Rescan, and small viewport fit")
+print("PASS: profession home, recycled recipe scrolling, known-first ordering/coverage, item-load refresh, whisper buttons, and viewport fit")
 addon.Members = nil
 
 for _, sharingEnabled in ipairs({ true, false }) do
@@ -687,6 +997,7 @@ local timers, sent = {}, {}
 local registered = false
 GetTime = function() return 10 end
 IsInGuild = function() return true end
+C_Club = { GetGuildClubId = function() return 503775441 end }
 GetNormalizedRealmName = function() return "ForeverRealm" end
 UnitFullName = function() return "Podcast", "Clawson" end
 GetGuildInfo = function() return "Horde Eternal", "Member", 5, "ForeverRealm" end
@@ -800,6 +1111,7 @@ assert(#sent == 3 and addon.Sync.status == "Join a guild before syncing")
 addon.Sync.SetSharing(false)
 IsInGuild = function() return true end
 assert(addon.GuildState.RefreshRoster())
+assert(addon.Catalog.Scan() ~= nil, "returning to the guild must require a fresh scan before publishing")
 
 local attempts = 0
 for _, outcome in ipairs({ "rejected", "nil", "error" }) do
@@ -822,3 +1134,119 @@ for _, outcome in ipairs({ "rejected", "nil", "error" }) do
     addon.Sync.SetSharing(false)
 end
 print("PASS: automatic guild sync, addon API acceptance/refusal, and queued-send authorization")
+local recordedFailures = table.concat(diagnostics.Lines("ERROR"), "\n")
+assert(recordedFailures:find("SEND_REJECTED", 1, true) and recordedFailures:find("SEND_UNAVAILABLE", 1, true),
+    "actual send rejection and API errors must be retained in diagnostics")
+local diagnosticReport = diagnostics.ReportText()
+assert(diagnosticReport:find("SCAN_COMPLETE", 1, true)
+    and not diagnosticReport:find("Podcast Clawson", 1, true) and not diagnosticReport:find("Other Crafter", 1, true),
+    "actual scan diagnostics must report counts without character identities")
+
+local currentClub, playerInGuild = 503775441, true
+C_Club.GetGuildClubId = function() return currentClub end
+IsInGuild = function() return playerInGuild end
+Minimap = Widget("Minimap")
+function methods:SetFrameLevel(level) self.level = level end
+function methods:HookScript(event, callback) self.scripts[event] = callback end
+assert(loadfile("HordeEternal/MinimapButton.lua"))("HordeEternal", addon)
+addon.RefreshGuildAccess()
+assert(addon.minimapButton and addon.minimapButton:IsShown() and addon.guildActive,
+    "the real minimap button must appear for the eligible guild")
+addon.ToggleCanvas()
+assert(canvas:IsShown())
+diagnostics.ToggleWindow()
+assert(diagnostics.window:IsShown())
+local guildListener
+for _, widget in ipairs(frames) do
+    if widget.events and widget.events.INITIAL_CLUBS_LOADED then guildListener = widget end
+end
+assert(guildListener, "guild eligibility must refresh when club data becomes available")
+local scans = 0
+C_TradeSkillUI.GetAllRecipeIDs = function() scans = scans + 1; return { 25124 } end
+addon.Catalog.listener.scripts.OnEvent(nil, "TRADE_SKILL_SHOW")
+local beforeBlockedSend = #sent
+currentClub = 123456
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+while #timers > 0 do table.remove(timers, 1)() end
+assert(not addon.minimapButton:IsShown() and not canvas:IsShown() and not diagnostics.window:IsShown() and not addon.guildActive,
+    "changing guild must immediately hide all addon entry points")
+assert(scans == 0 and #sent == beforeBlockedSend, "changing guild must cancel pending scans and sends")
+addon.CreateMinimapButton()
+addon.ToggleCanvas()
+assert(not addon.minimapButton:IsShown() and not canvas:IsShown(), "blocked controls must not reopen")
+currentClub = nil
+guildListener.scripts.OnEvent(nil, "INITIAL_CLUBS_LOADED")
+assert(not addon.minimapButton:IsShown(), "pending club data must not show the minimap button")
+currentClub = 503775441
+guildListener.scripts.OnEvent(nil, "INITIAL_CLUBS_LOADED")
+assert(addon.minimapButton:IsShown() and addon.guildActive and not canvas:IsShown(),
+    "restored guild access must show the existing button without reopening the window")
+addon.ToggleCanvas()
+assert(canvas:IsShown())
+playerInGuild = false
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+assert(not addon.minimapButton:IsShown() and not canvas:IsShown() and not addon.guildActive,
+    "leaving the guild must hide the window and minimap button immediately")
+print("PASS: guild-only minimap/window visibility, pending identity, rejoin, and scan cancellation")
+
+local savedUIRealmName, savedUIGuildInfo, savedUIRosterInfo = GetNormalizedRealmName, GetGuildInfo, GetGuildRosterInfo
+GetNormalizedRealmName = function() return "" end
+GetGuildInfo = function() return "Horde Eternal", "Member", 5, nil end
+GetGuildRosterInfo = function(index) return index == 1 and "Podcast Clawson" or "Other Crafter" end
+playerInGuild = true
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+guildListener.scripts.OnEvent(nil, "GUILD_ROSTER_UPDATE")
+assert(addon.minimapButton:IsShown() and addon.guildActive and addon.GuildState.IsReady(),
+    "an explicitly empty realm must not hide an eligible guild's minimap button")
+SlashCmdList.HORDEETERNAL("")
+assert(canvas:IsShown(), "the slash command must open the window with an explicitly empty realm")
+SlashCmdList.HORDEETERNAL("")
+assert(not canvas:IsShown(), "the realm-less slash command must retain normal toggle behavior")
+playerInGuild = false
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+assert(not addon.minimapButton:IsShown() and not addon.guildActive,
+    "realm-less guild access must still end immediately on leaving the guild")
+GetNormalizedRealmName, GetGuildInfo, GetGuildRosterInfo = savedUIRealmName, savedUIGuildInfo, savedUIRosterInfo
+print("PASS: realm-less guild minimap visibility, slash-command toggle, and guild-leave hiding")
+
+playerInGuild = true
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+guildListener.scripts.OnEvent(nil, "GUILD_ROSTER_UPDATE")
+local mixedProfile = addon.Catalog.Initialize().localProfile
+mixedProfile.recipes[#mixedProfile.recipes + 1] = { recipeID = 9001, skillLineID = 171,
+    professionName = "Alchemy", itemName = "Potion", recipeName = "Potion" }
+mixedProfile.recipes[#mixedProfile.recipes + 1] = { recipeID = 9002, skillLineID = 186,
+    professionName = "Mining", itemName = "Smelt", recipeName = "Smelt" }
+addon.Catalog.Scan()
+local correction = addon.professionCorrection
+assert(correction and correction:IsShown() and correction.heading:GetText():find("unlearn", 1, true),
+    "a third cached primary must prompt the owning character rather than block addon access")
+local conflictProfile = addon.Catalog.Initialize().localProfile
+local removalRow
+for _, row in ipairs(correction.rows) do
+    if row.profession and row.profession.id == 186 then removalRow = row end
+    assert(not row.profession or (row.profession.id ~= 129 and row.profession.id ~= 185 and row.profession.id ~= 356),
+        "secondary professions must never appear in the unlearned chooser")
+end
+assert(removalRow and not correction.confirm.enabled)
+removalRow.scripts.OnClick()
+assert(correction.confirm.enabled and addon.Catalog.Initialize().localProfile == conflictProfile,
+    "selecting a profession must not change data before confirmation")
+correction.later.scripts.OnClick()
+assert(not correction:IsShown() and addon.Catalog.Initialize().localProfile == conflictProfile,
+    "Later must preserve all records")
+SlashCmdList.HORDEETERNAL("professions")
+assert(correction:IsShown())
+removalRow.scripts.OnClick()
+correction.confirm.scripts.OnClick()
+assert(not correction:IsShown() and not addon.Catalog.Initialize().localProfile.professionConflict
+    and #addon.Catalog.PrimaryProfessions(addon.Catalog.Initialize().localProfile) == 2,
+    "explicit owner confirmation must repair the profile and dismiss the prompt: " .. correction.status:GetText()
+        .. " selected=" .. tostring(correction.selected) .. " count=" .. #addon.Catalog.PrimaryProfessions(addon.Catalog.Initialize().localProfile))
+SlashCmdList.HORDEETERNAL("professions")
+correction.modes.scripts.OnClick()
+assert(correction.rows[1].profession.id == 186, "previous withdrawals must remain available for relearning or mistake recovery")
+playerInGuild = false
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+assert(not correction:IsShown(), "the correction prompt must obey guild-only visibility")
+print("PASS: owner profession-correction chooser, explicit confirmation/cancel, secondary exclusion, and guild visibility")

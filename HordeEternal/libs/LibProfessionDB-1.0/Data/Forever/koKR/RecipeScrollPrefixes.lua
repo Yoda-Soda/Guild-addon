@@ -29,17 +29,17 @@ lib:LoadRecipeScrollPrefixes({
 -- own header if it would rather -- the builder does not decide that here.
 lib:LoadRecipeScrollPrefixSamples({
 [129]=9,
-[164]=360,
-[165]=443,
-[171]=116,
+[164]=370,
+[165]=459,
+[171]=120,
 [182]=2,
-[185]=107,
+[185]=111,
 [186]=2,
-[197]=350,
-[202]=169,
-[333]=137,
+[197]=345,
+[202]=160,
+[333]=140,
 [356]=2,
-[393]=1,
+[393]=2,
 })
 
 -- [skillLineID] = Use: sentence, %s = the craft's name. The ARTICLE is the

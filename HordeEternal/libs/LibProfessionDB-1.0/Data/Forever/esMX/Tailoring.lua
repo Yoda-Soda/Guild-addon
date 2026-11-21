@@ -890,22 +890,22 @@ lib:LoadNames(197, {
 			["name"] = "Estandarte de facción",
 		},
 		[1252979] = {
-			["name"] = "Togas adaptables de matababosas",
+			["name"] = "",
 		},
 		[1252980] = {
-			["name"] = "Puños adaptables de matababosas",
+			["name"] = "",
 		},
 		[1252981] = {
-			["name"] = "Cordón adaptable de matababosas",
+			["name"] = "",
 		},
 		[1252991] = {
-			["name"] = "Túnica adaptable de sanababosas",
+			["name"] = "",
 		},
 		[1252992] = {
-			["name"] = "Brazales adaptables de sanababosas",
+			["name"] = "",
 		},
 		[1252993] = {
-			["name"] = "Cinturón adaptable de sanababosas",
+			["name"] = "",
 		},
 		[1257013] = {
 			["name"] = "Bolsa de componentes de lino",

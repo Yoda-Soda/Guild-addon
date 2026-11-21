@@ -6,7 +6,7 @@
 -- Credits section of README.md. No client signal reveals this.
 --
 -- 23 never-implemented recipes for this expansion; 23 of them
--- are in the 2510 recipes this version ships. The rest are kept anyway, so
+-- are in the 2516 recipes this version ships. The rest are kept anyway, so
 -- adding recipes later cannot silently un-hide one.
 
 local lib = LibStub and LibStub("LibProfessionDB-1.0", true)

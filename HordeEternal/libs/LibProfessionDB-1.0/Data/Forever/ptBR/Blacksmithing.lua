@@ -1361,22 +1361,22 @@ lib:LoadNames(164, {
 			["name"] = "Glaive de Legionita",
 		},
 		[1252988] = {
-			["name"] = "Guarda-peito Adaptável do Britaterra",
+			["name"] = "",
 		},
 		[1252989] = {
-			["name"] = "Guarda-braços Adaptáveis do Britaterra",
+			["name"] = "",
 		},
 		[1252990] = {
-			["name"] = "Cinturão Adaptável do Britaterra",
+			["name"] = "",
 		},
 		[1253001] = {
-			["name"] = "Placas Adaptáveis do Teceterra",
+			["name"] = "",
 		},
 		[1253002] = {
-			["name"] = "Elos Adaptáveis do Teceterra",
+			["name"] = "",
 		},
 		[1253003] = {
-			["name"] = "Cinta Adaptável do Teceterra",
+			["name"] = "",
 		},
 		[1263041] = {
 			["name"] = "Bigorna",

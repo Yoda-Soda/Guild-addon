@@ -8,97 +8,97 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(129, {
 		[3275] = {
-			["name"] = "Benda di Lino",
+			["name"] = "Linen Bandage",
 		},
 		[3276] = {
-			["name"] = "Benda Pesante di Lino",
+			["name"] = "Heavy Linen Bandage",
 		},
 		[3277] = {
-			["name"] = "Benda di Lana",
+			["name"] = "Wool Bandage",
 		},
 		[3278] = {
-			["name"] = "Benda Pesante di Lana",
+			["name"] = "Heavy Wool Bandage",
 		},
 		[7924] = {
-			["name"] = "Pronto Soccorso",
+			["name"] = "First Aid",
 		},
 		[7928] = {
-			["name"] = "Benda di Seta",
+			["name"] = "Silk Bandage",
 		},
 		[7929] = {
-			["name"] = "Benda Pesante di Seta",
+			["name"] = "Heavy Silk Bandage",
 		},
 		[7934] = {
-			["name"] = "Antiveleno",
+			["name"] = "Anti-Venom",
 		},
 		[7935] = {
-			["name"] = "Antiveleno Potenziato",
+			["name"] = "Strong Anti-Venom",
 		},
 		[10840] = {
-			["name"] = "Benda di Telamagica",
+			["name"] = "Mageweave Bandage",
 		},
 		[10841] = {
-			["name"] = "Benda Pesante di Telamagica",
+			["name"] = "Heavy Mageweave Bandage",
 		},
 		[18629] = {
-			["name"] = "Benda di Telarunica",
+			["name"] = "Runecloth Bandage",
 		},
 		[18630] = {
-			["name"] = "Benda Pesante di Telarunica",
+			["name"] = "Heavy Runecloth Bandage",
 		},
 		[23787] = {
-			["name"] = "Antiveleno Estremo",
+			["name"] = "Powerful Anti-Venom",
 		},
 		[30021] = {
 			["name"] = "Crystal Infused Bandage",
 		},
 		[470349] = {
-			["name"] = "Benda Pesante di Seta",
+			["name"] = "Dense Runecloth Bandage",
 		},
 		[1230117] = {
 			["name"] = "First Aid Kit",
 		},
 		[1244431] = {
-			["name"] = "Pozione di Cura Minore",
+			["name"] = "Minor Healing Potion",
 		},
 		[1244432] = {
-			["name"] = "Pozione di Cura Inferiore",
+			["name"] = "Lesser Healing Potion",
 		},
 		[1244433] = {
-			["name"] = "Pozione di Cura",
+			["name"] = "Healing Potion",
 		},
 		[1244434] = {
-			["name"] = "Pozione di Cura Superiore",
+			["name"] = "Greater Healing Potion",
 		},
 		[1244435] = {
-			["name"] = "Pozione di Cura Massima",
+			["name"] = "Superior Healing Potion",
 		},
 		[1244436] = {
-			["name"] = "Pozione di Cura Maggiore",
+			["name"] = "Major Healing Potion",
 		},
 		[1259341] = {
-			["name"] = "Antiveleno Estremo",
+			["name"] = "Potent Anti-Venom",
 		},
 		[1259342] = {
-			["name"] = "Antiveleno",
+			["name"] = "Simple Poultice",
 		},
 		[1259343] = {
-			["name"] = "Antiveleno",
+			["name"] = "Clever Poultice",
 		},
 		[1259344] = {
-			["name"] = "Antiveleno",
+			["name"] = "Superior Poultice",
 		},
 		[1259345] = {
-			["name"] = "Antiveleno",
+			["name"] = "Powerful Poultice",
 		},
 		[1259347] = {
-			["name"] = "Antiveleno",
+			["name"] = "Woolen Tourniquet",
 		},
 		[1259348] = {
-			["name"] = "Antiveleno",
+			["name"] = "Leather Tourniquet",
 		},
 		[1259349] = {
-			["name"] = "Antiveleno",
+			["name"] = "Surgical Tourniquet",
 		},
 		[1262996] = {
 			["name"] = "Toxin Study",

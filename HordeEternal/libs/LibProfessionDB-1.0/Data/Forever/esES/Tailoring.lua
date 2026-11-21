@@ -26,7 +26,7 @@ lib:LoadNames(197, {
 			["name"] = "Camisa blanca de lino",
 		},
 		[2394] = {
-			["name"] = "Camiseta azul de lino",
+			["name"] = "Camisa de lino azul",
 		},
 		[2395] = {
 			["name"] = "Jubón primitivo de lino",
@@ -47,16 +47,16 @@ lib:LoadNames(197, {
 			["name"] = "Capa de lana",
 		},
 		[2403] = {
-			["name"] = "Toga gris de algodón",
+			["name"] = "Toga de lana gris",
 		},
 		[2406] = {
-			["name"] = "Toga gris de algodón",
+			["name"] = "Camisa de lana gris",
 		},
 		[2963] = {
 			["name"] = "Madeja de paño de lino",
 		},
 		[2964] = {
-			["name"] = "Madeja de paño de algodón",
+			["name"] = "Madeja de paño de lana",
 		},
 		[3755] = {
 			["name"] = "Bolsa de lino",
@@ -143,7 +143,7 @@ lib:LoadNames(197, {
 			["name"] = "Cinturón de estrella",
 		},
 		[3865] = {
-			["name"] = "Madeja de paño mágico",
+			["name"] = "Madeja de tejido mágico",
 		},
 		[3866] = {
 			["name"] = "Camisa roja estilosa",
@@ -152,7 +152,7 @@ lib:LoadNames(197, {
 			["name"] = "Guantes de fénix",
 		},
 		[3869] = {
-			["name"] = "Camiseta amarilla brillante",
+			["name"] = "Camisa amarillo brillante",
 		},
 		[3870] = {
 			["name"] = "Camisa negra de seda",
@@ -161,16 +161,16 @@ lib:LoadNames(197, {
 			["name"] = "Camisa blanca formal",
 		},
 		[3872] = {
-			["name"] = "Camisa morada de seda enriquecida",
+			["name"] = "Camisa de seda morada viva",
 		},
 		[3873] = {
-			["name"] = "Camiseta negra de aventurero",
+			["name"] = "Camisa de espadachín negra",
 		},
 		[3914] = {
 			["name"] = "Pantalones marrones de lino",
 		},
 		[3915] = {
-			["name"] = "Camiseta marrón de lino",
+			["name"] = "Camisa de lino marrón",
 		},
 		[6521] = {
 			["name"] = "Capa con remaches de perla",
@@ -182,13 +182,13 @@ lib:LoadNames(197, {
 			["name"] = "Bolsa roja de lana",
 		},
 		[6690] = {
-			["name"] = "Toga inferior de zahorí",
+			["name"] = "Toga de zahorí inferior",
 		},
 		[6692] = {
 			["name"] = "Togas de Arcana",
 		},
 		[6693] = {
-			["name"] = "Conjunto verde de seda",
+			["name"] = "Talega de seda verde",
 		},
 		[6695] = {
 			["name"] = "Mochila negra de seda",
@@ -215,7 +215,7 @@ lib:LoadNames(197, {
 			["name"] = "Bata azul",
 		},
 		[7643] = {
-			["name"] = "Toga superior de adepto",
+			["name"] = "Toga de adepto superior",
 		},
 		[7892] = {
 			["name"] = "Camisa azul estilosa",
@@ -233,7 +233,7 @@ lib:LoadNames(197, {
 			["name"] = "Camisa blanca de aventurero",
 		},
 		[8489] = {
-			["name"] = "Camisa roja de aventurero",
+			["name"] = "Camisa de espadachín roja",
 		},
 		[8758] = {
 			["name"] = "Pantalones de seda azur",
@@ -242,7 +242,7 @@ lib:LoadNames(197, {
 			["name"] = "Capucha de seda azur",
 		},
 		[8762] = {
-			["name"] = "Cinta de pelo de seda",
+			["name"] = "Cinta de seda",
 		},
 		[8764] = {
 			["name"] = "Jubón terráneo",
@@ -284,13 +284,13 @@ lib:LoadNames(197, {
 			["name"] = "Jubón carmesí de seda",
 		},
 		[8793] = {
-			["name"] = "Hombreras carmesí de seda",
+			["name"] = "Sobrehombros de seda carmesí",
 		},
 		[8795] = {
 			["name"] = "Hombreras azur",
 		},
 		[8797] = {
-			["name"] = "Cinturón terráneo de seda",
+			["name"] = "Cinturón de seda terránea",
 		},
 		[8799] = {
 			["name"] = "Pantalones carmesí de seda",
@@ -314,34 +314,34 @@ lib:LoadNames(197, {
 			["name"] = "Kilt colorido",
 		},
 		[12048] = {
-			["name"] = "Jubón negro de paño mágico",
+			["name"] = "Jubón de tejido mágico negro",
 		},
 		[12049] = {
-			["name"] = "Leotardos negros de paño mágico",
+			["name"] = "Leotardos de tejido mágico negros",
 		},
 		[12050] = {
-			["name"] = "Toga negra de paño mágico",
+			["name"] = "Toga de tejido mágico negra",
 		},
 		[12052] = {
 			["name"] = "Pantalones de tejido de sombra",
 		},
 		[12053] = {
-			["name"] = "Guantes negros de paño mágico",
+			["name"] = "Guantes de tejido mágico negros",
 		},
 		[12055] = {
 			["name"] = "Toga de tejido de sombra",
 		},
 		[12056] = {
-			["name"] = "Jubón rojo de tejemagia",
+			["name"] = "Jubón de tejido mágico rojo",
 		},
 		[12059] = {
 			["name"] = "Máscara blanca de bandido",
 		},
 		[12060] = {
-			["name"] = "Pantalones rojos de tejemagia",
+			["name"] = "Pantalones de tejido mágico rojos",
 		},
 		[12061] = {
-			["name"] = "Camisa naranja de tejemagia",
+			["name"] = "Camisa de tejido mágico naranja",
 		},
 		[12062] = {
 			["name"] = "Pantalones de paño tormentoso",
@@ -356,7 +356,7 @@ lib:LoadNames(197, {
 			["name"] = "Bolsa de tejido mágico",
 		},
 		[12066] = {
-			["name"] = "Guantes rojos de tejemagia",
+			["name"] = "Guantes de tejido mágico rojos",
 		},
 		[12067] = {
 			["name"] = "Guantes Tejesueños",
@@ -374,16 +374,16 @@ lib:LoadNames(197, {
 			["name"] = "Guantes de tejido de sombra",
 		},
 		[12072] = {
-			["name"] = "Cinta de pelo de paño mágico",
+			["name"] = "Cinta de tejido mágico negra",
 		},
 		[12073] = {
-			["name"] = "Botas negras de paño mágico",
+			["name"] = "Botas de tejido mágico negras",
 		},
 		[12074] = {
-			["name"] = "Hombreras negras de paño mágico",
+			["name"] = "Sobrehombros de tejido mágico negros",
 		},
 		[12075] = {
-			["name"] = "Camisa lavanda de paño mágico",
+			["name"] = "Camisa de tejido mágico lavanda",
 		},
 		[12076] = {
 			["name"] = "Hombreras de tejido de sombra",
@@ -392,13 +392,13 @@ lib:LoadNames(197, {
 			["name"] = "Vestido negro sencillo",
 		},
 		[12078] = {
-			["name"] = "Hombreras rojas de tejemagia",
+			["name"] = "Sobrehombros de tejido mágico rojos",
 		},
 		[12079] = {
-			["name"] = "Bolsa roja de tejemagia",
+			["name"] = "Bolsa de tejido mágico roja",
 		},
 		[12080] = {
-			["name"] = "Camisa rosa de tejemagia",
+			["name"] = "Camisa de tejido mágico rosa",
 		},
 		[12081] = {
 			["name"] = "Sombrero del almirante",
@@ -407,13 +407,13 @@ lib:LoadNames(197, {
 			["name"] = "Botas de tejido de sombra",
 		},
 		[12083] = {
-			["name"] = "Cinta de pelo de paño tormentoso",
+			["name"] = "Cinta de paño tormentoso",
 		},
 		[12084] = {
-			["name"] = "Cinta de pelo roja de tejemagia",
+			["name"] = "Cinta de tejido mágico roja",
 		},
 		[12085] = {
-			["name"] = "Camisa de smoquin",
+			["name"] = "Camisa de esmoquin",
 		},
 		[12086] = {
 			["name"] = "Máscara de tejido de sombra",
@@ -536,7 +536,7 @@ lib:LoadNames(197, {
 			["name"] = "Capucha de tela de inferi",
 		},
 		[18444] = {
-			["name"] = "Cinta de pelo de paño rúnico",
+			["name"] = "Cinta de paño rúnico",
 		},
 		[18445] = {
 			["name"] = "Bolsa de tela lunar",
@@ -671,10 +671,10 @@ lib:LoadNames(197, {
 			["name"] = "Traje de fiesta",
 		},
 		[27658] = {
-			["name"] = "Faltriquera encantada de paño mágico",
+			["name"] = "Faltriquera de tejido mágico encantada",
 		},
 		[27659] = {
-			["name"] = "Bolsa encantada de paño rúnico",
+			["name"] = "Bolsa de paño rúnico encantada",
 		},
 		[27660] = {
 			["name"] = "Bolsa grande de encantamiento",
@@ -695,7 +695,7 @@ lib:LoadNames(197, {
 			["name"] = "Capa glacial",
 		},
 		[28209] = {
-			["name"] = "Puño glacial",
+			["name"] = "Muñequeras glaciales",
 		},
 		[28210] = {
 			["name"] = "Abrazo de Gaea",
@@ -890,22 +890,22 @@ lib:LoadNames(197, {
 			["name"] = "Estandarte de facción",
 		},
 		[1252979] = {
-			["name"] = "Togas adaptables de asesino de babosas",
+			["name"] = "",
 		},
 		[1252980] = {
-			["name"] = "Puños adaptables de asesino de babosas",
+			["name"] = "",
 		},
 		[1252981] = {
-			["name"] = "Cordón adaptable de asesino de babosas",
+			["name"] = "",
 		},
 		[1252991] = {
-			["name"] = "Guerrera adaptable de ensalmador de babosas",
+			["name"] = "",
 		},
 		[1252992] = {
-			["name"] = "Brazales adaptables de ensalmador de babosas",
+			["name"] = "",
 		},
 		[1252993] = {
-			["name"] = "Cinturón adaptable de ensalmador de babosas",
+			["name"] = "",
 		},
 		[1257013] = {
 			["name"] = "Bolsa de componentes de lino",

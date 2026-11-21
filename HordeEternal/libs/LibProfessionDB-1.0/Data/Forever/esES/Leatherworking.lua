@@ -23,13 +23,13 @@ lib:LoadNames(165, {
 			["name"] = "Capa fina de cuero",
 		},
 		[2160] = {
-			["name"] = "Jubón de cuero repujado",
+			["name"] = "Jubón de cuero estampado",
 		},
 		[2161] = {
-			["name"] = "Botas de cuero repujadas",
+			["name"] = "Botas de cuero estampado",
 		},
 		[2162] = {
-			["name"] = "Capa de cuero repujada",
+			["name"] = "Capa de cuero estampado",
 		},
 		[2163] = {
 			["name"] = "Chaleco blanco de cuero",
@@ -38,13 +38,13 @@ lib:LoadNames(165, {
 			["name"] = "Guantes finos de cuero",
 		},
 		[2165] = {
-			["name"] = "Mejora media de armadura",
+			["name"] = "Refuerzo para armadura medio",
 		},
 		[2166] = {
-			["name"] = "Armadura de cuero endurecido",
+			["name"] = "Armadura de cuero fortalecido",
 		},
 		[2167] = {
-			["name"] = "Botas oscuras de cuero",
+			["name"] = "Botas de cuero gris",
 		},
 		[2168] = {
 			["name"] = "Capa oscura de cuero",
@@ -59,10 +59,10 @@ lib:LoadNames(165, {
 			["name"] = "Cinturón de cuero cosido a mano",
 		},
 		[3756] = {
-			["name"] = "Guantes de cuero repujada",
+			["name"] = "Guantes de cuero estampado",
 		},
 		[3759] = {
-			["name"] = "Pantalones de cuero repujados",
+			["name"] = "Pantalones de cuero estampado",
 		},
 		[3760] = {
 			["name"] = "Capa del montañero",
@@ -95,7 +95,7 @@ lib:LoadNames(165, {
 			["name"] = "Hombreras oscuras de cuero",
 		},
 		[3770] = {
-			["name"] = "Guantes de ciuero endurecido",
+			["name"] = "Guantes de cuero fortalecido",
 		},
 		[3771] = {
 			["name"] = "Guantes primitivos",
@@ -137,10 +137,10 @@ lib:LoadNames(165, {
 			["name"] = "Pellejo curado pesado",
 		},
 		[4096] = {
-			["name"] = "Arnés oculto de raptor",
+			["name"] = "Arnés de pellejo de raptor",
 		},
 		[4097] = {
-			["name"] = "Cinturón oculto de raptor",
+			["name"] = "Cinturón de pellejo de raptor",
 		},
 		[5244] = {
 			["name"] = "Bolsa de pellejo de kodo",
@@ -209,7 +209,7 @@ lib:LoadNames(165, {
 			["name"] = "Faltriquera pequeña de cuero para munición",
 		},
 		[9064] = {
-			["name"] = "Pantralones de cuero basto",
+			["name"] = "Pantalones de cuero basto",
 		},
 		[9065] = {
 			["name"] = "Brazales ligeros de cuero",
@@ -224,7 +224,7 @@ lib:LoadNames(165, {
 			["name"] = "Guantes de cría de dragón rojo",
 		},
 		[9074] = {
-			["name"] = "Guantes de cuero eficaces",
+			["name"] = "Guantes de cuero livianos",
 		},
 		[9145] = {
 			["name"] = "Guantes de Fletcher",
@@ -233,13 +233,13 @@ lib:LoadNames(165, {
 			["name"] = "Guantes de herborista",
 		},
 		[9147] = {
-			["name"] = "Hombreras terráneas de cuero",
+			["name"] = "Sobrehombros de cuero terráneo",
 		},
 		[9148] = {
 			["name"] = "Guantes de ratero",
 		},
 		[9149] = {
-			["name"] = "Guantes pesados terráneos",
+			["name"] = "Guantes terráneos gruesos",
 		},
 		[9193] = {
 			["name"] = "Carcaj pesado",
@@ -287,13 +287,13 @@ lib:LoadNames(165, {
 			["name"] = "Túnica Nochefugaz",
 		},
 		[10507] = {
-			["name"] = "Cinta de pelo Nochefugaz",
+			["name"] = "Cinta Nochefugaz",
 		},
 		[10509] = {
 			["name"] = "Guantes de escamas de tortuga",
 		},
 		[10511] = {
-			["name"] = "Peto de escamas de tortuga",
+			["name"] = "Coraza de escamas de tortuga",
 		},
 		[10516] = {
 			["name"] = "Hombreras Nochefugaz",
@@ -302,22 +302,22 @@ lib:LoadNames(165, {
 			["name"] = "Brazales de escamas de tortuga",
 		},
 		[10520] = {
-			["name"] = "Gran toga vudú",
+			["name"] = "Toga de gran vudú",
 		},
 		[10525] = {
-			["name"] = "Peto duro de escórpido",
+			["name"] = "Coraza de escórpido resistente",
 		},
 		[10529] = {
 			["name"] = "Hombreras de cuero salvaje",
 		},
 		[10531] = {
-			["name"] = "Gran máscara vudú",
+			["name"] = "Máscara de gran vudú",
 		},
 		[10533] = {
-			["name"] = "Brazales duros de escórpido",
+			["name"] = "Brazales de escórpido resistentes",
 		},
 		[10542] = {
-			["name"] = "Guantes duros de escórpido",
+			["name"] = "Guantes de escórpido resistentes",
 		},
 		[10544] = {
 			["name"] = "Jubón de cuero salvaje",
@@ -335,7 +335,7 @@ lib:LoadNames(165, {
 			["name"] = "Yelmo de escamas de tortuga",
 		},
 		[10554] = {
-			["name"] = "Botas duras de escórpido",
+			["name"] = "Botas de escórpido resistentes",
 		},
 		[10556] = {
 			["name"] = "Leotardos de escamas de tortuga",
@@ -344,22 +344,22 @@ lib:LoadNames(165, {
 			["name"] = "Botas Nochefugaz",
 		},
 		[10560] = {
-			["name"] = "Grandes pantalones vudú",
+			["name"] = "Pantalones de gran vudú",
 		},
 		[10562] = {
-			["name"] = "Gran capa vudú",
+			["name"] = "Capa de gran vudú",
 		},
 		[10564] = {
-			["name"] = "Hombreras duras de escórpido",
+			["name"] = "Sobrehombros de escórpido resistentes",
 		},
 		[10566] = {
 			["name"] = "Botas de cuero salvaje",
 		},
 		[10568] = {
-			["name"] = "Leotardos duros de escórpido",
+			["name"] = "Leotardos de escórpido resistentes",
 		},
 		[10570] = {
-			["name"] = "Yelmo duro de escórpido",
+			["name"] = "Yelmo de escórpido resistente",
 		},
 		[10572] = {
 			["name"] = "Leotardos de cuero salvaje",
@@ -407,19 +407,19 @@ lib:LoadNames(165, {
 			["name"] = "Pellejo curado basto",
 		},
 		[19048] = {
-			["name"] = "Brazales escórpidos pesados",
+			["name"] = "Brazales de escórpido pesados",
 		},
 		[19049] = {
-			["name"] = "Guanteletes perversos de cuero",
+			["name"] = "Guanteletes de cuero maligno",
 		},
 		[19050] = {
 			["name"] = "Peto de escamas de dragón verde",
 		},
 		[19051] = {
-			["name"] = "Jubón escórpido pesado",
+			["name"] = "Jubón de escórpido pesado",
 		},
 		[19052] = {
-			["name"] = "Brazales perversos de cuero",
+			["name"] = "Brazales de cuero maligno",
 		},
 		[19053] = {
 			["name"] = "Guantes quiméricos",
@@ -464,10 +464,10 @@ lib:LoadNames(165, {
 			["name"] = "Arnés de oso de guerra",
 		},
 		[19070] = {
-			["name"] = "Cinturón escórpido pesado",
+			["name"] = "Cinturón de escórpido pesado",
 		},
 		[19071] = {
-			["name"] = "Cinta de pelo perversa de cuero",
+			["name"] = "Cinta de cuero maligno",
 		},
 		[19072] = {
 			["name"] = "Cinturón de cuero rúnico",
@@ -479,7 +479,7 @@ lib:LoadNames(165, {
 			["name"] = "Leotardos sable de hielo",
 		},
 		[19075] = {
-			["name"] = "Leotardos escórpidos pesados",
+			["name"] = "Leotardos de escórpido pesados",
 		},
 		[19076] = {
 			["name"] = "Peto volcánico",
@@ -500,10 +500,10 @@ lib:LoadNames(165, {
 			["name"] = "Jubón quimérico",
 		},
 		[19082] = {
-			["name"] = "Cinta de pelo de cuero rúnico",
+			["name"] = "Cinta de cuero rúnico",
 		},
 		[19083] = {
-			["name"] = "Pantalones perversos de cuero",
+			["name"] = "Pantalones de cuero maligno",
 		},
 		[19084] = {
 			["name"] = "Guanteletes de devilsaurio",
@@ -518,7 +518,7 @@ lib:LoadNames(165, {
 			["name"] = "Guantes sable de hielo",
 		},
 		[19088] = {
-			["name"] = "Yelmo escórpido pesado",
+			["name"] = "Yelmo de escórpido pesado",
 		},
 		[19089] = {
 			["name"] = "Hombreras de escamas de dragón azul",
@@ -530,7 +530,7 @@ lib:LoadNames(165, {
 			["name"] = "Pantalones de cuero rúnico",
 		},
 		[19092] = {
-			["name"] = "Cinturón perverso de cuero",
+			["name"] = "Cinturón de cuero maligno",
 		},
 		[19093] = {
 			["name"] = "Capa de escamas de Onyxia",
@@ -545,10 +545,10 @@ lib:LoadNames(165, {
 			["name"] = "Leotardos de devilsaurio",
 		},
 		[19098] = {
-			["name"] = "Armadura perversa de cuero",
+			["name"] = "Armadura de cuero maligno",
 		},
 		[19100] = {
-			["name"] = "Hombreras escórpidas pesadas",
+			["name"] = "Sobrehombros de escórpido pesados",
 		},
 		[19101] = {
 			["name"] = "Hombreras volcánicas",
@@ -899,7 +899,7 @@ lib:LoadNames(165, {
 			["name"] = "Falda de escamas oníricas",
 		},
 		[1223774] = {
-			["name"] = "Coraza de escamas heladas",
+			["name"] = "Peto de escamas heladas",
 		},
 		[1223776] = {
 			["name"] = "Guanteletes de escamas heladas",
@@ -908,7 +908,7 @@ lib:LoadNames(165, {
 			["name"] = "Brazales de escamas heladas",
 		},
 		[1223780] = {
-			["name"] = "Guerrera polar",
+			["name"] = "Túnica polar",
 		},
 		[1223782] = {
 			["name"] = "Guantes polares",
@@ -974,40 +974,40 @@ lib:LoadNames(165, {
 			["name"] = "Tienda de campamento",
 		},
 		[1252982] = {
-			["name"] = "Jubón adaptable de asesino de bestias",
+			["name"] = "",
 		},
 		[1252983] = {
-			["name"] = "Brazales adaptables de asesino de bestias",
+			["name"] = "",
 		},
 		[1252984] = {
-			["name"] = "Envoltura adaptable de asesino de bestias",
+			["name"] = "",
 		},
 		[1252985] = {
-			["name"] = "Coselete adaptable de dinodestructor",
+			["name"] = "",
 		},
 		[1252986] = {
-			["name"] = "Muñequeras adaptables de dinodestructor",
+			["name"] = "",
 		},
 		[1252987] = {
-			["name"] = "Cinturón adaptable de dinodestructor",
+			["name"] = "",
 		},
 		[1252995] = {
-			["name"] = "Toga adaptable de ensalmador de bestias",
+			["name"] = "",
 		},
 		[1252996] = {
-			["name"] = "Pulseras adaptables de ensalmador de bestias",
+			["name"] = "",
 		},
 		[1252997] = {
-			["name"] = "Faja adaptable de ensalmador de bestias",
+			["name"] = "",
 		},
 		[1252998] = {
-			["name"] = "Guerrera adaptable de dinoensalmador",
+			["name"] = "",
 		},
 		[1252999] = {
-			["name"] = "Muñequeras adaptables de dinoensalmador",
+			["name"] = "",
 		},
 		[1253000] = {
-			["name"] = "Armadura de anillas adaptable de dinoensalmador",
+			["name"] = "",
 		},
 		[1254965] = {
 			["name"] = "Complemento basto para armadura fuerte",
@@ -1085,7 +1085,7 @@ lib:LoadNames(165, {
 			["name"] = "Guanteletes de malla de acechador",
 		},
 		[1254990] = {
-			["name"] = "Hombreras de escórpido cargadas",
+			["name"] = "Hombreras de escórpido electrificadas",
 		},
 		[1254991] = {
 			["name"] = "Brazales de escórpido flexibles",
@@ -1130,7 +1130,7 @@ lib:LoadNames(165, {
 			["name"] = "Hombreras de malla de ensalmador",
 		},
 		[1255005] = {
-			["name"] = "Hombreras de malla de hostigador",
+			["name"] = "Hombreras de malla de tramador",
 		},
 		[1255006] = {
 			["name"] = "Hombreras de malla de clamacielos",
@@ -1625,16 +1625,16 @@ lib:LoadNames(165, {
 			["name"] = "Botas de costura nefasta",
 		},
 		[1292969] = {
-			["name"] = "Falda de clamaespíritus",
+			["name"] = "Leotardos de clamaespíritus",
 		},
 		[1292970] = {
-			["name"] = "Guantes de clamaespíritus",
+			["name"] = "Mandiletes de clamaespíritus",
 		},
 		[1292971] = {
-			["name"] = "Manto de clamaespíritus",
+			["name"] = "Bufas de clamaespíritus",
 		},
 		[1292972] = {
-			["name"] = "Botas de clamaespíritus",
+			["name"] = "Botines de clamaespíritus",
 		},
 		[1292973] = {
 			["name"] = "Pantalones de clamaespíritus",
@@ -1685,16 +1685,16 @@ lib:LoadNames(165, {
 			["name"] = "Botines de guardacrías",
 		},
 		[1299914] = {
-			["name"] = "Leotardos de clamaespíritus",
+			["name"] = "Falda de clamaespíritus",
 		},
 		[1299915] = {
-			["name"] = "Mandiletes de clamaespíritus",
+			["name"] = "Guantes de clamaespíritus",
 		},
 		[1299916] = {
-			["name"] = "Bufas de clamaespíritus",
+			["name"] = "Manto de clamaespíritus",
 		},
 		[1299917] = {
-			["name"] = "Botines de clamaespíritus",
+			["name"] = "Botas de clamaespíritus",
 		},
 		[1301427] = {
 			["name"] = "Arnés nublado tejido por el viento",

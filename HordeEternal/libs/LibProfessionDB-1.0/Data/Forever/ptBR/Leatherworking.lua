@@ -44,7 +44,7 @@ lib:LoadNames(165, {
 			["name"] = "Armadura de Couro Resistente",
 		},
 		[2167] = {
-			["name"] = "Botas de Couro Escuro",
+			["name"] = "Botas de Couro Cinza",
 		},
 		[2168] = {
 			["name"] = "Manto de Couro Escuro",
@@ -974,40 +974,40 @@ lib:LoadNames(165, {
 			["name"] = "Barraca de Acampamento",
 		},
 		[1252982] = {
-			["name"] = "Colete Adaptável do Abateferas",
+			["name"] = "",
 		},
 		[1252983] = {
-			["name"] = "Braçadeiras Adaptáveis do Abateferas",
+			["name"] = "",
 		},
 		[1252984] = {
-			["name"] = "Cingidouro Adaptável do Abateferas",
+			["name"] = "",
 		},
 		[1252985] = {
-			["name"] = "Couraça Adaptável do Destroçadino",
+			["name"] = "",
 		},
 		[1252986] = {
-			["name"] = "Pulsos Adaptáveis do Destroçadino",
+			["name"] = "",
 		},
 		[1252987] = {
-			["name"] = "Cinto Adaptável do Destroçadino",
+			["name"] = "",
 		},
 		[1252995] = {
-			["name"] = "Veste Adaptável do Remendaferas",
+			["name"] = "",
 		},
 		[1252996] = {
-			["name"] = "Pulseiras Adaptáveis do Remendaferas",
+			["name"] = "",
 		},
 		[1252997] = {
-			["name"] = "Cinturão Adaptável do Remendaferas",
+			["name"] = "",
 		},
 		[1252998] = {
-			["name"] = "Túnica Adaptável do Remendino",
+			["name"] = "",
 		},
 		[1252999] = {
-			["name"] = "Pulsos Adaptáveis do Remendino",
+			["name"] = "",
 		},
 		[1253000] = {
-			["name"] = "Corrente Adaptável do Remendino",
+			["name"] = "",
 		},
 		[1254965] = {
 			["name"] = "Kit de Armadura Rústica Vigorosa",
@@ -1625,16 +1625,16 @@ lib:LoadNames(165, {
 			["name"] = "Botas de Costuratroz",
 		},
 		[1292969] = {
-			["name"] = "Kilt de Evoca-espírito",
+			["name"] = "Perneiras de Evoca-espírito",
 		},
 		[1292970] = {
-			["name"] = "Luvas de Evoca-espírito",
+			["name"] = "Guantes de Evoca-espírito",
 		},
 		[1292971] = {
-			["name"] = "Dragonas de Evoca-espírito",
+			["name"] = "Espaldares de Evoca-espírito",
 		},
 		[1292972] = {
-			["name"] = "Botas de Evoca-espírito",
+			["name"] = "Botinas de Evoca-espírito",
 		},
 		[1292973] = {
 			["name"] = "Calças de Evoca-espírito",
@@ -1685,16 +1685,16 @@ lib:LoadNames(165, {
 			["name"] = "Botinas do Cuidador",
 		},
 		[1299914] = {
-			["name"] = "Perneiras de Evoca-espírito",
+			["name"] = "Kilt de Evoca-espírito",
 		},
 		[1299915] = {
-			["name"] = "Guantes de Evoca-espírito",
+			["name"] = "Luvas de Evoca-espírito",
 		},
 		[1299916] = {
-			["name"] = "Espaldares de Evoca-espírito",
+			["name"] = "Dragonas de Evoca-espírito",
 		},
 		[1299917] = {
-			["name"] = "Botinas de Evoca-espírito",
+			["name"] = "Botas de Evoca-espírito",
 		},
 		[1301427] = {
 			["name"] = "Arnês Tecido com Lufadas Neblinoso",

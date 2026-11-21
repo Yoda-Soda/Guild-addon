@@ -404,6 +404,6 @@ lib:LoadNames(185, {
 			["name"] = "Bonne vieille viande de brochepâle",
 		},
 		[1319313] = {
-			["name"] = "Plated Armorfish",
+			["name"] = "Poisson cuirassé",
 		},
 	})

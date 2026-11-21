@@ -593,7 +593,7 @@ lib:LoadNames(197, {
 			["name"] = "Flimmerkernhandschuhe",
 		},
 		[21945] = {
-			["name"] = "Grünes Festtagsshemd",
+			["name"] = "Grünes Festtagshemd",
 		},
 		[22759] = {
 			["name"] = "Flimmerkernwickeltücher",
@@ -890,22 +890,22 @@ lib:LoadNames(197, {
 			["name"] = "Fraktionsbanner",
 		},
 		[1252979] = {
-			["name"] = "Adaptive Robe des Schleimschlächters",
+			["name"] = "",
 		},
 		[1252980] = {
-			["name"] = "Adaptive Manschetten des Schleimschlächters",
+			["name"] = "",
 		},
 		[1252981] = {
-			["name"] = "Adaptive Kordel des Schleimschlächters",
+			["name"] = "",
 		},
 		[1252991] = {
-			["name"] = "Adaptive Tunika des Schleimhüters",
+			["name"] = "",
 		},
 		[1252992] = {
-			["name"] = "Adaptive Armschienen des Schleimhüters",
+			["name"] = "",
 		},
 		[1252993] = {
-			["name"] = "Adaptiver Gürtel des Schleimhüters",
+			["name"] = "",
 		},
 		[1257013] = {
 			["name"] = "Leinenreagenzientasche",
