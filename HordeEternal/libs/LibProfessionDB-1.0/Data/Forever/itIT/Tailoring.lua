@@ -8,661 +8,661 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(197, {
 		[2385] = {
-			["name"] = "Veste di Lino Marrone",
+			["name"] = "Brown Linen Vest",
 		},
 		[2386] = {
-			["name"] = "Stivali di Lino",
+			["name"] = "Linen Boots",
 		},
 		[2387] = {
-			["name"] = "Mantello di Lino",
+			["name"] = "Linen Cloak",
 		},
 		[2389] = {
-			["name"] = "Tonaca di Lino Rossa",
+			["name"] = "Red Linen Robe",
 		},
 		[2392] = {
-			["name"] = "Camicia di Lino Rossa",
+			["name"] = "Red Linen Shirt",
 		},
 		[2393] = {
-			["name"] = "Camicia di Lino Bianca",
+			["name"] = "White Linen Shirt",
 		},
 		[2394] = {
-			["name"] = "Camicia di Lino Blu",
+			["name"] = "Blue Linen Shirt",
 		},
 		[2395] = {
-			["name"] = "Veste di Lino della Barbarie",
+			["name"] = "Barbaric Linen Vest",
 		},
 		[2396] = {
-			["name"] = "Camicia di Lino Verde",
+			["name"] = "Green Linen Shirt",
 		},
 		[2397] = {
-			["name"] = "Cappa di Lino Rinforzato",
+			["name"] = "Reinforced Linen Cape",
 		},
 		[2399] = {
-			["name"] = "Veste di Lana Verde",
+			["name"] = "Green Woolen Vest",
 		},
 		[2401] = {
-			["name"] = "Stivali di Lana",
+			["name"] = "Woolen Boots",
 		},
 		[2402] = {
-			["name"] = "Cappa di Lana",
+			["name"] = "Woolen Cape",
 		},
 		[2403] = {
-			["name"] = "Tonaca di Lana Grigia",
+			["name"] = "Gray Woolen Robe",
 		},
 		[2406] = {
-			["name"] = "Camicia di Lana Grigia",
+			["name"] = "Gray Woolen Shirt",
 		},
 		[2963] = {
-			["name"] = "Rotolo di Lino",
+			["name"] = "Bolt of Linen Cloth",
 		},
 		[2964] = {
-			["name"] = "Rotolo di Lana",
+			["name"] = "Bolt of Woolen Cloth",
 		},
 		[3755] = {
-			["name"] = "Sacca di Lino",
+			["name"] = "Linen Bag",
 		},
 		[3757] = {
-			["name"] = "Sacca di Lana",
+			["name"] = "Woolen Bag",
 		},
 		[3758] = {
-			["name"] = "Sacca di Lana Verde",
+			["name"] = "Green Woolen Bag",
 		},
 		[3813] = {
-			["name"] = "Sacca di Seta Piccola",
+			["name"] = "Small Silk Pack",
 		},
 		[3839] = {
-			["name"] = "Rotolo di Seta",
+			["name"] = "Bolt of Silk Cloth",
 		},
 		[3840] = {
-			["name"] = "Guanti di Lino Pesante",
+			["name"] = "Heavy Linen Gloves",
 		},
 		[3841] = {
-			["name"] = "Bracciali di Lino Verdi",
+			["name"] = "Green Linen Bracers",
 		},
 		[3842] = {
-			["name"] = "Pantaloni di Lino Cuciti a Mano",
+			["name"] = "Handstitched Linen Britches",
 		},
 		[3843] = {
-			["name"] = "Guanti di Lana Pesante",
+			["name"] = "Heavy Woolen Gloves",
 		},
 		[3844] = {
-			["name"] = "Mantello di Lana Pesante",
+			["name"] = "Heavy Woolen Cloak",
 		},
 		[3845] = {
-			["name"] = "Stivali di Lino con Suola Soffice",
+			["name"] = "Soft-soled Linen Boots",
 		},
 		[3847] = {
-			["name"] = "Stivali di Lana Rossi",
+			["name"] = "Red Woolen Boots",
 		},
 		[3848] = {
-			["name"] = "Spallacci di Lana con Doppia Cucitura",
+			["name"] = "Double-stitched Woolen Shoulders",
 		},
 		[3849] = {
-			["name"] = "Spallacci di Lana Rinforzati",
+			["name"] = "Reinforced Woolen Shoulders",
 		},
 		[3850] = {
-			["name"] = "Pantaloni di Lana Pesante",
+			["name"] = "Heavy Woolen Pants",
 		},
 		[3851] = {
-			["name"] = "Pantaloni della Fenice",
+			["name"] = "Phoenix Pants",
 		},
 		[3852] = {
-			["name"] = "Guanti della Meditazione",
+			["name"] = "Gloves of Meditation",
 		},
 		[3854] = {
-			["name"] = "Guanti di Seta Azzurri",
+			["name"] = "Azure Silk Gloves",
 		},
 		[3855] = {
-			["name"] = "Stivali di Seta di Ragno",
+			["name"] = "Spidersilk Boots",
 		},
 		[3856] = {
-			["name"] = "Pianelle di Seta di Ragno",
+			["name"] = "Spider Silk Slippers",
 		},
 		[3857] = {
-			["name"] = "Copricapo da Incantatore",
+			["name"] = "Enchanter's Cowl",
 		},
 		[3858] = {
-			["name"] = "Cappuccio d'Ombra",
+			["name"] = "Shadow Hood",
 		},
 		[3859] = {
-			["name"] = "Veste di Seta Azzurra",
+			["name"] = "Azure Silk Vest",
 		},
 		[3860] = {
-			["name"] = "Stivali dell'Incantatore",
+			["name"] = "Boots of the Enchanter",
 		},
 		[3861] = {
-			["name"] = "Mantello Lungo di Seta",
+			["name"] = "Long Silken Cloak",
 		},
 		[3862] = {
-			["name"] = "Mantello Gelido",
+			["name"] = "Icy Cloak",
 		},
 		[3863] = {
-			["name"] = "Cintura di Ragno",
+			["name"] = "Spider Belt",
 		},
 		[3864] = {
-			["name"] = "Cintura della Stella",
+			["name"] = "Star Belt",
 		},
 		[3865] = {
-			["name"] = "Rotolo di Telamagica",
+			["name"] = "Bolt of Mageweave",
 		},
 		[3866] = {
-			["name"] = "Camicia Rossa Stilosa",
+			["name"] = "Stylish Red Shirt",
 		},
 		[3868] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Phoenix Gloves",
 		},
 		[3869] = {
-			["name"] = "Camicia Gialla",
+			["name"] = "Bright Yellow Shirt",
 		},
 		[3870] = {
-			["name"] = "Camicia di Seta Nera",
+			["name"] = "Dark Silk Shirt",
 		},
 		[3871] = {
-			["name"] = "Camicia Formale Bianca",
+			["name"] = "Formal White Shirt",
 		},
 		[3872] = {
-			["name"] = "Camicia di Seta Viola Sfarzosa",
+			["name"] = "Rich Purple Silk Shirt",
 		},
 		[3873] = {
-			["name"] = "Camicia da Spaccone Nera",
+			["name"] = "Black Swashbuckler's Shirt",
 		},
 		[3914] = {
-			["name"] = "Pantaloni di Lino Marrone",
+			["name"] = "Brown Linen Pants",
 		},
 		[3915] = {
-			["name"] = "Camicia di Lino Marrone",
+			["name"] = "Brown Linen Shirt",
 		},
 		[6521] = {
-			["name"] = "Mantello con Fibbia di Perla",
+			["name"] = "Pearl-clasped Cloak",
 		},
 		[6686] = {
-			["name"] = "Sacca di Lino Rossa",
+			["name"] = "Red Linen Bag",
 		},
 		[6688] = {
-			["name"] = "Sacca di Lana Rossa",
+			["name"] = "Red Woolen Bag",
 		},
 		[6690] = {
-			["name"] = "Tonaca del Mago Minore",
+			["name"] = "Lesser Wizard's Robe",
 		},
 		[6692] = {
-			["name"] = "Vesti Arcane",
+			["name"] = "Robes of Arcana",
 		},
 		[6693] = {
-			["name"] = "Sacca di Seta Verde",
+			["name"] = "Green Silk Pack",
 		},
 		[6695] = {
-			["name"] = "Sacca di Seta Nera",
+			["name"] = "Black Silk Pack",
 		},
 		[7623] = {
-			["name"] = "Tonaca di Lino Marrone",
+			["name"] = "Brown Linen Robe",
 		},
 		[7624] = {
-			["name"] = "Tonaca di Lino Bianca",
+			["name"] = "White Linen Robe",
 		},
 		[7629] = {
-			["name"] = "Veste di Lino Rossa",
+			["name"] = "Red Linen Vest",
 		},
 		[7630] = {
-			["name"] = "Veste di Lino Blu",
+			["name"] = "Blue Linen Vest",
 		},
 		[7633] = {
-			["name"] = "Tonaca di Lino Blu",
+			["name"] = "Blue Linen Robe",
 		},
 		[7636] = {
-			["name"] = "Tonaca di Lana Verde",
+			["name"] = "Green Woolen Robe",
 		},
 		[7639] = {
-			["name"] = "Salopette Blu",
+			["name"] = "Blue Overalls",
 		},
 		[7643] = {
-			["name"] = "Tonaca dell'Adepto Superiore",
+			["name"] = "Greater Adept's Robe",
 		},
 		[7892] = {
-			["name"] = "Camicia Blu Stilosa",
+			["name"] = "Stylish Blue Shirt",
 		},
 		[7893] = {
-			["name"] = "Camicia Verde Stilosa",
+			["name"] = "Stylish Green Shirt",
 		},
 		[8465] = {
-			["name"] = "Vestito Semplice",
+			["name"] = "Simple Dress",
 		},
 		[8467] = {
-			["name"] = "Abito di Lana Bianco",
+			["name"] = "White Woolen Dress",
 		},
 		[8483] = {
-			["name"] = "Camicia da Spaccone Bianca",
+			["name"] = "White Swashbuckler's Shirt",
 		},
 		[8489] = {
-			["name"] = "Camicia da Spaccone Rossa",
+			["name"] = "Red Swashbuckler's Shirt",
 		},
 		[8758] = {
-			["name"] = "Pantaloni di Seta Azzurri",
+			["name"] = "Azure Silk Pants",
 		},
 		[8760] = {
-			["name"] = "Cappuccio di Seta Azzurro",
+			["name"] = "Azure Silk Hood",
 		},
 		[8762] = {
-			["name"] = "Banda di Seta",
+			["name"] = "Silk Headband",
 		},
 		[8764] = {
-			["name"] = "Veste Terrigena",
+			["name"] = "Earthen Vest",
 		},
 		[8766] = {
-			["name"] = "Cintura di Seta Azzurra",
+			["name"] = "Azure Silk Belt",
 		},
 		[8770] = {
-			["name"] = "Tonaca del Potere",
+			["name"] = "Robe of Power",
 		},
 		[8772] = {
-			["name"] = "Cintura di Seta Cremisi",
+			["name"] = "Crimson Silk Belt",
 		},
 		[8774] = {
-			["name"] = "Spallacci Setosi Verdi",
+			["name"] = "Green Silken Shoulders",
 		},
 		[8776] = {
-			["name"] = "Cintura di Lino",
+			["name"] = "Linen Belt",
 		},
 		[8778] = {
-			["name"] = "Stivali dell'Oscurità",
+			["name"] = "Boots of Darkness",
 		},
 		[8780] = {
-			["name"] = "Guanti dell'Oscurità",
+			["name"] = "Hands of Darkness",
 		},
 		[8782] = {
-			["name"] = "Guanti della Pura Verità",
+			["name"] = "Truefaith Gloves",
 		},
 		[8784] = {
-			["name"] = "Armatura di Seta Verde",
+			["name"] = "Green Silk Armor",
 		},
 		[8786] = {
-			["name"] = "Mantello di Seta Azzurro",
+			["name"] = "Azure Silk Cloak",
 		},
 		[8789] = {
-			["name"] = "Mantello di Seta Cremisi",
+			["name"] = "Crimson Silk Cloak",
 		},
 		[8791] = {
-			["name"] = "Veste di Seta Cremisi",
+			["name"] = "Crimson Silk Vest",
 		},
 		[8793] = {
-			["name"] = "Spallacci di Seta Cremisi",
+			["name"] = "Crimson Silk Shoulders",
 		},
 		[8795] = {
-			["name"] = "Spallacci Azzurri",
+			["name"] = "Azure Shoulders",
 		},
 		[8797] = {
-			["name"] = "Cintura di Seta Terrigena",
+			["name"] = "Earthen Silk Belt",
 		},
 		[8799] = {
-			["name"] = "Brache di Seta Cremisi",
+			["name"] = "Crimson Silk Pantaloons",
 		},
 		[8802] = {
-			["name"] = "Tonaca di Seta Cremisi",
+			["name"] = "Crimson Silk Robe",
 		},
 		[8804] = {
-			["name"] = "Guanti di Seta Cremisi",
+			["name"] = "Crimson Silk Gloves",
 		},
 		[12044] = {
-			["name"] = "Pantaloni di Lino Semplici",
+			["name"] = "Simple Linen Pants",
 		},
 		[12045] = {
-			["name"] = "Stivali di Lino Semplici",
+			["name"] = "Simple Linen Boots",
 		},
 		[12046] = {
-			["name"] = "Kilt Semplice",
+			["name"] = "Simple Kilt",
 		},
 		[12047] = {
-			["name"] = "Kilt Colorato",
+			["name"] = "Colorful Kilt",
 		},
 		[12048] = {
-			["name"] = "Veste di Telamagica Nera",
+			["name"] = "Black Mageweave Vest",
 		},
 		[12049] = {
-			["name"] = "Gambiere di Telamagica Nera",
+			["name"] = "Black Mageweave Leggings",
 		},
 		[12050] = {
-			["name"] = "Tonaca di Telamagica Nera",
+			["name"] = "Black Mageweave Robe",
 		},
 		[12052] = {
-			["name"] = "Pantaloni di Stoffa dell'Ombra",
+			["name"] = "Shadoweave Pants",
 		},
 		[12053] = {
-			["name"] = "Guanti di Telamagica Nera",
+			["name"] = "Black Mageweave Gloves",
 		},
 		[12055] = {
-			["name"] = "Tonaca di Stoffa dell'Ombra",
+			["name"] = "Shadoweave Robe",
 		},
 		[12056] = {
-			["name"] = "Veste di Telamagica Rossa",
+			["name"] = "Red Mageweave Vest",
 		},
 		[12059] = {
-			["name"] = "Maschera del Bandito Bianca",
+			["name"] = "White Bandit Mask",
 		},
 		[12060] = {
-			["name"] = "Pantaloni di Telamagica Rossi",
+			["name"] = "Red Mageweave Pants",
 		},
 		[12061] = {
-			["name"] = "Camicia di Telamagica Arancione",
+			["name"] = "Orange Mageweave Shirt",
 		},
 		[12062] = {
-			["name"] = "Pantaloni di Stoffa Tempestosa",
+			["name"] = "Stormcloth Pants",
 		},
 		[12063] = {
-			["name"] = "Guanti di Stoffa Tempestosa",
+			["name"] = "Stormcloth Gloves",
 		},
 		[12064] = {
-			["name"] = "Camicia Marziale Arancione",
+			["name"] = "Orange Martial Shirt",
 		},
 		[12065] = {
-			["name"] = "Sacca di Telamagica",
+			["name"] = "Mageweave Bag",
 		},
 		[12066] = {
-			["name"] = "Guanti di Telamagica Rossi",
+			["name"] = "Red Mageweave Gloves",
 		},
 		[12067] = {
-			["name"] = "Guanti di Tessuto Onirico",
+			["name"] = "Dreamweave Gloves",
 		},
 		[12068] = {
-			["name"] = "Veste di Stoffa Tempestosa",
+			["name"] = "Stormcloth Vest",
 		},
 		[12069] = {
-			["name"] = "Tonaca di Stoffa Carbonizzata",
+			["name"] = "Cindercloth Robe",
 		},
 		[12070] = {
-			["name"] = "Veste di Tessuto Onirico",
+			["name"] = "Dreamweave Vest",
 		},
 		[12071] = {
-			["name"] = "Guanti di Stoffa dell'Ombra",
+			["name"] = "Shadoweave Gloves",
 		},
 		[12072] = {
-			["name"] = "Banda di Telamagica Nera",
+			["name"] = "Black Mageweave Headband",
 		},
 		[12073] = {
-			["name"] = "Stivali di Telamagica Nera",
+			["name"] = "Black Mageweave Boots",
 		},
 		[12074] = {
-			["name"] = "Spallacci di Telamagica Nera",
+			["name"] = "Black Mageweave Shoulders",
 		},
 		[12075] = {
-			["name"] = "Camicia di Telamagica Color Lavanda",
+			["name"] = "Lavender Mageweave Shirt",
 		},
 		[12076] = {
-			["name"] = "Spallacci di Stoffa dell'Ombra",
+			["name"] = "Shadoweave Shoulders",
 		},
 		[12077] = {
-			["name"] = "Vestito Semplice Nero",
+			["name"] = "Simple Black Dress",
 		},
 		[12078] = {
-			["name"] = "Spallacci di Telamagica Rossi",
+			["name"] = "Red Mageweave Shoulders",
 		},
 		[12079] = {
-			["name"] = "Sacca di Telamagica Rossa",
+			["name"] = "Red Mageweave Bag",
 		},
 		[12080] = {
-			["name"] = "Camicia di Telamagica Rosa",
+			["name"] = "Pink Mageweave Shirt",
 		},
 		[12081] = {
-			["name"] = "Cappello da Ammiraglio",
+			["name"] = "Admiral's Hat",
 		},
 		[12082] = {
-			["name"] = "Stivali di Stoffa dell'Ombra",
+			["name"] = "Shadoweave Boots",
 		},
 		[12083] = {
-			["name"] = "Banda di Stoffa Tempestosa",
+			["name"] = "Stormcloth Headband",
 		},
 		[12084] = {
-			["name"] = "Banda di Telamagica Rossa",
+			["name"] = "Red Mageweave Headband",
 		},
 		[12085] = {
-			["name"] = "Camicia da Smoking",
+			["name"] = "Tuxedo Shirt",
 		},
 		[12086] = {
-			["name"] = "Maschera di Stoffa dell'Ombra",
+			["name"] = "Shadoweave Mask",
 		},
 		[12087] = {
-			["name"] = "Spallacci di Stoffa Tempestosa",
+			["name"] = "Stormcloth Shoulders",
 		},
 		[12088] = {
-			["name"] = "Stivali di Stoffa Carbonizzata",
+			["name"] = "Cindercloth Boots",
 		},
 		[12089] = {
-			["name"] = "Pantaloni da Smoking",
+			["name"] = "Tuxedo Pants",
 		},
 		[12090] = {
-			["name"] = "Stivali di Stoffa Tempestosa",
+			["name"] = "Stormcloth Boots",
 		},
 		[12091] = {
-			["name"] = "Abito Nuziale Bianco",
+			["name"] = "White Wedding Dress",
 		},
 		[12092] = {
-			["name"] = "Tiara di Tessuto Onirico",
+			["name"] = "Dreamweave Circlet",
 		},
 		[12093] = {
-			["name"] = "Giacca da Smoking",
+			["name"] = "Tuxedo Jacket",
 		},
 		[18401] = {
-			["name"] = "Rotolo di Telarunica",
+			["name"] = "Bolt of Runecloth",
 		},
 		[18402] = {
-			["name"] = "Cintura di Telarunica",
+			["name"] = "Runecloth Belt",
 		},
 		[18403] = {
-			["name"] = "Giubba di Telafredda",
+			["name"] = "Frostweave Tunic",
 		},
 		[18404] = {
-			["name"] = "Tonaca di Telafredda",
+			["name"] = "Frostweave Robe",
 		},
 		[18405] = {
-			["name"] = "Sacca di Telarunica",
+			["name"] = "Runecloth Bag",
 		},
 		[18406] = {
-			["name"] = "Tonaca di Telarunica",
+			["name"] = "Runecloth Robe",
 		},
 		[18407] = {
-			["name"] = "Giubba di Telarunica",
+			["name"] = "Runecloth Tunic",
 		},
 		[18408] = {
-			["name"] = "Veste di Stoffa Carbonizzata",
+			["name"] = "Cindercloth Vest",
 		},
 		[18409] = {
-			["name"] = "Mantello di Telarunica",
+			["name"] = "Runecloth Cloak",
 		},
 		[18410] = {
-			["name"] = "Cintura di Tessuto Fantasma",
+			["name"] = "Ghostweave Belt",
 		},
 		[18411] = {
-			["name"] = "Guanti di Telafredda",
+			["name"] = "Frostweave Gloves",
 		},
 		[18412] = {
-			["name"] = "Guanti di Stoffa Carbonizzata",
+			["name"] = "Cindercloth Gloves",
 		},
 		[18413] = {
-			["name"] = "Guanti di Tessuto Fantasma",
+			["name"] = "Ghostweave Gloves",
 		},
 		[18414] = {
-			["name"] = "Tonaca di Stoffa Luminosa",
+			["name"] = "Brightcloth Robe",
 		},
 		[18415] = {
-			["name"] = "Guanti di Stoffa Luminosa",
+			["name"] = "Brightcloth Gloves",
 		},
 		[18416] = {
-			["name"] = "Veste di Tessuto Fantasma",
+			["name"] = "Ghostweave Vest",
 		},
 		[18417] = {
-			["name"] = "Guanti di Telarunica",
+			["name"] = "Runecloth Gloves",
 		},
 		[18418] = {
-			["name"] = "Mantello di Stoffa Carbonizzata",
+			["name"] = "Cindercloth Cloak",
 		},
 		[18419] = {
-			["name"] = "Pantaloni di Telavile",
+			["name"] = "Felcloth Pants",
 		},
 		[18420] = {
-			["name"] = "Mantello di Stoffa Luminosa",
+			["name"] = "Brightcloth Cloak",
 		},
 		[18421] = {
-			["name"] = "Gambiere di Tessuto Stregato",
+			["name"] = "Wizardweave Leggings",
 		},
 		[18422] = {
-			["name"] = "Mantello di Fuoco",
+			["name"] = "Cloak of Fire",
 		},
 		[18423] = {
-			["name"] = "Stivali di Telarunica",
+			["name"] = "Runecloth Boots",
 		},
 		[18424] = {
-			["name"] = "Pantaloni di Telafredda",
+			["name"] = "Frostweave Pants",
 		},
 		[18434] = {
-			["name"] = "Pantaloni di Stoffa Carbonizzata",
+			["name"] = "Cindercloth Pants",
 		},
 		[18436] = {
-			["name"] = "Tonaca della Notte Invernale",
+			["name"] = "Robe of Winter Night",
 		},
 		[18437] = {
-			["name"] = "Stivali di Telavile",
+			["name"] = "Felcloth Boots",
 		},
 		[18438] = {
-			["name"] = "Pantaloni di Telarunica",
+			["name"] = "Runecloth Pants",
 		},
 		[18439] = {
-			["name"] = "Pantaloni di Stoffa Luminosa",
+			["name"] = "Brightcloth Pants",
 		},
 		[18440] = {
-			["name"] = "Gambiere di Telaluna",
+			["name"] = "Mooncloth Leggings",
 		},
 		[18441] = {
-			["name"] = "Pantaloni di Tessuto Fantasma",
+			["name"] = "Ghostweave Pants",
 		},
 		[18442] = {
-			["name"] = "Cappuccio di Telavile",
+			["name"] = "Felcloth Hood",
 		},
 		[18444] = {
-			["name"] = "Banda di Telarunica",
+			["name"] = "Runecloth Headband",
 		},
 		[18445] = {
-			["name"] = "Sacca di Telaluna",
+			["name"] = "Mooncloth Bag",
 		},
 		[18446] = {
-			["name"] = "Tonaca di Tessuto Stregato",
+			["name"] = "Wizardweave Robe",
 		},
 		[18447] = {
-			["name"] = "Veste di Telaluna",
+			["name"] = "Mooncloth Vest",
 		},
 		[18448] = {
-			["name"] = "Spallacci di Telaluna",
+			["name"] = "Mooncloth Shoulders",
 		},
 		[18449] = {
-			["name"] = "Spallacci di Telarunica",
+			["name"] = "Runecloth Shoulders",
 		},
 		[18450] = {
-			["name"] = "Turbante di Tessuto Stregato",
+			["name"] = "Wizardweave Turban",
 		},
 		[18451] = {
-			["name"] = "Tonaca di Telavile",
+			["name"] = "Felcloth Robe",
 		},
 		[18452] = {
-			["name"] = "Tiara di Telaluna",
+			["name"] = "Mooncloth Circlet",
 		},
 		[18453] = {
-			["name"] = "Spallacci di Telavile",
+			["name"] = "Felcloth Shoulders",
 		},
 		[18454] = {
-			["name"] = "Guanti della Maestria Magica",
+			["name"] = "Gloves of Spell Mastery",
 		},
 		[18455] = {
-			["name"] = "Sacca Senza Fondo",
+			["name"] = "Bottomless Bag",
 		},
 		[18456] = {
-			["name"] = "Paramento della Pura Verità",
+			["name"] = "Truefaith Vestments",
 		},
 		[18457] = {
-			["name"] = "Tonaca dell'Arcimago",
+			["name"] = "Robe of the Archmage",
 		},
 		[18458] = {
-			["name"] = "Tonaca del Vuoto",
+			["name"] = "Robe of the Void",
 		},
 		[18560] = {
-			["name"] = "Telaluna",
+			["name"] = "Mooncloth",
 		},
 		[19435] = {
-			["name"] = "Stivali di Telaluna",
+			["name"] = "Mooncloth Boots",
 		},
 		[20848] = {
-			["name"] = "Coprispalla del Nucleo di Fiamme",
+			["name"] = "Flarecore Mantle",
 		},
 		[20849] = {
-			["name"] = "Guanti del Nucleo di Fiamme",
+			["name"] = "Flarecore Gloves",
 		},
 		[21945] = {
-			["name"] = "Camicia Verde della Festa",
+			["name"] = "Green Holiday Shirt",
 		},
 		[22759] = {
-			["name"] = "Abito del Nucleo di Fiamme",
+			["name"] = "Flarecore Wraps",
 		},
 		[22813] = {
-			["name"] = "Completo da Ogre Gordok",
+			["name"] = "Gordok Ogre Suit",
 		},
 		[22866] = {
-			["name"] = "Cintura dell'Arcimago",
+			["name"] = "Belt of the Archmage",
 		},
 		[22867] = {
-			["name"] = "Guanti di Telavile",
+			["name"] = "Felcloth Gloves",
 		},
 		[22868] = {
-			["name"] = "Guanti Infernali",
+			["name"] = "Inferno Gloves",
 		},
 		[22869] = {
-			["name"] = "Guanti di Telaluna",
+			["name"] = "Mooncloth Gloves",
 		},
 		[22870] = {
-			["name"] = "Mantello della Protezione",
+			["name"] = "Cloak of Warding",
 		},
 		[22902] = {
-			["name"] = "Tonaca di Telaluna",
+			["name"] = "Mooncloth Robe",
 		},
 		[23662] = {
-			["name"] = "Cintura della Saggezza dei Mordilegno",
+			["name"] = "Wisdom of the Timbermaw",
 		},
 		[23663] = {
-			["name"] = "Coprispalle dei Mordilegno",
+			["name"] = "Mantle of the Timbermaw",
 		},
 		[23664] = {
-			["name"] = "Stivali d'Argento",
+			["name"] = "Argent Boots",
 		},
 		[23665] = {
-			["name"] = "Spallacci d'Argento",
+			["name"] = "Argent Shoulders",
 		},
 		[23666] = {
-			["name"] = "Tonaca del Nucleo di Fiamme",
+			["name"] = "Flarecore Robe",
 		},
 		[23667] = {
-			["name"] = "Gambiere del Nucleo di Fiamme",
+			["name"] = "Flarecore Leggings",
 		},
 		[24091] = {
-			["name"] = "Veste della Vite del Sangue",
+			["name"] = "Bloodvine Vest",
 		},
 		[24092] = {
-			["name"] = "Gambiere della Vite del Sangue",
+			["name"] = "Bloodvine Leggings",
 		},
 		[24093] = {
-			["name"] = "Stivali della Vite del Sangue",
+			["name"] = "Bloodvine Boots",
 		},
 		[24901] = {
-			["name"] = "Gambiere Stigee Runiche",
+			["name"] = "Runed Stygian Leggings",
 		},
 		[24902] = {
-			["name"] = "Cintura Stigea Runica",
+			["name"] = "Runed Stygian Belt",
 		},
 		[24903] = {
-			["name"] = "Stivali Stigei Runici",
+			["name"] = "Runed Stygian Boots",
 		},
 		[26085] = {
-			["name"] = "Borsa dell'Anima",
+			["name"] = "Soul Pouch",
 		},
 		[26086] = {
-			["name"] = "Sacca di Telavile",
+			["name"] = "Felcloth Bag",
 		},
 		[26087] = {
-			["name"] = "Sacca di Telavile del Nucleo",
+			["name"] = "Core Felcloth Bag",
 		},
 		[26403] = {
 			["name"] = "Festival Dress",
@@ -671,631 +671,631 @@ lib:LoadNames(197, {
 			["name"] = "Festival Suit",
 		},
 		[27658] = {
-			["name"] = "Borsa di Telamagica Incantata",
+			["name"] = "Enchanted Mageweave Pouch",
 		},
 		[27659] = {
-			["name"] = "Sacca di Telarunica Incantata",
+			["name"] = "Enchanted Runecloth Bag",
 		},
 		[27660] = {
-			["name"] = "Sacca Grande da Incantatore",
+			["name"] = "Big Bag of Enchantment",
 		},
 		[27724] = {
-			["name"] = "Sacca per Erbe Cenariana",
+			["name"] = "Cenarion Herb Bag",
 		},
 		[27725] = {
-			["name"] = "Sacco Cenariano",
+			["name"] = "Satchel of Cenarius",
 		},
 		[28205] = {
-			["name"] = "Guanti Glaciali",
+			["name"] = "Glacial Gloves",
 		},
 		[28207] = {
-			["name"] = "Veste Glaciale",
+			["name"] = "Glacial Vest",
 		},
 		[28208] = {
-			["name"] = "Mantello Glaciale",
+			["name"] = "Glacial Cloak",
 		},
 		[28209] = {
-			["name"] = "Polsiere Glaciali",
+			["name"] = "Glacial Wrists",
 		},
 		[28210] = {
-			["name"] = "Abbraccio di Gaea",
+			["name"] = "Gaea's Embrace",
 		},
 		[28480] = {
-			["name"] = "Veste Silvana",
+			["name"] = "Sylvan Vest",
 		},
 		[28481] = {
-			["name"] = "Corona Silvana",
+			["name"] = "Sylvan Crown",
 		},
 		[28482] = {
-			["name"] = "Spallacci Silvani",
+			["name"] = "Sylvan Shoulders",
 		},
 		[44950] = {
-			["name"] = "Giacca di Grande Inverno Verde",
+			["name"] = "Green Winter Clothes",
 		},
 		[44958] = {
-			["name"] = "Giacca di Grande Inverno Rossa",
+			["name"] = "Red Winter Clothes",
 		},
 		[428424] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Phoenix Bindings",
 		},
 		[429351] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Extraplanar Spidersilk Boots",
 		},
 		[435610] = {
-			["name"] = "Stivali Foschi",
+			["name"] = "Gneuro-Linked Arcano-Filament Monocle",
 		},
 		[435827] = {
-			["name"] = "Stivali Foschi",
+			["name"] = "Hyperconductive Arcano-Filament",
 		},
 		[435841] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Invoker's Cord",
 		},
 		[435848] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Invoker's Mantle",
 		},
 		[439085] = {
-			["name"] = "Tonaca di Seta Cremisi",
+			["name"] = "Crimson Silk Robe",
 		},
 		[439086] = {
-			["name"] = "Veste di Telamagica Nera",
+			["name"] = "Black Mageweave Vest",
 		},
 		[439088] = {
-			["name"] = "Gambiere di Telamagica Nera",
+			["name"] = "Black Mageweave Leggings",
 		},
 		[439091] = {
-			["name"] = "Cintura di Seta Terrigena",
+			["name"] = "Earthen Silk Belt",
 		},
 		[439093] = {
-			["name"] = "Spallacci di Seta Cremisi",
+			["name"] = "Crimson Silk Shoulders",
 		},
 		[439094] = {
-			["name"] = "Mantello Lungo di Seta",
+			["name"] = "Long Silken Cloak",
 		},
 		[439097] = {
-			["name"] = "Stivali dell'Incantatore",
+			["name"] = "Boots of the Enchanter",
 		},
 		[439098] = {
-			["name"] = "Cintura di Seta Cremisi",
+			["name"] = "Crimson Silk Belt",
 		},
 		[439100] = {
-			["name"] = "Veste Terrigena",
+			["name"] = "Earthen Vest",
 		},
 		[439102] = {
-			["name"] = "Copricapo da Incantatore",
+			["name"] = "Enchanter's Cowl",
 		},
 		[446193] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Fractured Mind Pauldrons",
 		},
 		[446194] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Mantle of Insanity",
 		},
 		[446195] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Shoulderpads of the Deranged",
 		},
 		[461692] = {
-			["name"] = "Mantello Mutevole",
+			["name"] = "Synthetic Gordok Ogre Suit",
 		},
 		[461708] = {
-			["name"] = "Tonaca di Telaluna",
+			["name"] = "Incandescent Mooncloth Robe",
 		},
 		[461727] = {
-			["name"] = "Sacca di Telaluna",
+			["name"] = "Leather-Reinforced Runecloth Bag",
 		},
 		[461747] = {
-			["name"] = "Veste di Telaluna",
+			["name"] = "Incandescent Mooncloth Vest",
 		},
 		[461750] = {
-			["name"] = "Tiara di Telaluna",
+			["name"] = "Incandescent Mooncloth Circlet",
 		},
 		[461752] = {
-			["name"] = "Gambiere di Telaluna",
+			["name"] = "Incandescent Mooncloth Leggings",
 		},
 		[462282] = {
-			["name"] = "Cintura dell'Arcimago",
+			["name"] = "Embroidered Belt of the Archmage",
 		},
 		[463972] = {
-			["name"] = "Sacca Senza Fondo",
+			["name"] = "Bottomless Bag",
 		},
 		[1213527] = {
-			["name"] = "Gambiere di Telaluna",
+			["name"] = "Vampiric Cowl",
 		},
 		[1213530] = {
-			["name"] = "Gambiere di Telaluna",
+			["name"] = "Vampiric Shawl",
 		},
 		[1213532] = {
-			["name"] = "Gambiere di Telaluna",
+			["name"] = "Vampiric Robe",
 		},
 		[1213534] = {
-			["name"] = "Mantello Cromatico",
+			["name"] = "Qiraji Silk Scarf",
 		},
 		[1213536] = {
-			["name"] = "Mantello Cromatico",
+			["name"] = "Qiraji Silk Cape",
 		},
 		[1213538] = {
-			["name"] = "Mantello Cromatico",
+			["name"] = "Qiraji Silk Cloak",
 		},
 		[1213540] = {
-			["name"] = "Mantello Cromatico",
+			["name"] = "Qiraji Silk Drape",
 		},
 		[1213740] = {
-			["name"] = "Spallacci Silvani",
+			["name"] = "Sylvan Shoulders",
 		},
 		[1213742] = {
-			["name"] = "Corona Silvana",
+			["name"] = "Sylvan Crown",
 		},
 		[1213744] = {
-			["name"] = "Veste Silvana",
+			["name"] = "Sylvan Vest",
 		},
 		[1214173] = {
-			["name"] = "Rotolo di Telarunica",
+			["name"] = "Bolt of Qiraji Silk",
 		},
 		[1214306] = {
-			["name"] = "Veste Silvana",
+			["name"] = "Dreamscale Bracers",
 		},
 		[1214307] = {
-			["name"] = "Veste Silvana",
+			["name"] = "Dreamscale Mitts",
 		},
 		[1223760] = {
-			["name"] = "Veste Glaciale",
+			["name"] = "Glacial Vest",
 		},
 		[1223762] = {
-			["name"] = "Mantello Glaciale",
+			["name"] = "Glacial Cloak",
 		},
 		[1223764] = {
-			["name"] = "Guanti Glaciali",
+			["name"] = "Glacial Gloves",
 		},
 		[1223766] = {
-			["name"] = "Polsiere Glaciali",
+			["name"] = "Glacial Wrists",
 		},
 		[1223768] = {
-			["name"] = "Veste Glaciale",
+			["name"] = "Frosty Vest",
 		},
 		[1223770] = {
-			["name"] = "Guanti Glaciali",
+			["name"] = "Frosty Gloves",
 		},
 		[1223772] = {
-			["name"] = "Polsiere Glaciali",
+			["name"] = "Frosty Wrists",
 		},
 		[1224607] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Augur's Hood",
 		},
 		[1224608] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Augur's Mantle",
 		},
 		[1224609] = {
 			["name"] = "Scarlet Augur's Vestments",
 		},
 		[1224610] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Augur's Cuffs",
 		},
 		[1224611] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Augur's Mitts",
 		},
 		[1224612] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Augur's Strap",
 		},
 		[1224613] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Augur's Leggings",
 		},
 		[1224614] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Scarlet Augur's Soles",
 		},
 		[1227723] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Crusader's Knapsack",
 		},
 		[1227724] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Crimson Dawnwoven Bag",
 		},
 		[1229504] = {
 			["name"] = "Faction Banner",
 		},
 		[1252979] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252980] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252981] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252991] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252992] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1252993] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1257013] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Linen Reagent Bag",
 		},
 		[1257017] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Woolen Reagent Bag",
 		},
 		[1257368] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Novice Arcanist's Sash",
 		},
 		[1257369] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Novice Ardent's Sash",
 		},
 		[1257370] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pristine Boots",
 		},
 		[1257371] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Silky Boots",
 		},
 		[1257372] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Flame Boots",
 		},
 		[1257373] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shadow Boots",
 		},
 		[1257374] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pearly Boots",
 		},
 		[1257375] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shining Boots",
 		},
 		[1257376] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Pristine Gown",
 		},
 		[1257377] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Silky Gown",
 		},
 		[1257378] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Flame Gown",
 		},
 		[1257379] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Shadow Gown",
 		},
 		[1257380] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Pearly Gown",
 		},
 		[1257381] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Shining Gown",
 		},
 		[1257382] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pristine Gloves",
 		},
 		[1257383] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Silky Gloves",
 		},
 		[1257384] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Flame Gloves",
 		},
 		[1257385] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shadow Gloves",
 		},
 		[1257386] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pearly Gloves",
 		},
 		[1257387] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shining Gloves",
 		},
 		[1257388] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pristine Sash",
 		},
 		[1257389] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Silky Sash",
 		},
 		[1257390] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Flame Sash",
 		},
 		[1257391] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shadow Sash",
 		},
 		[1257392] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pearly Sash",
 		},
 		[1257393] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shining Sash",
 		},
 		[1257394] = {
 			["name"] = "Filigreed Pristine Leggings",
 		},
 		[1257395] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Silky Leggings",
 		},
 		[1257396] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Flame Leggings",
 		},
 		[1257397] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Shadow Leggings",
 		},
 		[1257398] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Pearly Leggings",
 		},
 		[1257399] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Shining Leggings",
 		},
 		[1257400] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pristine Circlet",
 		},
 		[1257401] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Silky Circlet",
 		},
 		[1257402] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Flame Circlet",
 		},
 		[1257403] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shadow Circlet",
 		},
 		[1257404] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pearly Circlet",
 		},
 		[1257405] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shining Circlet",
 		},
 		[1257406] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pristine Gown",
 		},
 		[1257407] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Silky Gown",
 		},
 		[1257408] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Flame Gown",
 		},
 		[1257409] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shadow Gown",
 		},
 		[1257410] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pearly Gown",
 		},
 		[1257411] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shining Gown",
 		},
 		[1257412] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Silk Reagent Bag",
 		},
 		[1257413] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Pristine Circlet",
 		},
 		[1257414] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Silky Circlet",
 		},
 		[1257415] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Flame Circlet",
 		},
 		[1257416] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Shadow Circlet",
 		},
 		[1257417] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Pearly Circlet",
 		},
 		[1257418] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Filigreed Shining Circlet",
 		},
 		[1257419] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pristine Leggings",
 		},
 		[1257420] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Silky Leggings",
 		},
 		[1257421] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Flame Leggings",
 		},
 		[1257422] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shadow Leggings",
 		},
 		[1257423] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Pearly Leggings",
 		},
 		[1257424] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Shining Leggings",
 		},
 		[1257425] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthen Leggings",
 		},
 		[1257426] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Gilded Slippers",
 		},
 		[1257427] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Frothing Slippers",
 		},
 		[1257428] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Fiery Slippers",
 		},
 		[1257429] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Black Slippers",
 		},
 		[1257430] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Golden Slippers",
 		},
 		[1257431] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Radiant Slippers",
 		},
 		[1257432] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthen Silk Slippers",
 		},
 		[1257433] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthen Silk Hood",
 		},
 		[1257434] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthen Silk Gloves",
 		},
 		[1257435] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthen Silk Cuffs",
 		},
 		[1257436] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Gilded Handwraps",
 		},
 		[1257437] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Frothing Handwraps",
 		},
 		[1257438] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Fiery Handwraps",
 		},
 		[1257439] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Black Handwraps",
 		},
 		[1257440] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Golden Handwraps",
 		},
 		[1257441] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Radiant Handwraps",
 		},
 		[1257442] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthen Silk Shoulders",
 		},
 		[1257443] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Mageweave Reagent Bag",
 		},
 		[1257444] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Gilded Cord",
 		},
 		[1257445] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Frothing Cord",
 		},
 		[1257446] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Fiery Cord",
 		},
 		[1257447] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Black Cord",
 		},
 		[1257448] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Golden Cord",
 		},
 		[1257449] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Radiant Cord",
 		},
 		[1257450] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Nethergeld Shoulders",
 		},
 		[1257451] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Netherfroth Shoulders",
 		},
 		[1257452] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Netherflame Shoulders",
 		},
 		[1257453] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Netherpearl Shoulders",
 		},
 		[1257454] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Nethershine Shoulders",
 		},
 		[1257455] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Netherlight Shoulders",
 		},
 		[1257456] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Nethergeld Cuffs",
 		},
 		[1257457] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Netherfroth Cuffs",
 		},
 		[1257458] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Netherflame Cuffs",
 		},
 		[1257459] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Netherpearl Cuffs",
 		},
 		[1257460] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Nethershine Cuffs",
 		},
 		[1257461] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Netherlight Cuffs",
 		},
 		[1257462] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Ghostweave Cord",
 		},
 		[1257463] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthenweave Gloves",
 		},
 		[1257464] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthenweave Cord",
 		},
 		[1257465] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Runecloth Reagent Bag",
 		},
 		[1257466] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Gilded Waistcord",
 		},
 		[1257467] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Frothing Waistcord",
 		},
 		[1257468] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Fiery Waistcord",
 		},
 		[1257469] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Black Waistcord",
 		},
 		[1257470] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Golden Waistcord",
 		},
 		[1257471] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Radiant Waistcord",
 		},
 		[1257472] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthenweave Boots",
 		},
 		[1257473] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Gilded Gloves",
 		},
 		[1257474] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Frothing Gloves",
 		},
 		[1257475] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Fiery Gloves",
 		},
 		[1257476] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Black Gloves",
 		},
 		[1257477] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Golden Gloves",
 		},
 		[1257478] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Radiant Gloves",
 		},
 		[1257479] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Gilded Sandals",
 		},
 		[1257480] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Frothing Sandals",
 		},
 		[1257481] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Fiery Sandals",
 		},
 		[1257482] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Black Sandals",
 		},
 		[1257483] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Golden Sandals",
 		},
 		[1257484] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Radiant Sandals",
 		},
 		[1257485] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthenweave Mantle",
 		},
 		[1257486] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthenweave Vest",
 		},
 		[1257487] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Runecloth Cuffs",
 		},
 		[1257488] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthenweave Leggings",
 		},
 		[1257489] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Ghostweave Mantle",
 		},
 		[1257490] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Ghostweave Boots",
 		},
 		[1257491] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthenweave Cuffs",
 		},
 		[1257492] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Mooncloth Reagent Bag",
 		},
 		[1257493] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Ghostweave Hood",
 		},
 		[1257494] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Earthenweave Crown",
 		},
 		[1257495] = {
-			["name"] = "Guanti della Fenice",
+			["name"] = "Bottomless Reagent Bag",
 		},
 		[1263032] = {
 			["name"] = "Spinning Wheel",

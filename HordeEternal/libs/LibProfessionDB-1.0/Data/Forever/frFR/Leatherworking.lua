@@ -44,7 +44,7 @@ lib:LoadNames(165, {
 			["name"] = "Armure en cuir raffermi",
 		},
 		[2167] = {
-			["name"] = "Bottes noires en cuir",
+			["name"] = "Bottes en cuir gris",
 		},
 		[2168] = {
 			["name"] = "Cape noire en cuir",
@@ -728,7 +728,7 @@ lib:LoadNames(165, {
 			["name"] = "Ceinture de la ronceraie",
 		},
 		[44953] = {
-			["name"] = "Bottes d'hiver",
+			["name"] = "Bottes d’hiver",
 		},
 		[429354] = {
 			["name"] = "Gants en cuir touché par le Vide",
@@ -974,40 +974,40 @@ lib:LoadNames(165, {
 			["name"] = "Tente du camp",
 		},
 		[1252982] = {
-			["name"] = "Gilet adaptable d’abattage de bêtes",
+			["name"] = "",
 		},
 		[1252983] = {
-			["name"] = "Brassards adaptables d’abattage de bêtes",
+			["name"] = "",
 		},
 		[1252984] = {
-			["name"] = "Ruban adaptable d’abattage de bêtes",
+			["name"] = "",
 		},
 		[1252985] = {
-			["name"] = "Corselet adaptable de destruction de dinosaures",
+			["name"] = "",
 		},
 		[1252986] = {
-			["name"] = "Poignets adaptables de destruction de dinosaures",
+			["name"] = "",
 		},
 		[1252987] = {
-			["name"] = "Ceinture adaptable de destruction de dinosaures",
+			["name"] = "",
 		},
 		[1252995] = {
-			["name"] = "Robe adaptable de soins des bêtes",
+			["name"] = "",
 		},
 		[1252996] = {
-			["name"] = "Lie-poignets adaptable de soins des bêtes",
+			["name"] = "",
 		},
 		[1252997] = {
-			["name"] = "Ceinturon adaptable de soins des bêtes",
+			["name"] = "",
 		},
 		[1252998] = {
-			["name"] = "Tunique adaptable de soins des dinosaures",
+			["name"] = "",
 		},
 		[1252999] = {
-			["name"] = "Poignets adaptables de soins des dinosaures",
+			["name"] = "",
 		},
 		[1253000] = {
-			["name"] = "Chaîne adaptable de soins des dinosaures",
+			["name"] = "",
 		},
 		[1254965] = {
 			["name"] = "Renfort d’armure robuste énergique",
@@ -1625,16 +1625,16 @@ lib:LoadNames(165, {
 			["name"] = "Bottes sombrepoint",
 		},
 		[1292969] = {
-			["name"] = "Kilt de mande-esprit",
+			["name"] = "Jambières de mande-esprit",
 		},
 		[1292970] = {
-			["name"] = "Gants de mande-esprit",
+			["name"] = "Poignes de mande-esprit",
 		},
 		[1292971] = {
-			["name"] = "Mantelet de mande-esprit",
+			["name"] = "Spallières de mande-esprit",
 		},
 		[1292972] = {
-			["name"] = "Bottes de mande-esprit",
+			["name"] = "Bottines de mande-esprit",
 		},
 		[1292973] = {
 			["name"] = "Pantalon de mande-esprit",
@@ -1685,16 +1685,16 @@ lib:LoadNames(165, {
 			["name"] = "Bottines de garde-couvée",
 		},
 		[1299914] = {
-			["name"] = "Jambières de mande-esprit",
+			["name"] = "Kilt de mande-esprit",
 		},
 		[1299915] = {
-			["name"] = "Poignes de mande-esprit",
+			["name"] = "Gants de mande-esprit",
 		},
 		[1299916] = {
-			["name"] = "Spallières de mande-esprit",
+			["name"] = "Mantelet de mande-esprit",
 		},
 		[1299917] = {
-			["name"] = "Bottines de mande-esprit",
+			["name"] = "Bottes de mande-esprit",
 		},
 		[1301427] = {
 			["name"] = "Harnais tisse-souffle nuageux",

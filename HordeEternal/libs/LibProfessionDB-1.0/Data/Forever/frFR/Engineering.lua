@@ -599,13 +599,13 @@ lib:LoadNames(202, {
 			["name"] = "Papier de verre",
 		},
 		[1253004] = {
-			["name"] = "Suppresseur de vase",
+			["name"] = "",
 		},
 		[1253005] = {
-			["name"] = "Énorme fléchette tranquillisante",
+			["name"] = "",
 		},
 		[1253006] = {
-			["name"] = "G.R.R.-Nade",
+			["name"] = "",
 		},
 		[1263034] = {
 			["name"] = "Robot réparateur",

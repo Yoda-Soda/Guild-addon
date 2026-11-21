@@ -2,9 +2,35 @@ local _, addon = ...
 
 local Guild = { ready = false, serial = 0, members = {}, aliases = {}, online = {}, details = {} }
 addon.GuildState = Guild
-local OWNER = "Podcast Clawson"
+local OWNER = "Pod Cast"
+local GUILD_CLUB_ID = 503775441
 local MAX_MEMBERS = 1000
 local listener
+
+local function GuildClubId()
+    local api = C_Club
+    if not addon.Compat.IsReadable(api) or type(api) ~= "table"
+        or (type(canaccesstable) == "function" and not canaccesstable(api)) then return nil end
+    local callback = api.GetGuildClubId
+    if not addon.Compat.IsReadable(callback) then return nil end
+    if type(callback) == "function" then return addon.Compat.Value(callback) end
+    local clubs = addon.Compat.Value(api.GetSubscribedClubs)
+    if type(clubs) ~= "table" or (type(canaccesstable) == "function" and not canaccesstable(clubs))
+        or #clubs > 100 then return nil end
+    local guildId
+    for _, club in ipairs(clubs) do
+        if not addon.Compat.IsReadable(club) or type(club) ~= "table"
+            or (type(canaccesstable) == "function" and not canaccesstable(club)) then return nil end
+        local clubType = club.clubType
+        if not addon.Compat.IsReadable(clubType) then return nil end
+        if clubType == 2 then
+            local clubId = club.clubId
+            if not addon.Compat.IsReadable(clubId) or guildId ~= nil then return nil end
+            guildId = clubId
+        end
+    end
+    return guildId
+end
 
 local function Invalidate()
     Guild.ready = false
@@ -20,13 +46,20 @@ local function CurrentContext()
     if state ~= "available" then return nil end
     if inGuild == false then return false end
     if inGuild ~= true then return nil end
+    local clubId = GuildClubId()
+    if type(clubId) ~= "number" and type(clubId) ~= "string" then return nil end
+    if clubId ~= GUILD_CLUB_ID and clubId ~= tostring(GUILD_CLUB_ID) then return false end
     local info = addon.Compat.Call(GetGuildInfo, "player")
-    local home = addon.Compat.Value(GetNormalizedRealmName)
+    local home = addon.Compat.HomeRealm()
     if not info or type(info[2]) ~= "string" or info[2] == ""
-        or type(home) ~= "string" or home == "" then return nil end
+        or type(home) ~= "string" then return nil end
     local guildRealm = info[5]
     if type(guildRealm) ~= "string" or guildRealm == "" then guildRealm = home end
     return info[2] .. "@" .. guildRealm, home
+end
+
+function Guild.IsAllowed()
+    return type(CurrentContext()) == "string"
 end
 
 function Guild.CheckContext()
@@ -34,6 +67,7 @@ function Guild.CheckContext()
     if not key then
         if Guild.key or Guild.ready then Invalidate() end
         Guild.key, Guild.home = nil, nil
+        if addon.HideGuildUI then addon.HideGuildUI() end
         if key == false and addon.db then
             local database = addon.Catalog.Initialize()
             database.remoteProfiles = {}
@@ -89,10 +123,22 @@ function Guild.Rows()
     return rows
 end
 
-function Guild.CanReset()
-    if not Guild.IsReady() then return false end
+function Guild.IsAdmin()
+    if not Guild.IsReady() then return nil end
     local authority = Guild.Authority()
-    return authority ~= nil and addon.Compat.IsPlayerName(authority)
+    if not authority then return nil end
+    return addon.Compat.IsPlayerName(authority)
+end
+
+function Guild.CanReset()
+    return Guild.IsAdmin() == true
+end
+
+function Guild.AdminStatus()
+    local admin = Guild.IsAdmin()
+    if admin == true then return "Application admin" end
+    if admin == false then return "Guild member" end
+    return "Admin status unavailable"
 end
 
 function Guild.Generation()
@@ -115,6 +161,7 @@ function Guild.AcceptGeneration(generation, issuer)
     addon.db.craftingGenerations[Guild.key] = { generation = generation, issuer = authority }
     Guild.serial = Guild.serial + 1
     if addon.Sync and addon.Sync.Invalidate then addon.Sync.Invalidate() end
+    if addon.LogEvent then addon.LogEvent("RESET_APPLIED", { generation = generation }) end
     return true
 end
 
@@ -122,6 +169,7 @@ function Guild.RefreshRoster()
     if not Guild.CheckContext() then return false end
     local count = addon.Compat.Value(GetNumGuildMembers)
     if type(count) ~= "number" or count < 1 or count > MAX_MEMBERS or count ~= math.floor(count) then
+        if addon.LogEvent then addon.LogEvent("ROSTER_UNAVAILABLE", { reason = "count" }) end
         Invalidate()
         return false
     end
@@ -135,6 +183,7 @@ function Guild.RefreshRoster()
         local info = addon.Compat.Call(GetGuildRosterInfo, index)
         local name = info and Canonical(info[2])
         if not name or members[name:lower()] then
+            if addon.LogEvent then addon.LogEvent("ROSTER_UNAVAILABLE", { reason = "row", row = index }) end
             Invalidate()
             return false
         end
@@ -156,6 +205,7 @@ function Guild.RefreshRoster()
     end
     local key = CurrentContext()
     if not selfPresent or key ~= Guild.key or addon.Compat.Value(GetNumGuildMembers) ~= count then
+        if addon.LogEvent then addon.LogEvent("ROSTER_UNAVAILABLE", { reason = "identity" }) end
         Invalidate()
         return false
     end
@@ -168,6 +218,7 @@ function Guild.RefreshRoster()
     for name in pairs(database.remoteProfiles) do
         if not Guild.Resolve(name) then database.remoteProfiles[name] = nil end
     end
+    if addon.Sync and addon.Sync.PruneMembers then addon.Sync.PruneMembers() end
     addon.Catalog.CacheLocalProfile()
     if addon.RefreshCatalog then addon.RefreshCatalog() end
     if addon.Members then addon.Members.RosterReady() end
@@ -178,22 +229,27 @@ end
 function Guild.Start()
     if not listener then
         listener = CreateFrame("Frame")
-        listener:RegisterEvent("GUILD_ROSTER_UPDATE")
-        listener:RegisterEvent("PLAYER_GUILD_UPDATE")
+        for _, event in ipairs({ "GUILD_ROSTER_UPDATE", "PLAYER_GUILD_UPDATE", "PLAYER_ENTERING_WORLD",
+            "INITIAL_CLUBS_LOADED", "CLUB_ADDED", "CLUB_REMOVED", "CLUB_UPDATED" }) do
+            addon.Compat.Call(listener.RegisterEvent, listener, event)
+        end
         listener:SetScript("OnEvent", function(_, event, unit)
+            if not addon.Compat.IsReadable(event) then return end
             if event == "PLAYER_GUILD_UPDATE" then
                 if not addon.Compat.IsReadable(unit) or unit ~= "player" then return end
                 Invalidate()
-                Guild.CheckContext()
-                addon.Compat.Call(C_GuildInfo and C_GuildInfo.GuildRoster)
+                if Guild.CheckContext() then addon.Compat.Call(C_GuildInfo and C_GuildInfo.GuildRoster) end
             elseif Guild.RefreshRoster() and addon.Sync and addon.Sync.RosterReady then
                 addon.Sync.RosterReady()
             end
+            if addon.RefreshGuildAccess then addon.RefreshGuildAccess() end
+            if not Guild.key then return end
             if addon.RefreshCatalog then addon.RefreshCatalog() end
             if addon.RefreshGuild then addon.RefreshGuild() end
         end)
     end
-    Guild.CheckContext()
-    Guild.RefreshRoster()
-    addon.Compat.Call(C_GuildInfo and C_GuildInfo.GuildRoster)
+    if Guild.CheckContext() then
+        Guild.RefreshRoster()
+        addon.Compat.Call(C_GuildInfo and C_GuildInfo.GuildRoster)
+    end
 end

@@ -44,7 +44,7 @@ lib:LoadNames(165, {
 			["name"] = "Gekräftigte Lederrüstung",
 		},
 		[2167] = {
-			["name"] = "Dunkle Lederstiefel",
+			["name"] = "Graue Lederstiefel",
 		},
 		[2168] = {
 			["name"] = "Dunkler Lederumhang",
@@ -653,7 +653,7 @@ lib:LoadNames(165, {
 			["name"] = "Geschmolzener Gürtel",
 		},
 		[24121] = {
-			["name"] = "Urzeitliche Fledermaushautwams",
+			["name"] = "Urzeitliches Fledermaushautwams",
 		},
 		[24122] = {
 			["name"] = "Urzeitliche Fledermaushauthandschuhe",
@@ -974,40 +974,40 @@ lib:LoadNames(165, {
 			["name"] = "Lagerzelt",
 		},
 		[1252982] = {
-			["name"] = "Adaptive Weste des Wildtierschlächters",
+			["name"] = "",
 		},
 		[1252983] = {
-			["name"] = "Adaptive Armschienen des Wildtierschlächters",
+			["name"] = "",
 		},
 		[1252984] = {
-			["name"] = "Adaptiver Wickel des Wildtierschlächters",
+			["name"] = "",
 		},
 		[1252985] = {
-			["name"] = "Adaptiver Brustschutz des Dinozerstörers",
+			["name"] = "",
 		},
 		[1252986] = {
-			["name"] = "Adaptiver Handschutz des Dinozerstörers",
+			["name"] = "",
 		},
 		[1252987] = {
-			["name"] = "Adaptiver Gürtel des Dinozerstörers",
+			["name"] = "",
 		},
 		[1252995] = {
-			["name"] = "Adaptive Robe des Wildtierheilers",
+			["name"] = "",
 		},
 		[1252996] = {
-			["name"] = "Adaptive Handgelenkbindungen des Wildtierheilers",
+			["name"] = "",
 		},
 		[1252997] = {
-			["name"] = "Adaptiver Gurt des Wildtierheilers",
+			["name"] = "",
 		},
 		[1252998] = {
-			["name"] = "Adaptive Tunika des Dinoheilers",
+			["name"] = "",
 		},
 		[1252999] = {
-			["name"] = "Adaptiver Handschutz des Dinoheilers",
+			["name"] = "",
 		},
 		[1253000] = {
-			["name"] = "Adaptive Kette des Dinoheilers",
+			["name"] = "",
 		},
 		[1254965] = {
 			["name"] = "Kraftvolles unverwüstliches Rüstungsset",
@@ -1058,7 +1058,7 @@ lib:LoadNames(165, {
 			["name"] = "Geladene Skorpidarmschienen",
 		},
 		[1254981] = {
-			["name"] = "Weiche Skorpidschulterstücke",
+			["name"] = "Geschmeidige Skorpidschultern",
 		},
 		[1254982] = {
 			["name"] = "Panzergürtel des Heilers",
@@ -1085,7 +1085,7 @@ lib:LoadNames(165, {
 			["name"] = "Panzerstulpen des Pirschers",
 		},
 		[1254990] = {
-			["name"] = "Geladene Skorpidschulterstücke",
+			["name"] = "Geladene Skorpidschultern",
 		},
 		[1254991] = {
 			["name"] = "Weiche Skorpidarmschienen",
@@ -1127,16 +1127,16 @@ lib:LoadNames(165, {
 			["name"] = "Panzerarmschienen des Pirschers",
 		},
 		[1255004] = {
-			["name"] = "Panzerschulterschutz des Heilers",
+			["name"] = "Panzerschultern des Heilers",
 		},
 		[1255005] = {
-			["name"] = "Panzerschulterschutz des Scharmützlers",
+			["name"] = "Panzerschultern des Scharmützlers",
 		},
 		[1255006] = {
-			["name"] = "Panzerschulterschutz des Himmelsrufers",
+			["name"] = "Panzerschultern des Himmelsrufers",
 		},
 		[1255007] = {
-			["name"] = "Panzerschulterschutz des Pirschers",
+			["name"] = "Panzerschultern des Pirschers",
 		},
 		[1255008] = {
 			["name"] = "Panzerstiefel des Heilers",
@@ -1193,7 +1193,7 @@ lib:LoadNames(165, {
 			["name"] = "Kunstvoll gefertigte Lederkrone",
 		},
 		[1255026] = {
-			["name"] = "Blaue Wildlederschulterstücke",
+			["name"] = "Blaue Wildlederschultern",
 		},
 		[1255027] = {
 			["name"] = "Kunstvoll gefertigte Lederstulpen",
@@ -1280,19 +1280,19 @@ lib:LoadNames(165, {
 			["name"] = "Lederarmschienen des Streuners",
 		},
 		[1255055] = {
-			["name"] = "Lederschulterstücke des Heilers",
+			["name"] = "Lederschultern des Heilers",
 		},
 		[1255056] = {
-			["name"] = "Lederschulterstücke des Himmelsrufers",
+			["name"] = "Lederschultern des Himmelsrufers",
 		},
 		[1255057] = {
-			["name"] = "Lederschulterstücke des Aufsehers",
+			["name"] = "Lederschultern des Wächters",
 		},
 		[1255058] = {
-			["name"] = "Lederschulterstücke des Schleichers",
+			["name"] = "Lederschultern des Lauerers",
 		},
 		[1255059] = {
-			["name"] = "Lederschulterstücke des Streuners",
+			["name"] = "Lederschultern des Pirschers",
 		},
 		[1255060] = {
 			["name"] = "Lederschuhe des Heilers",
@@ -1625,16 +1625,16 @@ lib:LoadNames(165, {
 			["name"] = "Grimmstichstiefel",
 		},
 		[1292969] = {
-			["name"] = "Geistruferkilt",
+			["name"] = "Geistrufergamaschen",
 		},
 		[1292970] = {
-			["name"] = "Geistruferhandschuhe",
+			["name"] = "Geistruferhandschutz",
 		},
 		[1292971] = {
-			["name"] = "Geistrufermantelung",
+			["name"] = "Geistruferschiftung",
 		},
 		[1292972] = {
-			["name"] = "Geistruferstiefel",
+			["name"] = "Geistrufertreter",
 		},
 		[1292973] = {
 			["name"] = "Geistruferhose",
@@ -1685,16 +1685,16 @@ lib:LoadNames(165, {
 			["name"] = "Treter des Brutwächters",
 		},
 		[1299914] = {
-			["name"] = "Geistrufergamaschen",
+			["name"] = "Geistruferkilt",
 		},
 		[1299915] = {
-			["name"] = "Geistruferhandschutz",
+			["name"] = "Geistruferhandschuhe",
 		},
 		[1299916] = {
-			["name"] = "Geistruferschiftung",
+			["name"] = "Geistrufermantelung",
 		},
 		[1299917] = {
-			["name"] = "Geistrufertreter",
+			["name"] = "Geistruferstiefel",
 		},
 		[1301427] = {
 			["name"] = "Wolkenblauer böengewobener Harnisch",

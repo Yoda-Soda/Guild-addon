@@ -8,25 +8,25 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(202, {
 		[3918] = {
-			["name"] = "Polvere Esplosiva Grezza",
+			["name"] = "Rough Blasting Powder",
 		},
 		[3919] = {
-			["name"] = "Dinamite Grezza",
+			["name"] = "Rough Dynamite",
 		},
 		[3920] = {
 			["name"] = "Crafted Light Shot",
 		},
 		[3922] = {
-			["name"] = "Manciata di Viti di Rame",
+			["name"] = "Handful of Copper Bolts",
 		},
 		[3923] = {
-			["name"] = "Bomba di Rame Grezza",
+			["name"] = "Rough Copper Bomb",
 		},
 		[3924] = {
-			["name"] = "Tubo di Rame",
+			["name"] = "Copper Tube",
 		},
 		[3925] = {
-			["name"] = "Cannalunga Grezzo",
+			["name"] = "Rough Boomstick",
 		},
 		[3926] = {
 			["name"] = "Copper Modulator",
@@ -35,481 +35,481 @@ lib:LoadNames(202, {
 			["name"] = "Mechanical Squirrel",
 		},
 		[3929] = {
-			["name"] = "Polvere Esplosiva Comune",
+			["name"] = "Coarse Blasting Powder",
 		},
 		[3930] = {
 			["name"] = "Crafted Heavy Shot",
 		},
 		[3931] = {
-			["name"] = "Dinamite Comune",
+			["name"] = "Coarse Dynamite",
 		},
 		[3932] = {
-			["name"] = "Manichino a Molla",
+			["name"] = "Target Dummy",
 		},
 		[3933] = {
-			["name"] = "Carica Piccola di Nitronite",
+			["name"] = "Small Seaforium Charge",
 		},
 		[3934] = {
-			["name"] = "Occhiali della Tigre Volante",
+			["name"] = "Flying Tiger Goggles",
 		},
 		[3936] = {
-			["name"] = "Schioppo Mortale",
+			["name"] = "Deadly Blunderbuss",
 		},
 		[3937] = {
-			["name"] = "Bomba Grande di Rame",
+			["name"] = "Large Copper Bomb",
 		},
 		[3938] = {
-			["name"] = "Tubo di Bronzo",
+			["name"] = "Bronze Tube",
 		},
 		[3939] = {
-			["name"] = "Cannalunga Fatto a Mano",
+			["name"] = "Lovingly Crafted Boomstick",
 		},
 		[3940] = {
-			["name"] = "Occhiali d'Ombra",
+			["name"] = "Shadow Goggles",
 		},
 		[3941] = {
-			["name"] = "Bomba di Bronzo Piccola",
+			["name"] = "Small Bronze Bomb",
 		},
 		[3942] = {
-			["name"] = "Ingranaggi Rotanti di Bronzo",
+			["name"] = "Whirring Bronze Gizmo",
 		},
 		[3944] = {
-			["name"] = "Deflettore di Fiamme",
+			["name"] = "Flame Deflector",
 		},
 		[3945] = {
-			["name"] = "Polvere Esplosiva Pesante",
+			["name"] = "Heavy Blasting Powder",
 		},
 		[3946] = {
-			["name"] = "Dinamite Pesante",
+			["name"] = "Heavy Dynamite",
 		},
 		[3947] = {
 			["name"] = "Crafted Solid Shot",
 		},
 		[3949] = {
-			["name"] = "Cannone Placcato in Argento",
+			["name"] = "Silver-plated Shotgun",
 		},
 		[3950] = {
-			["name"] = "Grande Bomba di Bronzo",
+			["name"] = "Big Bronze Bomb",
 		},
 		[3952] = {
-			["name"] = "Tecno-Ricostituente Minore",
+			["name"] = "Minor Recombobulator",
 		},
 		[3953] = {
-			["name"] = "Struttura di Bronzo",
+			["name"] = "Bronze Framework",
 		},
 		[3954] = {
-			["name"] = "Archibugio Lunarmato",
+			["name"] = "Moonsight Rifle",
 		},
 		[3955] = {
-			["name"] = "Pecora Esplosiva",
+			["name"] = "Explosive Sheep",
 		},
 		[3956] = {
-			["name"] = "Occhiali con Lenti Verdi",
+			["name"] = "Green Tinted Goggles",
 		},
 		[3957] = {
-			["name"] = "Deflettore Antigelo",
+			["name"] = "Ice Deflector",
 		},
 		[3958] = {
-			["name"] = "Puntale di Ferro",
+			["name"] = "Iron Strut",
 		},
 		[3959] = {
-			["name"] = "Raggio Ricombinante",
+			["name"] = "Discombobulator Ray",
 		},
 		[3960] = {
-			["name"] = "Mortaio Portatile di Bronzo",
+			["name"] = "Portable Bronze Mortar",
 		},
 		[3961] = {
-			["name"] = "Girorologio",
+			["name"] = "Gyrochronatom",
 		},
 		[3962] = {
-			["name"] = "Granata di Ferro",
+			["name"] = "Iron Grenade",
 		},
 		[3963] = {
-			["name"] = "Kit per il Montaggio: Mietitore Compatto",
+			["name"] = "Compact Harvest Reaper Kit",
 		},
 		[3965] = {
-			["name"] = "Fantoccio Avanzato",
+			["name"] = "Advanced Target Dummy",
 		},
 		[3966] = {
-			["name"] = "Monocolo dell'Artigiano",
+			["name"] = "Craftsman's Monocle",
 		},
 		[3967] = {
-			["name"] = "Grande Bomba di Ferro",
+			["name"] = "Big Iron Bomb",
 		},
 		[3968] = {
-			["name"] = "Mina di Terra Goblin",
+			["name"] = "Goblin Land Mine",
 		},
 		[3969] = {
-			["name"] = "Minidrago Meccanico",
+			["name"] = "Mechanical Dragonling",
 		},
 		[3971] = {
-			["name"] = "Dispositivo di Occultamento Gnomesco",
+			["name"] = "Gnomish Cloaking Device",
 		},
 		[3972] = {
-			["name"] = "Carica Grande di Nitronite",
+			["name"] = "Large Seaforium Charge",
 		},
 		[3973] = {
-			["name"] = "Contatto in Argento",
+			["name"] = "Silver Contact",
 		},
 		[3977] = {
-			["name"] = "Mirino Grezzo",
+			["name"] = "Crude Scope",
 		},
 		[3978] = {
-			["name"] = "Mirino Standard",
+			["name"] = "Standard Scope",
 		},
 		[3979] = {
-			["name"] = "Mirino Accurato",
+			["name"] = "Accurate Scope",
 		},
 		[4073] = {
-			["name"] = "Minidrago Meccanico",
+			["name"] = "Mechanical Dragonling",
 		},
 		[6458] = {
-			["name"] = "Telescopio Elaborato",
+			["name"] = "Ornate Spyglass",
 		},
 		[7430] = {
-			["name"] = "Chiave ad Arco",
+			["name"] = "Arclight Spanner",
 		},
 		[8243] = {
-			["name"] = "Bomba Sfollabestie",
+			["name"] = "Flash Bomb",
 		},
 		[8334] = {
 			["name"] = "Practice Lock",
 		},
 		[8339] = {
-			["name"] = "Dinamite Maneggevole",
+			["name"] = "EZ-Thro Dynamite",
 		},
 		[8895] = {
-			["name"] = "Stivali Razzo dei Goblin",
+			["name"] = "Goblin Rocket Boots",
 		},
 		[9269] = {
-			["name"] = "Controllo Universale Gnomesco",
+			["name"] = "Gnomish Universal Remote",
 		},
 		[9271] = {
-			["name"] = "Esca Acquadinamica",
+			["name"] = "Aquadynamic Fish Attractor",
 		},
 		[9273] = {
-			["name"] = "Defibrillatore Goblin",
+			["name"] = "Goblin Jumper Cables",
 		},
 		[12584] = {
-			["name"] = "Nucleo Energetico d'Oro",
+			["name"] = "Gold Power Core",
 		},
 		[12585] = {
-			["name"] = "Polvere Esplosiva Solida",
+			["name"] = "Solid Blasting Powder",
 		},
 		[12586] = {
-			["name"] = "Dinamite Solida",
+			["name"] = "Solid Dynamite",
 		},
 		[12587] = {
-			["name"] = "Occhiali Brillanti",
+			["name"] = "Bright-Eye Goggles",
 		},
 		[12589] = {
-			["name"] = "Tubo di Mithril",
+			["name"] = "Mithril Tube",
 		},
 		[12590] = {
-			["name"] = "Microavvitatore Giromatico",
+			["name"] = "Gyromatic Micro-Adjustor",
 		},
 		[12591] = {
-			["name"] = "Attivatore Instabile",
+			["name"] = "Unstable Trigger",
 		},
 		[12594] = {
-			["name"] = "Occhiali Infuocati",
+			["name"] = "Fire Goggles",
 		},
 		[12595] = {
-			["name"] = "Schioppo di Mithril",
+			["name"] = "Mithril Blunderbuss",
 		},
 		[12596] = {
 			["name"] = "Hi-Impact Mithril Slugs",
 		},
 		[12597] = {
-			["name"] = "Mirino Mortale",
+			["name"] = "Deadly Scope",
 		},
 		[12599] = {
-			["name"] = "Rivestimento di Mithril",
+			["name"] = "Mithril Casing",
 		},
 		[12603] = {
-			["name"] = "Bomba a Frammentazione di Mithril",
+			["name"] = "Mithril Frag Bomb",
 		},
 		[12607] = {
-			["name"] = "Occhiali Ultrafelini",
+			["name"] = "Catseye Ultra Goggles",
 		},
 		[12614] = {
-			["name"] = "Archibugio di Mithril Pesante",
+			["name"] = "Mithril Heavy-bore Rifle",
 		},
 		[12615] = {
-			["name"] = "Occhiali della Potenza Magica Estremi",
+			["name"] = "Spellpower Goggles Xtreme",
 		},
 		[12616] = {
-			["name"] = "Mantello Paracadute",
+			["name"] = "Parachute Cloak",
 		},
 		[12617] = {
-			["name"] = "Casco da Palombaro",
+			["name"] = "Deepdive Helmet",
 		},
 		[12618] = {
-			["name"] = "Occhiali con Lenti Rosa",
+			["name"] = "Rose Colored Goggles",
 		},
 		[12619] = {
-			["name"] = "Bomba ad Alto Potenziale",
+			["name"] = "Hi-Explosive Bomb",
 		},
 		[12620] = {
-			["name"] = "Mirino da Cecchino",
+			["name"] = "Sniper Scope",
 		},
 		[12621] = {
 			["name"] = "Mithril Gyro-Shot",
 		},
 		[12622] = {
-			["name"] = "Lente Verde",
+			["name"] = "Green Lens",
 		},
 		[12624] = {
-			["name"] = "Minidrago Meccanico di Mithril",
+			["name"] = "Mithril Mechanical Dragonling",
 		},
 		[12715] = {
-			["name"] = "Ricetta del Carburante Razzo dei Goblin",
+			["name"] = "Goblin Rocket Fuel Recipe",
 		},
 		[12716] = {
-			["name"] = "Mortaio Goblin",
+			["name"] = "Goblin Mortar",
 		},
 		[12717] = {
-			["name"] = "Elmetto da Minatore Goblin",
+			["name"] = "Goblin Mining Helmet",
 		},
 		[12718] = {
-			["name"] = "Casco di Sicurezza dei Goblin",
+			["name"] = "Goblin Construction Helmet",
 		},
 		[12754] = {
-			["name"] = "Bombone",
+			["name"] = "The Big One",
 		},
 		[12755] = {
-			["name"] = "Distributore di Bombe dei Goblin",
+			["name"] = "Goblin Bomb Dispenser",
 		},
 		[12758] = {
-			["name"] = "Casco Goblin",
+			["name"] = "Goblin Rocket Helmet",
 		},
 		[12759] = {
-			["name"] = "Raggio Mortale Gnomesco",
+			["name"] = "Gnomish Death Ray",
 		},
 		[12760] = {
-			["name"] = "Carica Esplosiva dei Goblin",
+			["name"] = "Goblin Sapper Charge",
 		},
 		[12895] = {
-			["name"] = "Progetto per Cilindro di Mithril Intarsiato",
+			["name"] = "Inlaid Mithril Cylinder Plans",
 		},
 		[12897] = {
-			["name"] = "Occhiali Gnomeschi",
+			["name"] = "Gnomish Goggles",
 		},
 		[12899] = {
-			["name"] = "Raggio Riduttore Gnomesco",
+			["name"] = "Gnomish Shrink Ray",
 		},
 		[12902] = {
-			["name"] = "Lanciarete Gnomomatico",
+			["name"] = "Gnomish Net-o-Matic Projector",
 		},
 		[12903] = {
-			["name"] = "Cintura di Protezione Gnomesca",
+			["name"] = "Gnomish Harm Prevention Belt",
 		},
 		[12905] = {
-			["name"] = "Stivali Razzo Gnomeschi",
+			["name"] = "Gnomish Rocket Boots",
 		},
 		[12906] = {
-			["name"] = "Gallina da Battaglia Gnomesca",
+			["name"] = "Gnomish Battle Chicken",
 		},
 		[12907] = {
-			["name"] = "Cappello Controlla-Pensiero Gnomesco",
+			["name"] = "Gnomish Mind Control Cap",
 		},
 		[12908] = {
-			["name"] = "Fuoco a Ripetizione del Drago dei Goblin",
+			["name"] = "Goblin Dragon Gun",
 		},
 		[13240] = {
-			["name"] = "Mortaio: Ricarica",
+			["name"] = "The Mortar: Reloaded",
 		},
 		[15255] = {
-			["name"] = "Kit per Riparazioni Meccaniche",
+			["name"] = "Mechanical Repair Kit",
 		},
 		[15628] = {
-			["name"] = "Bom-Bot",
+			["name"] = "Pet Bombling",
 		},
 		[15633] = {
-			["name"] = "Fumetto Furbetto",
+			["name"] = "Lil' Smoky",
 		},
 		[19567] = {
-			["name"] = "Salinatore",
+			["name"] = "Salt Shaker",
 		},
 		[19788] = {
-			["name"] = "Polvere Esplosiva Densa",
+			["name"] = "Dense Blasting Powder",
 		},
 		[19790] = {
-			["name"] = "Granata di Torio",
+			["name"] = "Thorium Grenade",
 		},
 		[19791] = {
-			["name"] = "Meccanismo di Torio",
+			["name"] = "Thorium Widget",
 		},
 		[19792] = {
-			["name"] = "Archibugio di Torio",
+			["name"] = "Thorium Rifle",
 		},
 		[19793] = {
-			["name"] = "Rospo Meccanico",
+			["name"] = "Lifelike Mechanical Toad",
 		},
 		[19794] = {
-			["name"] = "Occhiali della Potenza Magica Extremi Plus",
+			["name"] = "Spellpower Goggles Xtreme Plus",
 		},
 		[19795] = {
-			["name"] = "Tubo di Torio",
+			["name"] = "Thorium Tube",
 		},
 		[19796] = {
-			["name"] = "Archibugio dei Ferroscuro",
+			["name"] = "Dark Iron Rifle",
 		},
 		[19799] = {
-			["name"] = "Bomba dei Ferroscuro",
+			["name"] = "Dark Iron Bomb",
 		},
 		[19800] = {
 			["name"] = "Thorium Shells",
 		},
 		[19804] = {
-			["name"] = "Minidrago di Arcanite",
+			["name"] = "Arcanite Dragonling",
 		},
 		[19814] = {
-			["name"] = "Manichino a Molla di Precisione",
+			["name"] = "Masterwork Target Dummy",
 		},
 		[19815] = {
-			["name"] = "Convertitore d'Arcanite Delicato",
+			["name"] = "Delicate Arcanite Converter",
 		},
 		[19819] = {
-			["name"] = "Modulatore d'Amplificazione Vocale",
+			["name"] = "Voice Amplification Modulator",
 		},
 		[19825] = {
-			["name"] = "Occhiali da Maestro Ingegnere",
+			["name"] = "Master Engineer's Goggles",
 		},
 		[19830] = {
-			["name"] = "Minidrago d'Arcanite",
+			["name"] = "Arcanite Dragonling",
 		},
 		[19831] = {
-			["name"] = "Bomba Arcana",
+			["name"] = "Arcane Bomb",
 		},
 		[19833] = {
-			["name"] = "Archibugio d'Arcanite Perfetto",
+			["name"] = "Flawless Arcanite Rifle",
 		},
 		[21940] = {
 			["name"] = "Snowmaster 9000",
 		},
 		[22704] = {
-			["name"] = "Robot di Riparazione 74A",
+			["name"] = "Field Repair Bot 74A",
 		},
 		[22793] = {
 			["name"] = "Biznicks 247x128 Accurascope",
 		},
 		[22795] = {
-			["name"] = "Archibugio del Tiratore Scelto",
+			["name"] = "Core Marksman Rifle",
 		},
 		[22797] = {
-			["name"] = "Disco Forzareattivo",
+			["name"] = "Force Reactive Disk",
 		},
 		[23066] = {
-			["name"] = "Fuoco d'Artificio Rosso",
+			["name"] = "Red Firework",
 		},
 		[23067] = {
-			["name"] = "Fuoco d'Artificio Blu",
+			["name"] = "Blue Firework",
 		},
 		[23068] = {
-			["name"] = "Fuoco d'Artificio Verde",
+			["name"] = "Green Firework",
 		},
 		[23069] = {
-			["name"] = "Dinamite Maneggevole II",
+			["name"] = "EZ-Thro Dynamite II",
 		},
 		[23070] = {
-			["name"] = "Dinamite Densa",
+			["name"] = "Dense Dynamite",
 		},
 		[23071] = {
-			["name"] = "Trasformatore di Verargento",
+			["name"] = "Truesilver Transformer",
 		},
 		[23077] = {
-			["name"] = "Riflettore Girogelido",
+			["name"] = "Gyrofreeze Ice Reflector",
 		},
 		[23078] = {
-			["name"] = "Defibrillatore Goblin XL",
+			["name"] = "Goblin Jumper Cables XL",
 		},
 		[23079] = {
-			["name"] = "Tecno-Ricostituente Maggiore",
+			["name"] = "Major Recombobulator",
 		},
 		[23080] = {
-			["name"] = "Carica Potente di Nitronite",
+			["name"] = "Powerful Seaforium Charge",
 		},
 		[23081] = {
-			["name"] = "Riflettore Radiante Antifuoco",
+			["name"] = "Hyper-Radiant Flame Reflector",
 		},
 		[23082] = {
-			["name"] = "Riflettore Antiombrico",
+			["name"] = "Ultra-Flash Shadow Reflector",
 		},
 		[23096] = {
 			["name"] = "Alarm-O-Bot",
 		},
 		[23129] = {
-			["name"] = "Allargamondo",
+			["name"] = "World Enlarger",
 		},
 		[23486] = {
-			["name"] = "Squarciatore Dimensionale: Lungavista",
+			["name"] = "Dimensional Ripper - Everlook",
 		},
 		[23489] = {
-			["name"] = "Teletrasporto Ultrasicuro: Meccania",
+			["name"] = "Ultrasafe Transporter - Gadgetzan",
 		},
 		[23507] = {
-			["name"] = "Fuoco d'Artificio a Spirale Giallo",
+			["name"] = "Snake Burst Firework",
 		},
 		[24356] = {
-			["name"] = "Occhiali della Vite del Sangue",
+			["name"] = "Bloodvine Goggles",
 		},
 		[24357] = {
-			["name"] = "Lente della Vite del Sangue",
+			["name"] = "Bloodvine Lens",
 		},
 		[26011] = {
-			["name"] = "Yeti Meccanico Tranquillo",
+			["name"] = "Tranquil Mechanical Yeti",
 		},
 		[26416] = {
-			["name"] = "Razzo Piccolo Blu",
+			["name"] = "Small Blue Rocket",
 		},
 		[26417] = {
-			["name"] = "Razzo Piccolo Verde",
+			["name"] = "Small Green Rocket",
 		},
 		[26418] = {
-			["name"] = "Razzo Piccolo Rosso",
+			["name"] = "Small Red Rocket",
 		},
 		[26420] = {
-			["name"] = "Razzo Blu Grande",
+			["name"] = "Large Blue Rocket",
 		},
 		[26421] = {
-			["name"] = "Razzo Verde Grande",
+			["name"] = "Large Green Rocket",
 		},
 		[26422] = {
-			["name"] = "Razzo Rosso Grande",
+			["name"] = "Large Red Rocket",
 		},
 		[26423] = {
-			["name"] = "Fascio di Razzi Blu",
+			["name"] = "Blue Rocket Cluster",
 		},
 		[26424] = {
-			["name"] = "Fascio di Razzi Verdi",
+			["name"] = "Green Rocket Cluster",
 		},
 		[26425] = {
-			["name"] = "Fascio di Razzi Rossi",
+			["name"] = "Red Rocket Cluster",
 		},
 		[26426] = {
-			["name"] = "Fascio di Razzi Blu Grandi",
+			["name"] = "Large Blue Rocket Cluster",
 		},
 		[26427] = {
-			["name"] = "Fascio di Razzi Verdi Grandi",
+			["name"] = "Large Green Rocket Cluster",
 		},
 		[26428] = {
-			["name"] = "Fascio di Razzi Rossi Grandi",
+			["name"] = "Large Red Rocket Cluster",
 		},
 		[26442] = {
-			["name"] = "Mortaio per Fuochi d'Artificio",
+			["name"] = "Firework Launcher",
 		},
 		[26443] = {
 			["name"] = "Firework Cluster Launcher",
 		},
 		[28327] = {
-			["name"] = "Telecomando Carro Giocattolo",
+			["name"] = "Steam Tonk Controller",
 		},
 		[424641] = {
-			["name"] = "Stivali Razzo dei Goblin",
+			["name"] = "Shredder Autosalvage Unit",
 		},
 		[431362] = {
-			["name"] = "Guanti della Pura Verità",
+			["name"] = "Soul Vessel",
 		},
 		[435956] = {
 			["name"] = "Polished Truesilver Gears",
@@ -518,94 +518,94 @@ lib:LoadNames(202, {
 			["name"] = "Whirling Truesilver Gearwall",
 		},
 		[435960] = {
-			["name"] = "Mantello Paracadute",
+			["name"] = "Hyperconductive Goldwap",
 		},
 		[435964] = {
-			["name"] = "Bomba Arcana",
+			["name"] = "High-Yield Radiation Bomb",
 		},
 		[435966] = {
-			["name"] = "Bomba Arcana",
+			["name"] = "Ez-Thro Radiation Bomb",
 		},
 		[446236] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Void-Powered Invoker's Vambraces",
 		},
 		[446237] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Void-Powered Slayer's Vambraces",
 		},
 		[446238] = {
-			["name"] = "Pettorale Corazzato d'Argento Lucido",
+			["name"] = "Void-Powered Protector's Vambraces",
 		},
 		[461710] = {
-			["name"] = "Archibugio del Tiratore Scelto",
+			["name"] = "Fiery Core Sharpshooter Rifle",
 		},
 		[1213573] = {
-			["name"] = "Carica Esplosiva dei Goblin",
+			["name"] = "Arcane Megabomb",
 		},
 		[1213576] = {
-			["name"] = "Carica Esplosiva dei Goblin",
+			["name"] = "The Fumigator",
 		},
 		[1213578] = {
-			["name"] = "Carica Esplosiva dei Goblin",
+			["name"] = "Obsidian Bomb",
 		},
 		[1213586] = {
-			["name"] = "Carica Esplosiva dei Goblin",
+			["name"] = "G00 DV-1B3 Generator",
 		},
 		[1213588] = {
-			["name"] = "Carica Esplosiva dei Goblin",
+			["name"] = "Tuned Force Reactive Disk",
 		},
 		[1213646] = {
-			["name"] = "Carica Esplosiva dei Goblin",
+			["name"] = "Obsidian Blasting Powder",
 		},
 		[1214145] = {
-			["name"] = "Guanti Lunghi della Tempesta",
+			["name"] = "Obsidian Shotgun",
 		},
 		[1217207] = {
-			["name"] = "Mirino da Cecchino",
+			["name"] = "Obsidian Scope",
 		},
 		[1221012] = {
-			["name"] = "Occhiali della Tigre Volante",
+			["name"] = "Creepy Censor Sensors",
 		},
 		[1226206] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Tinkerbox",
 		},
 		[1226207] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Tinkerbox: Teleport",
 		},
 		[1226208] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Tinkerbox: Nitro Boosts",
 		},
 		[1226209] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Tinkerbox: Magnetic Displacement",
 		},
 		[1226210] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Tinker: Teleport",
 		},
 		[1226211] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Tinker: Nitro Boosts",
 		},
 		[1226212] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Tinker: Magnetic Displacement",
 		},
 		[1226213] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Semisafe Transporter: New Avalon",
 		},
 		[1228088] = {
-			["name"] = "Incanta Arma a Due Mani - Intelletto Maggiore",
+			["name"] = "Pop-Up Shrub",
 		},
 		[1230656] = {
 			["name"] = "Reagent Bot",
 		},
 		[1249634] = {
-			["name"] = "Olio di Boccanera",
+			["name"] = "Sandpaper",
 		},
 		[1253004] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1253005] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1253006] = {
-			["name"] = "Cinghiale Arrosto",
+			["name"] = "",
 		},
 		[1263034] = {
 			["name"] = "Repair Bot",

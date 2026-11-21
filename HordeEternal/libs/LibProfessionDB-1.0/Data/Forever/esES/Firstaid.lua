@@ -38,7 +38,7 @@ lib:LoadNames(129, {
 			["name"] = "Vendaje de tejido mágico",
 		},
 		[10841] = {
-			["name"] = "Vendajes pesados de paño mágico",
+			["name"] = "Venda de tejido mágico gruesa",
 		},
 		[18629] = {
 			["name"] = "Venda de paño rúnico",

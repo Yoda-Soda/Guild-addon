@@ -44,7 +44,7 @@ lib:LoadNames(165, {
 			["name"] = "Armadura de cuero fortalecido",
 		},
 		[2167] = {
-			["name"] = "Botas de cuero oscuro",
+			["name"] = "Botas de cuero gris",
 		},
 		[2168] = {
 			["name"] = "Capa de cuero oscuro",
@@ -974,40 +974,40 @@ lib:LoadNames(165, {
 			["name"] = "Tienda de campamento",
 		},
 		[1252982] = {
-			["name"] = "Jubón adaptable de matabestias",
+			["name"] = "",
 		},
 		[1252983] = {
-			["name"] = "Brazales adaptables de matabestias",
+			["name"] = "",
 		},
 		[1252984] = {
-			["name"] = "Sobreveste adaptable de matabestias",
+			["name"] = "",
 		},
 		[1252985] = {
-			["name"] = "Coselete adaptable de dinodestructor",
+			["name"] = "",
 		},
 		[1252986] = {
-			["name"] = "Muñequeras adaptables de dinodestructor",
+			["name"] = "",
 		},
 		[1252987] = {
-			["name"] = "Cinturón adaptable de dinodestructor",
+			["name"] = "",
 		},
 		[1252995] = {
-			["name"] = "Toga adaptable de matabestias",
+			["name"] = "",
 		},
 		[1252996] = {
-			["name"] = "Muñequeras adaptables de matabestias",
+			["name"] = "",
 		},
 		[1252997] = {
-			["name"] = "Faja adaptable de matabestias",
+			["name"] = "",
 		},
 		[1252998] = {
-			["name"] = "Túnica adaptable de dinosanador",
+			["name"] = "",
 		},
 		[1252999] = {
-			["name"] = "Muñequeras adaptables de dinosanador",
+			["name"] = "",
 		},
 		[1253000] = {
-			["name"] = "Cadena adaptable de dinosanador",
+			["name"] = "",
 		},
 		[1254965] = {
 			["name"] = "Refuerzo para armadura basto contundente",
@@ -1625,16 +1625,16 @@ lib:LoadNames(165, {
 			["name"] = "Botas hilogrís",
 		},
 		[1292969] = {
-			["name"] = "Falda de clamaespíritus",
+			["name"] = "Leotardos de clamaespíritus",
 		},
 		[1292970] = {
-			["name"] = "Guantes de clamaespíritus",
+			["name"] = "Mandiletes de clamaespíritus",
 		},
 		[1292971] = {
-			["name"] = "Manto de clamaespíritus",
+			["name"] = "Bufas de clamaespíritus",
 		},
 		[1292972] = {
-			["name"] = "Botas de clamaespíritus",
+			["name"] = "Botines de clamaespíritus",
 		},
 		[1292973] = {
 			["name"] = "Pantalones de clamaespíritus",
@@ -1685,16 +1685,16 @@ lib:LoadNames(165, {
 			["name"] = "Botines de guardalinajes",
 		},
 		[1299914] = {
-			["name"] = "Leotardos de clamaespíritus",
+			["name"] = "Falda de clamaespíritus",
 		},
 		[1299915] = {
-			["name"] = "Mandiletes de clamaespíritus",
+			["name"] = "Guantes de clamaespíritus",
 		},
 		[1299916] = {
-			["name"] = "Bufas de clamaespíritus",
+			["name"] = "Manto de clamaespíritus",
 		},
 		[1299917] = {
-			["name"] = "Botines de clamaespíritus",
+			["name"] = "Botas de clamaespíritus",
 		},
 		[1301427] = {
 			["name"] = "Arnés hilavento nublado",

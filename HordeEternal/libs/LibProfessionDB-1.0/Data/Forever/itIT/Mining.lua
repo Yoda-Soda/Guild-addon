@@ -8,37 +8,37 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(186, {
 		[2657] = {
-			["name"] = "Fondi Rame",
+			["name"] = "Smelt Copper",
 		},
 		[2658] = {
-			["name"] = "Fondi Argento",
+			["name"] = "Smelt Silver",
 		},
 		[2659] = {
-			["name"] = "Fondi Bronzo",
+			["name"] = "Smelt Bronze",
 		},
 		[3304] = {
-			["name"] = "Fondi Stagno",
+			["name"] = "Smelt Tin",
 		},
 		[3307] = {
-			["name"] = "Fondi Ferro",
+			["name"] = "Smelt Iron",
 		},
 		[3308] = {
-			["name"] = "Fondi Oro",
+			["name"] = "Smelt Gold",
 		},
 		[3569] = {
-			["name"] = "Fondi Acciaio",
+			["name"] = "Smelt Steel",
 		},
 		[10097] = {
-			["name"] = "Fondi Mithril",
+			["name"] = "Smelt Mithril",
 		},
 		[10098] = {
-			["name"] = "Fondi Verargento",
+			["name"] = "Smelt Truesilver",
 		},
 		[14891] = {
-			["name"] = "Fondi Ferroscuro",
+			["name"] = "Smelt Dark Iron",
 		},
 		[16153] = {
-			["name"] = "Fondi Torio",
+			["name"] = "Smelt Thorium",
 		},
 		[22967] = {
 			["name"] = "Smelt Elementium",

@@ -245,7 +245,7 @@ lib:LoadNames(197, {
 			["name"] = "Bandana de Seda",
 		},
 		[8764] = {
-			["name"] = "Colete Terreno",
+			["name"] = "Colete Terrano",
 		},
 		[8766] = {
 			["name"] = "Cinto de Seda Lazúli",
@@ -890,22 +890,22 @@ lib:LoadNames(197, {
 			["name"] = "Estandarte de Facção",
 		},
 		[1252979] = {
-			["name"] = "Vestes Adaptáveis do Matavisgo",
+			["name"] = "",
 		},
 		[1252980] = {
-			["name"] = "Manilhas Adaptáveis do Matavisgo",
+			["name"] = "",
 		},
 		[1252981] = {
-			["name"] = "Cordão Adaptável do Matavisgo",
+			["name"] = "",
 		},
 		[1252991] = {
-			["name"] = "Túnica Adaptável do Remendavisgo",
+			["name"] = "",
 		},
 		[1252992] = {
-			["name"] = "Braçadeiras Adaptáveis do Remendavisgo",
+			["name"] = "",
 		},
 		[1252993] = {
-			["name"] = "Cinto Adaptável do Remendavisgo",
+			["name"] = "",
 		},
 		[1257013] = {
 			["name"] = "Sacola de Reagentes de Linho",

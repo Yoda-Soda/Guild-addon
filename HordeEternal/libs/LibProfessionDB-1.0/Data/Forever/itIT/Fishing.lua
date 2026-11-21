@@ -8,7 +8,7 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(356, {
 		[7732] = {
-			["name"] = "Pesca",
+			["name"] = "Fishing",
 		},
 		[1229745] = {
 			["name"] = "Fish Bowl",

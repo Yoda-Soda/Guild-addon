@@ -8,10 +8,10 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(202, {
 		[3918] = {
-			["name"] = "Polvo aplastante duro",
+			["name"] = "Pólvora férrea",
 		},
 		[3919] = {
-			["name"] = "Dinamita dura",
+			["name"] = "Dinamita férrea",
 		},
 		[3920] = {
 			["name"] = "Disparo ligero artesanal",
@@ -20,13 +20,13 @@ lib:LoadNames(202, {
 			["name"] = "Manojo de cuentas de cobre",
 		},
 		[3923] = {
-			["name"] = "Bomba dura de cobre",
+			["name"] = "Bomba de cobre férrea",
 		},
 		[3924] = {
 			["name"] = "Tubo de cobre",
 		},
 		[3925] = {
-			["name"] = "Escoba dura",
+			["name"] = "Bocarda férrea",
 		},
 		[3926] = {
 			["name"] = "Modulador de cobre",
@@ -95,10 +95,10 @@ lib:LoadNames(202, {
 			["name"] = "Recombobulador menor",
 		},
 		[3953] = {
-			["name"] = "Armazón de bronce",
+			["name"] = "Marco de bronce",
 		},
 		[3954] = {
-			["name"] = "Rifle vistaluna",
+			["name"] = "Rifle de vista lunar",
 		},
 		[3955] = {
 			["name"] = "Oveja explosiva",
@@ -110,10 +110,10 @@ lib:LoadNames(202, {
 			["name"] = "Deflector de hielo",
 		},
 		[3958] = {
-			["name"] = "Puntal de hierro",
+			["name"] = "Tornapunta de hierro",
 		},
 		[3959] = {
-			["name"] = "Rayo discombobulador",
+			["name"] = "Rayo descombobulador",
 		},
 		[3960] = {
 			["name"] = "Mortero de bronce portátil",
@@ -143,10 +143,10 @@ lib:LoadNames(202, {
 			["name"] = "Dragonizo mecánico",
 		},
 		[3971] = {
-			["name"] = "Dispositivo de invisibilidad gnomo",
+			["name"] = "Aparato de invisibilidad gnómico",
 		},
 		[3972] = {
-			["name"] = "Carga de gran marforio",
+			["name"] = "Carga de seforio grande",
 		},
 		[3973] = {
 			["name"] = "Contacto de plata",
@@ -182,7 +182,7 @@ lib:LoadNames(202, {
 			["name"] = "Botas cohete goblin",
 		},
 		[9269] = {
-			["name"] = "Control universal gnomo",
+			["name"] = "Mando universal gnómico",
 		},
 		[9271] = {
 			["name"] = "Atraepeces acuadinámico",
@@ -242,7 +242,7 @@ lib:LoadNames(202, {
 			["name"] = "Capa paracaídas",
 		},
 		[12617] = {
-			["name"] = "Casco Lanceprofundo",
+			["name"] = "Casco de inmersión",
 		},
 		[12618] = {
 			["name"] = "Gafas rosas de colores",
@@ -308,7 +308,7 @@ lib:LoadNames(202, {
 			["name"] = "Botas cohete gnomas",
 		},
 		[12906] = {
-			["name"] = "Pollo de batalla gnomo",
+			["name"] = "Gallo de batalla gnómico",
 		},
 		[12907] = {
 			["name"] = "Gorra de control mental gnoma",
@@ -326,7 +326,7 @@ lib:LoadNames(202, {
 			["name"] = "Bombardeo de mascota",
 		},
 		[15633] = {
-			["name"] = "El peque humitos",
+			["name"] = "Humillo",
 		},
 		[19567] = {
 			["name"] = "Salero",
@@ -398,7 +398,7 @@ lib:LoadNames(202, {
 			["name"] = "Rifle de precisión del núcleo",
 		},
 		[22797] = {
-			["name"] = "Forzar disco reactivo",
+			["name"] = "Disco reactivo a la fuerza",
 		},
 		[23066] = {
 			["name"] = "Fuegos artificiales rojos",
@@ -497,7 +497,7 @@ lib:LoadNames(202, {
 			["name"] = "Conjunto de cohetes grandes rojos",
 		},
 		[26442] = {
-			["name"] = "LanzaFuegos artificiales",
+			["name"] = "Lanzador de fuegos artificiales",
 		},
 		[26443] = {
 			["name"] = "LanzaFuegos artificiales",
@@ -599,13 +599,13 @@ lib:LoadNames(202, {
 			["name"] = "Papel de lija",
 		},
 		[1253004] = {
-			["name"] = "Supresor de fango",
+			["name"] = "",
 		},
 		[1253005] = {
-			["name"] = "Dardo tranquilizante enorme",
+			["name"] = "",
 		},
 		[1253006] = {
-			["name"] = "G.R.R.-Nada",
+			["name"] = "",
 		},
 		[1263034] = {
 			["name"] = "Robot de reparaciones",

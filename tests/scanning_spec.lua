@@ -62,6 +62,24 @@ Event("TRADE_SKILL_DATA_SOURCE_CHANGED")
 Flush()
 assert(published == 2 and #addon.Catalog.Search("25124") == 1 and #addon.Catalog.Search("2330") == 1,
     "automatically scanning a second window must preserve and share both professions")
+local originalRecipeInfo = C_TradeSkillUI.GetRecipeInfo
+recipeLists[171] = { 2330, 2331 }
+C_TradeSkillUI.GetRecipeInfo = function(id)
+    if id == 2331 then return nil end
+    return originalRecipeInfo(id)
+end
+Event("TRADE_SKILL_LIST_UPDATE")
+Flush()
+assert(#addon.Catalog.Search("2330") == 1 and addon.Catalog.Initialize().localProfile.unavailable == 1
+    and not addon.Catalog.scannedThisSession and published == 2,
+    "locally visible Alchemy recipes from an incomplete scan must not be reported as published")
+C_TradeSkillUI.GetRecipeInfo = originalRecipeInfo
+Event("TRADE_SKILL_LIST_UPDATE")
+Flush()
+assert(addon.Catalog.scannedThisSession and published == 3,
+    "Alchemy publication must recover when pending recipe data becomes readable")
+recipeLists[171] = { 2330 }
+published = 2
 Event("TRADE_SKILL_SHOW")
 Event("TRADE_SKILL_CLOSE")
 local beforeClose = scanCount
@@ -124,4 +142,45 @@ assert(loadfile("HordeEternal/Catalog.lua"))("HordeEternal", reloaded)
 reloaded.Compat = addon.Compat
 assert(#reloaded.Catalog.Search("25124") == 1 and #reloaded.Catalog.Search("2330") == 1,
     "combined per-character profession knowledge must survive addon reloads")
+local beforeConflict = addon.Catalog.Initialize().localProfile
+beforeConflict.recipes[#beforeConflict.recipes + 1] = {
+    recipeID = 9991, skillLineID = 186, professionName = "Mining", itemName = "Smelt", recipeName = "Smelt",
+}
+openID = 171
+local scanned, _, conflict = addon.Catalog.Scan()
+assert(scanned and conflict == "Confirm which primary profession was unlearned"
+    and addon.Catalog.Initialize().localProfile.professionConflict and not addon.Catalog.scannedThisSession,
+    "more than two cached primary professions must pause publication without guessing which was dropped")
+local conflictProfile = addon.Catalog.Initialize().localProfile
+addon.GuildState = { IsReady = function() return true end, members = {}, IsAllowed = function() return true end }
+assert(not addon.Catalog.ConfirmProfessionUnlearned(185, conflictProfile), "secondary professions must never be withdrawn by this chooser")
+assert(not addon.Catalog.ConfirmProfessionUnlearned(186, beforeConflict), "stale confirmation must not change a new profile")
+local priorRevision = addon.Catalog.Initialize().scanRevision
+assert(addon.Catalog.ConfirmProfessionUnlearned(186, conflictProfile))
+local corrected = addon.Catalog.Initialize().localProfile
+assert(#addon.Catalog.PrimaryProfessions(corrected) == 2 and corrected.revision > priorRevision
+    and addon.Catalog.scannedThisSession and #addon.Catalog.Search("Smelt") == 0,
+    "owner confirmation must remove only the selected primary, issue a new revision, and resume sharing")
+assert(#addon.Catalog.Search("25124") == 1 and #addon.Catalog.Search("2330") == 1,
+    "confirmation must preserve the other professions")
+recipeLists[171][#recipeLists[171] + 1] = 9991
+local priorInfo = C_TradeSkillUI.GetRecipeInfo
+C_TradeSkillUI.GetRecipeInfo = function(id)
+    if id == 9991 then return { recipeID = id, name = "Smelt", learned = true } end
+    return priorInfo(id)
+end
+local priorSkill = C_TradeSkillUI.GetTradeSkillLineForRecipe
+C_TradeSkillUI.GetTradeSkillLineForRecipe = function(id) return id == 9991 and 186 or priorSkill(id) end
+addon.Catalog.Scan()
+assert(#addon.Catalog.PrimaryProfessions(addon.Catalog.Initialize().localProfile) == 2
+    and #addon.Catalog.Search("Smelt") == 0, "stale recipe-window data must not undo a confirmed withdrawal")
+assert(#addon.Catalog.WithdrawnPrimaryProfessions() == 1
+    and addon.Catalog.WithdrawnPrimaryProfessions()[1].id == 186)
+assert(addon.Catalog.ConfirmProfessionRelearned(186, addon.Catalog.Initialize().localProfile))
+assert(addon.Catalog.Initialize().localProfile.professionConflict and not addon.Catalog.scannedThisSession,
+    "restoring a profession must still enforce the two-primary publishing limit")
+assert(addon.Catalog.ConfirmProfessionUnlearned(333, addon.Catalog.Initialize().localProfile))
+assert(#addon.Catalog.PrimaryProfessions(addon.Catalog.Initialize().localProfile) == 2
+    and #addon.Catalog.Search("Smelt") == 1 and #addon.Catalog.Search("25124") == 0,
+    "an owner must be able to correct a mistaken withdrawal or a later profession swap")
 print("PASS: incremental profession scans, automatic open/update capture, coalescing/retries, close cancellation, source guards, and sharing consent")

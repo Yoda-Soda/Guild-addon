@@ -8,7 +8,7 @@ if not lib or not lib:IsGameVersion("Forever") then return end
 
 lib:LoadNames(164, {
 		[2660] = {
-			["name"] = "Piedra de afilar rugosa",
+			["name"] = "Piedra de afilar férrea",
 		},
 		[2661] = {
 			["name"] = "Cinturón anillado de cobre",
@@ -32,19 +32,19 @@ lib:LoadNames(164, {
 			["name"] = "Peto de cobre rúnico",
 		},
 		[2668] = {
-			["name"] = "Leotardos duros de bronce",
+			["name"] = "Leotardos de bronce férreos",
 		},
 		[2670] = {
-			["name"] = "Coraza dura de bronce",
+			["name"] = "Loriga de bronce férrea",
 		},
 		[2671] = {
-			["name"] = "Brazales duros de bronce",
+			["name"] = "Brazales de bronce férreos",
 		},
 		[2672] = {
 			["name"] = "Brazales de bronce estampados",
 		},
 		[2673] = {
-			["name"] = "Peto de bronce plateadas",
+			["name"] = "Coraza de bronce bañada en plata",
 		},
 		[2674] = {
 			["name"] = "Piedra de afilar pesada",
@@ -71,10 +71,10 @@ lib:LoadNames(164, {
 			["name"] = "Espada corta de bronce",
 		},
 		[3115] = {
-			["name"] = "Contrapeso duro",
+			["name"] = "Contrapeso férreo",
 		},
 		[3116] = {
-			["name"] = "Piedrafuerte gruesa",
+			["name"] = "Contrapeso burdo",
 		},
 		[3117] = {
 			["name"] = "Piedrafuerte pesada",
@@ -95,13 +95,13 @@ lib:LoadNames(164, {
 			["name"] = "Maza pesada de bronce",
 		},
 		[3297] = {
-			["name"] = "Martillo de hierro poderosa",
+			["name"] = "Martillo de hierro poderoso",
 		},
 		[3319] = {
 			["name"] = "Botas anilladas de cobre",
 		},
 		[3320] = {
-			["name"] = "Piedra de pulir rugosa",
+			["name"] = "Piedra de pulir férrea",
 		},
 		[3321] = {
 			["name"] = "Jubón anillado de cobre",
@@ -116,19 +116,19 @@ lib:LoadNames(164, {
 			["name"] = "Guanteletes de cobre con gemas",
 		},
 		[3326] = {
-			["name"] = "Piedra de pulir gruesa",
+			["name"] = "Piedra de pulir burda",
 		},
 		[3328] = {
-			["name"] = "Hombreras duras de bronce",
+			["name"] = "Sobrehombros de bronce férreos",
 		},
 		[3330] = {
-			["name"] = "Hombreras de bronce plateadas",
+			["name"] = "Sobrehombros de bronce bañados en plata",
 		},
 		[3331] = {
-			["name"] = "Botas de bronce plateadas",
+			["name"] = "Botas de bronce bañadas en plata",
 		},
 		[3333] = {
-			["name"] = "Guanteletes de bronce plateadas",
+			["name"] = "Guanteletes de bronce bañados en plata",
 		},
 		[3334] = {
 			["name"] = "Botas de hierro verde",
@@ -143,19 +143,19 @@ lib:LoadNames(164, {
 			["name"] = "Cuchillo grande de bronce",
 		},
 		[3492] = {
-			["name"] = "Espada corta de hierro endurecida",
+			["name"] = "Espada corta de hierro endurecido",
 		},
 		[3493] = {
-			["name"] = "Jade Filoserpiente",
+			["name"] = "Hoja serpentina de jade",
 		},
 		[3494] = {
-			["name"] = "Machaque duro de hierro",
+			["name"] = "Gran maza de hierro sólido",
 		},
 		[3495] = {
 			["name"] = "Destructor de hierro dorado",
 		},
 		[3496] = {
-			["name"] = "Bracamarte lunacero",
+			["name"] = "Espada ancha de acero lunar",
 		},
 		[3497] = {
 			["name"] = "Espada escarchada del tigre",
@@ -179,7 +179,7 @@ lib:LoadNames(164, {
 			["name"] = "Hombreras de hierro verde",
 		},
 		[3505] = {
-			["name"] = "Hombreras de escamas doradas",
+			["name"] = "Sobrehombros de escamas doradas",
 		},
 		[3506] = {
 			["name"] = "Leotardos de hierro verde",
@@ -203,7 +203,7 @@ lib:LoadNames(164, {
 			["name"] = "Daga con empuñadura de perla",
 		},
 		[6518] = {
-			["name"] = "Martillo iridescente",
+			["name"] = "Martillo iridiscente",
 		},
 		[7221] = {
 			["name"] = "Pica de escudo de hierro",
@@ -221,7 +221,7 @@ lib:LoadNames(164, {
 			["name"] = "Mazo pesado de cobre",
 		},
 		[7817] = {
-			["name"] = "Botas duras de bronce",
+			["name"] = "Botas de bronce férreas",
 		},
 		[7818] = {
 			["name"] = "Vara de plata",
@@ -242,19 +242,19 @@ lib:LoadNames(164, {
 			["name"] = "Daga de cobre",
 		},
 		[9811] = {
-			["name"] = "Hombreras primitivas de acero",
+			["name"] = "Sobrehombros barbáricos de hierro",
 		},
 		[9813] = {
-			["name"] = "Peto primitivo de acero",
+			["name"] = "Coraza barbárica de hierro",
 		},
 		[9814] = {
-			["name"] = "Yelmo primitivo de acero",
+			["name"] = "Yelmo barbárico de hierro",
 		},
 		[9818] = {
-			["name"] = "Botas primitivas de acero",
+			["name"] = "Botas barbáricas de hierro",
 		},
 		[9820] = {
-			["name"] = "Guantes primitivos de acero",
+			["name"] = "Guantes barbáricos de hierro",
 		},
 		[9916] = {
 			["name"] = "Peto de acero",
@@ -311,7 +311,7 @@ lib:LoadNames(164, {
 			["name"] = "Peto pesado de mitril",
 		},
 		[9961] = {
-			["name"] = "Toca de mitril",
+			["name"] = "Almófar de mitril",
 		},
 		[9964] = {
 			["name"] = "Espuelas de mitril",
@@ -377,7 +377,7 @@ lib:LoadNames(164, {
 			["name"] = "Toxicidad",
 		},
 		[10013] = {
-			["name"] = "Shiv de Evon",
+			["name"] = "Chafarote de ébano",
 		},
 		[10015] = {
 			["name"] = "Campeón de veraplata",
@@ -392,7 +392,7 @@ lib:LoadNames(164, {
 			["name"] = "Leotardos de bronce plateadas",
 		},
 		[12260] = {
-			["name"] = "Jubón duro de cobre",
+			["name"] = "Jubón de cobre férreo",
 		},
 		[14379] = {
 			["name"] = "Cetro dorado",
@@ -491,7 +491,7 @@ lib:LoadNames(164, {
 			["name"] = "Pechera imperial de placas",
 		},
 		[16664] = {
-			["name"] = "Hombreras de chapa rúnica",
+			["name"] = "Sobrehombros rúnicos de placas",
 		},
 		[16665] = {
 			["name"] = "Botas de chapa rúnica",
@@ -614,7 +614,7 @@ lib:LoadNames(164, {
 			["name"] = "Faja abrasadora de anillas",
 		},
 		[20873] = {
-			["name"] = "Hombreras abrasadoras de anillas",
+			["name"] = "Sobrehombros de anillas ígneas",
 		},
 		[20874] = {
 			["name"] = "Brazales Hierro Negro",
@@ -695,7 +695,7 @@ lib:LoadNames(164, {
 			["name"] = "Peto Runanegra",
 		},
 		[27585] = {
-			["name"] = "Cinturón obsidiano pesado",
+			["name"] = "Cinturón de obsidiana pesado",
 		},
 		[27586] = {
 			["name"] = "Escudo obsidiano irregular",
@@ -704,7 +704,7 @@ lib:LoadNames(164, {
 			["name"] = "Peto grueso de obsidiana",
 		},
 		[27588] = {
-			["name"] = "Cinturón ligero obsidiano",
+			["name"] = "Cinturón de obsidiana ligero",
 		},
 		[27589] = {
 			["name"] = "Garras negras del destructor",
@@ -902,7 +902,7 @@ lib:LoadNames(164, {
 			["name"] = "Peto obsidiano grueso",
 		},
 		[1223787] = {
-			["name"] = "Coraza Deliriohelado",
+			["name"] = "Peto Deliriohelado",
 		},
 		[1223789] = {
 			["name"] = "Guanteletes Deliriohelado",
@@ -1361,22 +1361,22 @@ lib:LoadNames(164, {
 			["name"] = "Guja de legionita",
 		},
 		[1252988] = {
-			["name"] = "Peto adaptable de aplastatierras",
+			["name"] = "",
 		},
 		[1252989] = {
-			["name"] = "Guardabrazos adaptables de aplastatierras",
+			["name"] = "",
 		},
 		[1252990] = {
-			["name"] = "Faja adaptable de aplastatierras",
+			["name"] = "",
 		},
 		[1253001] = {
-			["name"] = "Placa adaptable de tejetierras",
+			["name"] = "",
 		},
 		[1253002] = {
-			["name"] = "Eslabones adaptables de tejetierras",
+			["name"] = "",
 		},
 		[1253003] = {
-			["name"] = "Guardarrenes adaptables de tejetierras",
+			["name"] = "",
 		},
 		[1263041] = {
 			["name"] = "Yunque",
@@ -1463,7 +1463,7 @@ lib:LoadNames(164, {
 			["name"] = "Apisonadoras de señor del nido",
 		},
 		[1301421] = {
-			["name"] = "Malla de anillas nublada cieloforjada",
+			["name"] = "Malla nublada cieloforjada",
 		},
 		[1301422] = {
 			["name"] = "Muñequeras nubladas cieloforjadas",
