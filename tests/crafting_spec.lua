@@ -1189,6 +1189,26 @@ assert(not addon.minimapButton:IsShown() and not canvas:IsShown() and not addon.
     "leaving the guild must hide the window and minimap button immediately")
 print("PASS: guild-only minimap/window visibility, pending identity, rejoin, and scan cancellation")
 
+local savedUIRealmName, savedUIGuildInfo, savedUIRosterInfo = GetNormalizedRealmName, GetGuildInfo, GetGuildRosterInfo
+GetNormalizedRealmName = function() return "" end
+GetGuildInfo = function() return "Horde Eternal", "Member", 5, nil end
+GetGuildRosterInfo = function(index) return index == 1 and "Podcast Clawson" or "Other Crafter" end
+playerInGuild = true
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+guildListener.scripts.OnEvent(nil, "GUILD_ROSTER_UPDATE")
+assert(addon.minimapButton:IsShown() and addon.guildActive and addon.GuildState.IsReady(),
+    "an explicitly empty realm must not hide an eligible guild's minimap button")
+SlashCmdList.HORDEETERNAL("")
+assert(canvas:IsShown(), "the slash command must open the window with an explicitly empty realm")
+SlashCmdList.HORDEETERNAL("")
+assert(not canvas:IsShown(), "the realm-less slash command must retain normal toggle behavior")
+playerInGuild = false
+guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
+assert(not addon.minimapButton:IsShown() and not addon.guildActive,
+    "realm-less guild access must still end immediately on leaving the guild")
+GetNormalizedRealmName, GetGuildInfo, GetGuildRosterInfo = savedUIRealmName, savedUIGuildInfo, savedUIRosterInfo
+print("PASS: realm-less guild minimap visibility, slash-command toggle, and guild-leave hiding")
+
 playerInGuild = true
 guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
 guildListener.scripts.OnEvent(nil, "GUILD_ROSTER_UPDATE")

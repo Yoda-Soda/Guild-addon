@@ -137,7 +137,47 @@ canaccesstable = nil
 C_Club = nil
 assert(not addon.GuildState.IsAllowed(), "missing club APIs must not fall back to guild name alone")
 C_Club = clubApi
+local savedRealmName, savedGuildInfo = GetNormalizedRealmName, GetGuildInfo
+local savedRoster, savedOnline = roster, onlineByName
+local savedFirst, savedLast = playerFirst, playerLast
+local savedGuildKey = addon.GuildState.key
+local savedGuildCache = addon.db.craftingGuilds[savedGuildKey]
+GetNormalizedRealmName = function() return "" end
+GetGuildInfo = function() return guildName, "Member", 5, nil end
+assert(addon.GuildState.IsAllowed(), "an explicitly empty home realm must not block the verified guild")
+roster, onlineByName = { "Pod Cast", "Other Crafter" }, { ["Pod Cast"] = true, ["Other Crafter"] = false }
+playerFirst, playerLast = "Pod", "Cast"
+assert(addon.Compat.IsPlayerName("Pod Cast") and not addon.Compat.IsPlayerName("Pod"),
+    "realm-less player matching must retain the full surname")
+assert(not addon.Compat.IsPlayerName("Pod Cast-OtherRealm"),
+    "an empty realm must not authorize an arbitrary realm-qualified identity")
+assert(addon.GuildState.RefreshRoster(), "a readable realm-less guild roster must become ready")
+assert(addon.GuildState.key == guildName .. "@club:503775441" and addon.GuildState.home == "",
+    "realm-less storage must use the verified club scope without inventing a realm")
+assert(addon.GuildState.Resolve("Pod Cast") == "Pod Cast"
+    and addon.GuildState.Resolve("Other Crafter") == "Other Crafter"
+    and addon.GuildState.IsAdmin() == true,
+    "realm-less roster and administrator identities must not gain a trailing hyphen")
+assert(addon.db.craftingGuilds[savedGuildKey] == savedGuildCache,
+    "a realm-less scope must preserve the separate realm-qualified guild cache")
+guildClubId = 123456
+assert(not addon.GuildState.IsAllowed(), "an empty realm must not bypass the required guild club ID")
+guildClubId = 503775441
+GetNormalizedRealmName = function() return secret end
+canaccessvalue = function(value) return value ~= secret end
+assert(not addon.GuildState.IsAllowed() and not addon.Compat.IsPlayerName("Pod Cast"),
+    "a restricted realm must not be treated as an explicitly empty realm")
+canaccessvalue = nil
+GetNormalizedRealmName = function() return nil end
+assert(not addon.GuildState.IsAllowed() and not addon.Compat.IsPlayerName("Pod Cast"),
+    "a missing realm result must remain unavailable")
+GetNormalizedRealmName, GetGuildInfo = savedRealmName, savedGuildInfo
+roster, onlineByName, playerFirst, playerLast = savedRoster, savedOnline, savedFirst, savedLast
+assert(addon.GuildState.RefreshRoster() and addon.GuildState.key == savedGuildKey
+    and addon.db.craftingGuilds[savedGuildKey] == savedGuildCache,
+    "restoring realm-qualified identity must reuse its original guild cache")
 print("PASS: complete guild rosters, departure cleanup, context changes, and unique owner authorization")
+print("PASS: empty-realm guild access, roster/self/admin identity, isolated cache scopes, and restricted/missing realm rejection")
 
 local active, clock = nil, 100
 local createdFrames = {}

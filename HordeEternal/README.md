@@ -57,9 +57,18 @@ loading.
   `/hordeeternal` and `/hordeeternal report`; include their outcome with the
   build and load status. Do not weaken the guild check to make controls appear.
 
-The post-update client reproduction and build collection are still outstanding.
-Offline tests and a valid package cannot certify that this visibility problem
-is fixed.
+One confirmed access blocker is an explicitly empty `GetNormalizedRealmName()`
+result with no guild-realm return from `GetGuildInfo("player")`. The reported
+client loads the addon and registers its command, but the old realm check then
+silently hides both the minimap button and window despite the correct guild ID.
+Readable empty realms now retain realm-less roster identities and use a
+`<guild name>@club:503775441` cache scope, without inventing a realm or relaxing
+the required guild ID. Missing or restricted realm results still fail closed.
+Previous realm-qualified guild caches remain separate and are not deleted; the
+realm-less scope populates through fresh scans, member setup, and guild sync.
+Use `/reload`, then verify the minimap button and `/hordeeternal` on the affected
+character. Current build metadata and post-fix client verification are still
+outstanding; passing offline tests does not establish that the live UI recovered.
 
 ## Guild Restriction
 

@@ -251,7 +251,7 @@ function Compat.IsPlayerName(name)
     local playerName, realm = identity[2], identity[3]
     if type(GetNormalizedRealmName) == "function" then
         local home, state = Compat.Value(GetNormalizedRealmName)
-        if state ~= "available" or type(home) ~= "string" or home == "" then return false end
+        if state ~= "available" or type(home) ~= "string" then return false end
         if type(realm) == "string" and realm ~= "" and realm ~= home
             and not playerName:find(" ", 1, true) then
             playerName, realm = playerName .. " " .. realm, home
