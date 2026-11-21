@@ -1,0 +1,18 @@
+# Review ownership.
+#
+# Branch protection on `main` requires CODE OWNER approval, so every entry below
+# is an approval gate, not a hint. The maintainer is the only code owner, which
+# is deliberate: a pull request from anyone else cannot merge until the
+# maintainer approves it.
+#
+# Consequence: a pull request authored by the maintainer cannot be self-approved
+# and will need the admin bypass ("Merge without waiting for requirements").
+
+*                       @Yoda-Soda
+
+# Vendored, hash-pinned third-party code - maintainer only.
+/HordeEternal/libs/     @Yoda-Soda
+
+# Release tooling and CI.
+/tools/                 @Yoda-Soda
+/.github/               @Yoda-Soda

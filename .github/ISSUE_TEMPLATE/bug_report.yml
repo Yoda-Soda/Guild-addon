@@ -1,0 +1,76 @@
+name: Bug report
+description: Something behaves incorrectly in game or in the test suite
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. For gameplay bugs, please include the client build
+        information — behaviour differs between client generations and cannot be
+        inferred from the mocks used in the tests.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+      placeholder: The guild overview shows 0% for every class even though the roster is populated.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps, starting from a fresh login where possible.
+      placeholder: |
+        1. Log in a character that is in the guild
+        2. Open the guild tab
+        3. Select Classes
+    validations:
+      required: true
+
+  - type: input
+    id: client-build
+    attributes:
+      label: Client build
+      description: Output of `GetBuildInfo()`, e.g. `1.60.1 69977`.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Guild overview / statistics
+        - Member directory
+        - Profession catalogue / crafting
+        - Guild map
+        - Sync between guild members
+        - Database / saved variables
+        - Minimap or options
+        - Test suite / tooling
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: lua-error
+    attributes:
+      label: Lua error
+      description: Paste the full error or traceback if one appeared.
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I searched existing issues for a duplicate.
+          required: true
+        - label: I removed any character names, guild names or account data that I do not want public.
+          required: true
