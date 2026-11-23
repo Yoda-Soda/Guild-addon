@@ -137,7 +137,7 @@ handler. Include the first actual Lua error stack when reporting such an excepti
 ## Guild Overview
 
 The Guild tab includes class, race, and talent-estimate counts in a compact
-composition area. Select Classes, Races, or Talents to see ranked counts and
+composition area. Select Classes, Races, or Specs to see ranked counts and
 proportional bars; larger breakdowns have their own page arrows. Counts include a
 percentage, such as `12 (23.5%)`, using the selected population as the denominator.
 Unknown race/spec reports remain in that population; these are composition
@@ -225,23 +225,50 @@ Battle.net account identifier. Keep the same SavedVariables when updating.
 
 The roster supplies class, level, and rank, but not a complete race or talent
 database. Each character reports its own guarded `UnitRace("player")` result and
-active talent configuration. Offline data is a last report, not live inspection.
+both talent configurations when the client exposes dual-spec group IDs. Offline
+data is a last report, not live inspection.
 Characters without the addon, unvisited alts, unreadable APIs, and unreceived data
 remain unknown. The directory and statistics do not invent race or spec values.
 
-Spec is an estimate from the named talent group with the most spent points.
-Ties are **Hybrid**; a readable zero-point configuration is **No talents spent**.
-Staged/uncommitted talent edits, missing groups, and restricted values yield
-**Spec unknown**. Talent events coalesce updates, with at least 30 seconds between
+Each build's spec is an estimate from the named returned talent group with the
+most readable spent points. Currency entries are matched by group ID; the
+client may return fewer entries than the displayed talent groups. Omitted group
+totals stay **Unknown**, rather than being filled with invented zeroes. Ties are
+**Hybrid**; only a complete, readable zero-point configuration is **No talents
+spent**. An incomplete all-zero result remains unknown.
+Dual-spec reports use primary/secondary order, for example
+**Retribution/Protection**, regardless of which build is active. The compact
+directory cell uses its two lines for the two names rather than point totals;
+the tooltip retains the joined label, point distributions, and an active-slot
+marker when available. Specs statistics count each character once under its
+reported combination, not once per build.
+
+A character with only one unlocked spec shows one name. Staged/uncommitted edits,
+missing trait data, and restricted values make the affected slot **Unknown**,
+without hiding the other readable build. If neither build is readable, the
+report stays **Spec unknown**. Clients without the group-config API retain the
+active-only read path; previously saved single-spec records remain readable.
+The joined label and detailed distributions stay within the existing member
+protocol's 60-byte and 320-byte limits; no wire-format or guild-data migration is
+required. Talent events coalesce updates, with at least 30 seconds between
 automatic publications. This does not inspect other players, change talents,
 select a gameplay specialization, or infer a tank/healer/damage role.
 
 The reader follows the pinned Forever/Camelot
-[talent UI](https://github.com/Gethe/wow-ui-source/blob/b401e0332adfbf0460d319b06d8ea29279a941f1/Interface/AddOns/Blizzard_PlayerSpells/Camelot/ClassTalents/Blizzard_ClassTalentsFrame.lua)
-and its `C_ClassTalents.GetActiveConfigID`, `C_Traits.GetConfigInfo`,
+[talent UI](https://github.com/Gethe/wow-ui-source/blob/734f065329cff4992835b01a84f210a297db91b6/Interface/AddOns/Blizzard_PlayerSpells/Camelot/ClassTalents/Blizzard_ClassTalentsFrame.lua)
+and its `C_SpecializationInfo.GetCombatConfigIDForSpecGroup(1/2)`,
+`GetActiveSpecGroup`, `GetNumSpecGroups`, `C_Traits.GetConfigInfo`,
 `ConfigHasStagedChanges`, `GetGroupDisplayInfoByTreeID`, and
-`GetGroupCurrencyInfo` declarations. These are from build `1.60.1.70425`, older
-than the reported runtime build, and still need a live check.
+`GetGroupCurrencyInfo` declarations. The source snapshot reports build
+`1.60.1.71037`. User probes confirm that both own config IDs are readable on
+the running client; inactive talent contents, event timing, layout, and
+two-client sharing still need live checks. These reads do not switch specs.
+
+If either build shows Unknown, run `/hordeeternal specs`. This read-only command
+prints the active, primary, and secondary config IDs and the first read check
+that rejected each build, such as staged changes, missing trees, or unavailable
+currencies. It does not scan professions, save member profiles, publish data,
+or change talents. Restricted values are not printed.
 
 ### Sharing And Trust
 

@@ -24,22 +24,154 @@ C_Timer = { After = function(_, callback) timers[#timers + 1] = callback end }
 UnitRace = function() return "Orc", "Orc", 2 end
 C_ClassTalents = { GetActiveConfigID = function() return 7 end }
 local spent = { 5, 31, 15 }
+local secondarySpent = { 0, 0, 51 }
 C_Traits = {
     ConfigHasStagedChanges = function() return false end,
-    GetConfigInfo = function(id) assert(id == 7); return { treeIDs = { 9 } } end,
+    GetConfigInfo = function(id) assert(id == 7 or id == 8); return { treeIDs = { 9 } } end,
     GetGroupDisplayInfoByTreeID = function(id)
         assert(id == 9)
         return { { groupID = 1, displayName = "Elemental" }, { groupID = 2, displayName = "Enhancement" }, { groupID = 3, displayName = "Restoration" } }
     end,
     GetGroupCurrencyInfo = function(id, groups)
-        assert(id == 7 and #groups == 3)
-        return { { traitNodeGroupID = 3, currencyInfos = { { spent = spent[3] } } },
-            { traitNodeGroupID = 1, currencyInfos = { { spent = spent[1] } } },
-            { traitNodeGroupID = 2, currencyInfos = { { spent = spent[2] } } } }
+        assert((id == 7 or id == 8) and #groups == 3)
+        local distribution = id == 7 and spent or secondarySpent
+        return { { traitNodeGroupID = 3, currencyInfos = { { spent = distribution[3] } } },
+            { traitNodeGroupID = 1, currencyInfos = { { spent = distribution[1] } } },
+            { traitNodeGroupID = 2, currencyInfos = { { spent = distribution[2] } } } }
     end,
 }
 local race, spec, points = addon.Compat.PlayerGuildFacts()
 assert(race == "Orc" and spec == "Enhancement" and points:find("Enhancement: 31", 1, true))
+C_SpecializationInfo = {
+    GetCombatConfigIDForSpecGroup = function(group) return group == 1 and 7 or 8 end,
+    GetActiveSpecGroup = function() return 2 end,
+}
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Restoration",
+    "dual-spec reporting must use primary/secondary talent names rather than point distributions")
+assert(select(3, addon.Compat.PlayerGuildFacts()):find("Secondary (active):", 1, true),
+    "the active slot must be marked in details without changing primary/secondary display order")
+local specReport = addon.Compat.SpecReport()
+assert(specReport[1] == "Active: config=7; Enhancement"
+    and specReport[2] == "Primary: config=7; Enhancement" and specReport[3] == "Secondary: config=8; Restoration",
+    "read-only spec diagnostics must distinguish active and both stored configurations")
+local fullCurrency = C_Traits.GetGroupCurrencyInfo
+C_Traits.GetGroupCurrencyInfo = function(id)
+    return { { traitNodeGroupID = 3, currencyInfos = { { spent = id == 7 and 20 or 31 } } },
+        { traitNodeGroupID = 2, currencyInfos = { { spent = id == 7 and 31 or 20 } } } }
+end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Restoration",
+    "two returned currency groups must not reject a readable three-group talent tree")
+assert(select(3, addon.Compat.PlayerGuildFacts()):find("Elemental: Unknown", 1, true),
+    "omitted currency groups must not manufacture a known zero-point total")
+assert(addon.Compat.SpecReport()[2] == "Primary: config=7; Enhancement",
+    "read-only diagnostics must accept readable sparse currency results")
+C_Traits.GetGroupCurrencyInfo = function()
+    return { { traitNodeGroupID = 3, currencyInfos = { { spent = 31 } } } }
+end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Restoration/Restoration",
+    "a readable positive one-group result must remain usable without assuming missing groups are zero")
+C_Traits.GetGroupCurrencyInfo = function()
+    return { { traitNodeGroupID = 2, currencyInfos = { { spent = 0 } } },
+        { traitNodeGroupID = 3, currencyInfos = { { spent = 0 } } } }
+end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == nil,
+    "an incomplete zero-point result must not claim that the character has no talents")
+C_Traits.GetGroupCurrencyInfo = function()
+    return { { traitNodeGroupID = 2, currencyInfos = { { spent = 31 } } },
+        { traitNodeGroupID = 2, currencyInfos = { { spent = 20 } } } }
+end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == nil,
+    "duplicate group IDs must still reject sparse currency data")
+C_Traits.GetGroupCurrencyInfo = function()
+    return { { traitNodeGroupID = 99, currencyInfos = { { spent = 31 } } } }
+end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == nil,
+    "a currency result outside the requested talent groups must not establish a spec")
+C_Traits.GetGroupCurrencyInfo = fullCurrency
+local dualConfig = C_SpecializationInfo.GetCombatConfigIDForSpecGroup
+local dualSecret = {}
+GetNumSpecGroups = function() return 2 end
+C_Traits.ConfigHasStagedChanges = function(id) return id == 7 end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Unknown/Restoration",
+    "staged primary talents must not hide a readable secondary build or be reported as committed")
+assert(addon.Compat.SpecReport()[2]:find("uncommitted talent changes", 1, true),
+    "spec diagnostics must identify the exact staging check that rejects a configuration")
+C_Traits.ConfigHasStagedChanges = function(id) return id == 8 end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Unknown",
+    "staged secondary talents must remain unknown independently of the primary build")
+C_Traits.ConfigHasStagedChanges = function() return false end
+secondarySpent = { 20, 20, 11 }
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Hybrid")
+secondarySpent = { 0, 0, 0 }
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/No talents spent")
+secondarySpent = { 0, 0, dualSecret }
+canaccessvalue = function(value) return value ~= dualSecret end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Unknown",
+    "a restricted secondary talent value must never be formatted or counted")
+assert(addon.Compat.SpecReport()[3]:find("talent points unavailable", 1, true),
+    "restricted talent diagnostics must report the failed stage without printing the value")
+secondarySpent = { 0, 0, 51 }
+local readableConfig = C_Traits.GetConfigInfo
+C_Traits.GetConfigInfo = function(id) if id == 7 then return readableConfig(id) end end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Unknown",
+    "a secondary ID without loaded trait data must remain unknown")
+assert(addon.Compat.SpecReport()[3] == "Secondary: config=8; config data unavailable; call=available",
+    "missing config data must be distinguishable from inaccessible or staged data")
+C_Traits.GetConfigInfo = readableConfig
+C_SpecializationInfo.GetCombatConfigIDForSpecGroup = function(group) return group == 1 and 7 or dualSecret end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Unknown",
+    "an inaccessible secondary config ID must never be passed into trait APIs")
+canaccessvalue = nil
+C_SpecializationInfo.GetCombatConfigIDForSpecGroup = function(group) if group == 1 then return 7 end end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Unknown",
+    "a missing secondary ID must not be mistaken for a known build")
+C_SpecializationInfo.GetCombatConfigIDForSpecGroup = function() return 7 end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement/Unknown",
+    "duplicate config IDs must not manufacture two distinct talent builds")
+C_SpecializationInfo.GetCombatConfigIDForSpecGroup = function(group)
+    assert(group == 1, "a locked second spec must not be queried")
+    return 7
+end
+GetNumSpecGroups = function() return 1 end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Enhancement",
+    "a single-spec character must retain a single name")
+C_SpecializationInfo.GetCombatConfigIDForSpecGroup = dualConfig
+GetNumSpecGroups = function() return 2 end
+local shamanGroups = C_Traits.GetGroupDisplayInfoByTreeID
+C_Traits.GetGroupDisplayInfoByTreeID = function()
+    return { { groupID = 1, displayName = "Holy" }, { groupID = 2, displayName = "Protection" }, { groupID = 3, displayName = "Retribution" } }
+end
+spent, secondarySpent = { 4, 15, 29 }, { 0, 51, 0 }
+assert(select(2, addon.Compat.PlayerGuildFacts()) == "Retribution/Protection",
+    "the user's 4/15/29 example must report the named primary and secondary builds")
+C_Traits.GetGroupDisplayInfoByTreeID = function()
+    return { { groupID = 1, displayName = string.rep("A", 40) }, { groupID = 2, displayName = string.rep("B", 40) },
+        { groupID = 3, displayName = string.rep("C", 40) } }
+end
+assert(select(2, addon.Compat.PlayerGuildFacts()) == nil,
+    "combined labels must stay within the existing member protocol's 60-byte bound")
+C_Traits.GetGroupDisplayInfoByTreeID = function()
+    return { { groupID = 1, displayName = "Holy" }, { groupID = 2, displayName = string.rep("B", 60) },
+        { groupID = 3, displayName = string.rep("C", 60) }, { groupID = 4, displayName = string.rep("D", 60) } }
+end
+local threeGroupCurrency = C_Traits.GetGroupCurrencyInfo
+C_Traits.GetGroupCurrencyInfo = function(_, groups)
+    assert(#groups == 4)
+    return { { traitNodeGroupID = 1, currencyInfos = { { spent = 51 } } },
+        { traitNodeGroupID = 2, currencyInfos = { { spent = 0 } } },
+        { traitNodeGroupID = 3, currencyInfos = { { spent = 0 } } },
+        { traitNodeGroupID = 4, currencyInfos = { { spent = 0 } } } }
+end
+spent, secondarySpent = { 51, 0, 0 }, { 51, 0, 0 }
+local _, boundedSpec, boundedDetails = addon.Compat.PlayerGuildFacts()
+assert(boundedSpec == "Holy/Holy" and boundedDetails == "",
+    "oversized detailed distributions must not exceed the existing 320-byte member field")
+C_Traits.GetGroupCurrencyInfo = threeGroupCurrency
+C_Traits.GetGroupDisplayInfoByTreeID = shamanGroups
+spent, secondarySpent = { 5, 31, 15 }, { 0, 0, 51 }
+GetNumSpecGroups = nil
+C_SpecializationInfo = nil
+print("PASS: primary/secondary talent names, active details, single-spec handling, staged/restricted/unknown slots, and bounded labels")
 C_Traits.ConfigHasStagedChanges = function() return true end
 assert(select(2, addon.Compat.PlayerGuildFacts()) == nil, "uncommitted talent edits must not be advertised")
 C_Traits.ConfigHasStagedChanges = function() return false end
@@ -94,7 +226,15 @@ assert(addon.Members.Save(false, ""))
 assert(addon.Members.Stats(true).total == 0 and #addon.Members.Rows() == 0 and addon.Members.Settings().discord == "")
 assert(not addon.Members.Save(true, "bad|Hlink") and not addon.Members.Save(true, string.rep("x", 33)))
 assert(addon.Members.Save(true, "contact"))
+local publishedOwn = addon.Members.Settings()
+local publishedID, publishedRevision = publishedOwn.id, publishedOwn.revision
+C_SpecializationInfo = { GetCombatConfigIDForSpecGroup = dualConfig }
+GetNumSpecGroups = function() return 2 end
 addon.Members.Publish()
+assert(addon.Members.Settings() == publishedOwn and publishedOwn.id == publishedID and publishedOwn.revision == publishedRevision
+    and addon.db.memberGuilds[addon.GuildState.key].profiles[player].spec == "Enhancement/Restoration",
+    "reporting both specs must preserve the existing account group, main, nickname, and settings revision")
+C_SpecializationInfo, GetNumSpecGroups = nil, nil
 local packets = sent
 addon.db = {}
 player = "Unknown Person-Realm"
@@ -104,6 +244,8 @@ assert(addon.Members.Save(true, "Receiver Nickname"))
 rows = addon.Members.Rows()
 assert(rows[2].state == "Main" and rows[2].discord == "contact" and rows[2].race == "Tauren",
     "bounded profiles must round-trip and assemble reordered chunks")
+assert(rows[2].spec == "Enhancement/Restoration",
+    "the existing member packet format must round-trip both build names without a schema change")
 local before = addon.Members.Stats(true).total
 addon.Members.Receive("HEGM1", packets[1], "GUILD", "Outsider-Realm")
 addon.Members.Receive("HEGM1", packets[1], "WHISPER", "Alt Person-Realm")
@@ -209,6 +351,20 @@ assert(view.discord:GetText() == "my.discord" and view.main:GetChecked(), "roste
 view.save.scripts.OnClick()
 assert(addon.Members.Settings().main == player and addon.Members.Settings().discord == "my.discord")
 assert(view.body.shown and not view.locked.shown, "saving a main and server nickname must unlock information")
+local displayedProfile = addon.db.memberGuilds[addon.GuildState.key].profiles[player]
+local displayedSpec, displayedTalents = displayedProfile.spec, displayedProfile.talents
+displayedProfile.spec, displayedProfile.talents = "Retribution/Protection", "Holy: 4, Protection: 15, Retribution: 29"
+view.Refresh()
+assert(view.rows[1].spec:GetText() == "Retribution/" and view.rows[1].report:GetText() == "Protection",
+    "the directory must show both names in its two-line cell instead of numeric talent points")
+assert(view.rows[1].member.spec == "Retribution/Protection"
+    and addon.Members.Stats(false).specs["Shaman: Retribution/Protection"] == 1
+    and addon.Members.Stats(false).total == #roster,
+    "the joined report must remain available and dual specs must not double-count a character")
+displayedProfile.spec, displayedProfile.talents = displayedSpec, displayedTalents
+view.Refresh()
+assert(view.rows[1].spec:GetText() == displayedSpec and view.rows[1].report:GetText() == "",
+    "legacy single-spec records must show their name without a point-distribution line")
 assert(view.coverage:GetText():find("1 counted", 1, true)
     and view.statRows[1].statName == "Shaman" and view.statRows[1].statCount == 1)
 assert(view.rows[1].identity:GetText() == "Main Person" and view.rows[1].presence:GetText() == "Main",
@@ -586,7 +742,7 @@ do
     assert(data.groups[original.id].discord == "Updated Nick")
     local newerGroup = Copy(data.groups[original.id])
     active = owner
-    owner.spec = "Restoration"
+    owner.spec = "Retribution/Protection"
     owner.addon.Members.Capture()
     local newerFacts = Copy(owner.addon.db.memberGuilds["Guild@Realm"].profiles[owner.name])
     local peerData = reloadedPeer.addon.db.memberGuilds["Guild@Realm"]
@@ -602,9 +758,9 @@ do
     assert(Deliver(arrival, reloadedPeer, "2|W|", retryStart) > 0, "a corrupted reply must be retried")
     Flush(reloadedPeer)
     Deliver(reloadedPeer, arrival, "2|R|", retryReply)
-    assert(data.profiles[owner.name].spec == "Restoration"
+    assert(data.profiles[owner.name].spec == "Retribution/Protection"
         and data.groups[original.id].discord == newerGroup.discord,
-        "newer character facts must combine with newer account settings without rolling either back")
+        "relayed dual-spec names must combine with newer account settings without rolling either back")
     peerData.profiles[owner.name], peerData.groups[original.id] = Copy(original), Copy(originalGroup)
     assert(Recover(reloadedPeer, arrival) == 0, "stale member inventories must not request older reports")
     peerData.profiles[owner.name], peerData.groups[original.id] = Copy(newerFacts), Copy(newerGroup)

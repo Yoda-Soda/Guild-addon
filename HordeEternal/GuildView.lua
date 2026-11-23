@@ -130,7 +130,7 @@ function addon.CreateGuildView(page, header, subheader)
     Rule(page, -34)
 
     local statTabs = {}
-    for index, definition in ipairs({ { "classes", "Classes" }, { "races", "Races" }, { "specs", "Talents" } }) do
+    for index, definition in ipairs({ { "classes", "Classes" }, { "races", "Races" }, { "specs", "Specs" } }) do
         local tab = CreateFrame("Button", nil, page)
         tab:SetSize(78, 24)
         tab:SetPoint("TOPLEFT", page, "TOPLEFT", 10 + (index - 1) * 84, -41)
@@ -203,7 +203,7 @@ function addon.CreateGuildView(page, header, subheader)
     local columns = {
         { key = "name", title = "Character", x = 31, width = 162 },
         { key = "className", title = "Class / Race", x = 199, width = 108 },
-        { key = "spec", title = "Talents", x = 315, width = 102 },
+        { key = "spec", title = "Specs", x = 315, width = 102 },
         { key = "rank", title = "Role", x = 425, width = 92 },
         { key = "main", title = "Main / Nickname", x = 525, width = 118 },
     }
@@ -405,10 +405,9 @@ function addon.CreateGuildView(page, header, subheader)
                 row.className:SetText(member.className)
                 row.race:SetText(member.race)
                 row.role:SetText(member.rank and member.rank ~= "" and member.rank or "Unknown")
-                row.spec:SetText(member.spec == "Spec unknown" and "Unknown" or member.spec)
-                local points = {}
-                for spent in member.talents:gmatch(": (%d+)") do points[#points + 1] = spent end
-                row.report:SetText(#points > 0 and table.concat(points, " / ") or "-")
+                local primary, secondary = member.spec:match("^([^/]+)/([^/]+)$")
+                row.spec:SetText(primary and (primary .. "/") or member.spec == "Spec unknown" and "Unknown" or member.spec)
+                row.report:SetText(secondary or "")
                 row.identity:SetText(member.main and Bare(member.main) or "No main selected")
                 row.identity:ClearAllPoints()
                 if member.main then

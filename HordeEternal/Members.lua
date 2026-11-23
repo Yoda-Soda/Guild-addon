@@ -137,10 +137,14 @@ local function Escape(value)
 end
 
 local function Decode(payload, count)
-    local fields = {}
-    for part in (payload .. "~"):gmatch("(.-)~") do
+    local fields, position = {}, 1
+    while true do
+        local separator = payload:find("~", position, true)
+        local part = payload:sub(position, separator and separator - 1 or #payload)
         fields[#fields + 1] = part:gsub("%%(%x%x)", function(hex) return string.char(tonumber(hex, 16)) end)
         if #fields > (count or 10) then return nil end
+        if not separator then break end
+        position = separator + 1
     end
     if #fields ~= (count or 10) then return nil end
     return fields
@@ -597,7 +601,8 @@ function Members.Start()
     Members.started = true
     if not listener then
         listener = CreateFrame("Frame")
-        for _, event in ipairs({ "PLAYER_TALENT_UPDATE", "ACTIVE_COMBAT_CONFIG_CHANGED", "TRAIT_CONFIG_UPDATED" }) do
+        for _, event in ipairs({ "PLAYER_TALENT_UPDATE", "ACTIVE_COMBAT_CONFIG_CHANGED", "ACTIVE_TALENT_GROUP_CHANGED",
+            "TRAIT_CONFIG_UPDATED", "TRAIT_CONFIG_CREATED", "TRAIT_CONFIG_DELETED", "TRAIT_CONFIG_LIST_UPDATED" }) do
             addon.Compat.Call(listener.RegisterEvent, listener, event)
         end
         listener:SetScript("OnEvent", function() Members.Schedule() end)

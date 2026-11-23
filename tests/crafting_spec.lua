@@ -1198,6 +1198,15 @@ guildListener.scripts.OnEvent(nil, "PLAYER_GUILD_UPDATE", "player")
 guildListener.scripts.OnEvent(nil, "GUILD_ROSTER_UPDATE")
 assert(addon.minimapButton:IsShown() and addon.guildActive and addon.GuildState.IsReady(),
     "an explicitly empty realm must not hide an eligible guild's minimap button")
+local savedSpecReport, savedSpecPrint, savedSpecScan = addon.Compat.SpecReport, addon.Print, addon.Catalog.Scan
+local reportedSpecs = {}
+addon.Compat.SpecReport = function() return { "Active result", "Primary result", "Secondary result" } end
+addon.Print = function(message) reportedSpecs[#reportedSpecs + 1] = message end
+addon.Catalog.Scan = function() error("read-only spec diagnostics must not scan or publish") end
+SlashCmdList.HORDEETERNAL("specs")
+assert(#reportedSpecs == 3 and reportedSpecs[1] == "Active result" and reportedSpecs[3] == "Secondary result"
+    and not canvas:IsShown(), "the spec diagnostic command must print each result without opening the window")
+addon.Compat.SpecReport, addon.Print, addon.Catalog.Scan = savedSpecReport, savedSpecPrint, savedSpecScan
 SlashCmdList.HORDEETERNAL("")
 assert(canvas:IsShown(), "the slash command must open the window with an explicitly empty realm")
 SlashCmdList.HORDEETERNAL("")
