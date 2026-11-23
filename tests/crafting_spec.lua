@@ -538,7 +538,7 @@ addon.Members = {
     Settings = function() return { main = "", discord = "" } end,
     Self = function() return "Local Person-Realm" end,
     Rows = function() return {} end,
-    Stats = function() return { total = 0, all = 0, mains = 0, unassigned = 0, classes = {}, races = {}, specs = {} } end,
+    Stats = function() return { total = 0, all = 0, mains = 0, alts = 0, unassigned = 0, classes = {}, races = {}, specs = {} } end,
 }
 assert(loadfile("HordeEternal/GuildView.lua"))("HordeEternal", addon)
 assert(loadfile("HordeEternal/GuildMap.lua"))("HordeEternal", addon)

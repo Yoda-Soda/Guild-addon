@@ -210,6 +210,30 @@ addon.Members.Capture()
 local rows = addon.Members.Rows()
 assert(rows[2].state == "Alt" and rows[2].main == "Main Person-Realm" and rows[2].discord == "test.handle")
 assert(rows[3].state == "No main selected" and rows[3].race == "Unknown")
+local splitStats = addon.Members.Stats(true)
+assert(splitStats.mains == 1 and splitStats.alts == 1 and splitStats.unassigned == 1
+    and splitStats.all == 3 and splitStats.total == 1,
+    "guild totals must separate mains, declared alts, and unassigned characters without counting alts as mains")
+local allStats = addon.Members.Stats(false)
+assert(allStats.total == 3 and allStats.mains == 1 and allStats.alts == 1 and allStats.unassigned == 1
+    and allStats.mains + allStats.alts + allStats.unassigned == allStats.all,
+    "main/alt/unassigned totals must partition the guild independently of the selected statistics population")
+local countDatabase = addon.db.memberGuilds[addon.GuildState.key]
+local previousCountProfile = countDatabase.profiles["Unknown Person-Realm"]
+local previousCountGroup = countDatabase.groups["other-account"]
+countDatabase.profiles["Unknown Person-Realm"] = { id = "other-account", race = "", spec = "", talents = "" }
+countDatabase.groups["other-account"] = { revision = 1, main = "Unknown Person-Realm", discord = "Other Nickname" }
+local declaredCount = addon.Members.Stats(true)
+assert(declaredCount.mains == 2 and declaredCount.alts == 1 and declaredCount.unassigned == 0 and declaredCount.total == 2,
+    "a verified main declaration must increase the main population without counting its alts")
+countDatabase.groups["other-account"].main = ""
+countDatabase.groups["other-account"].revision = 2
+local withdrawnCount = addon.Members.Stats(true)
+assert(withdrawnCount.mains == 1 and withdrawnCount.alts == 1 and withdrawnCount.unassigned == 1
+    and withdrawnCount.total == 1 and withdrawnCount.all == 3,
+    "withdrawing a main must reduce the main count and move the character to unassigned, not alt")
+countDatabase.profiles["Unknown Person-Realm"] = previousCountProfile
+countDatabase.groups["other-account"] = previousCountGroup
 local departedMain = table.remove(roster, 1)
 addon.Members.Capture()
 assert(addon.Members.Settings().main == "" and #addon.Members.Rows() == 0 and not addon.Members.CanView(),
@@ -365,8 +389,23 @@ displayedProfile.spec, displayedProfile.talents = displayedSpec, displayedTalent
 view.Refresh()
 assert(view.rows[1].spec:GetText() == displayedSpec and view.rows[1].report:GetText() == "",
     "legacy single-spec records must show their name without a point-distribution line")
-assert(view.coverage:GetText():find("1 counted", 1, true)
+assert(view.coverage:GetText() == "Mains counted: 1"
     and view.statRows[1].statName == "Shaman" and view.statRows[1].statCount == 1)
+assert(subheader:GetText() == "Mains: 1 / Alts: 1 / Unassigned: 0",
+    "the guild header must show the explicit main/alt split rather than mains versus all characters")
+view.everyone.scripts.OnClick()
+assert(view.coverage:GetText() == "Characters counted: 2"
+    and subheader:GetText() == "Mains: 1 / Alts: 1 / Unassigned: 0",
+    "changing the composition population must not change the guild-wide main and alt totals")
+view.filter:SetText("Shaman")
+view.Refresh()
+assert(view.rows[1].shown and not view.rows[2].shown and view.coverage:GetText() == "Characters counted: 2"
+    and subheader:GetText() == "Mains: 1 / Alts: 1 / Unassigned: 0",
+    "directory search must not reduce the complete-roster main/alt summary or composition denominator")
+view.filter:SetText("")
+view.mains.scripts.OnClick()
+assert(view.coverage:GetText() == "Mains counted: 1",
+    "returning to mains-only mode must exclude known alts from the composition count")
 assert(view.rows[1].identity:GetText() == "Main Person" and view.rows[1].presence:GetText() == "Main",
     "the selected main must show first name and surname without realm or a competing prefix")
 assert(view.rows[1].mainIcon.shown and view.rows[1].mainIcon.texture == "Interface\\TargetingFrame\\UI-RaidTargetingIcon_1"
@@ -403,7 +442,7 @@ assert(not view.rows[1].presence:GetText():find("Online", 1, true)
     and not view.rows[1].presence:GetText():find("Offline", 1, true), "recycled online rows must clear stale presence words")
 assert(view.statRows[1].count:GetText() == "1 (100.0%)")
 view.everyone.scripts.OnClick()
-assert(not view.mains:GetChecked() and view.everyone:GetChecked() and view.coverage:GetText():find("2 counted", 1, true))
+assert(not view.mains:GetChecked() and view.everyone:GetChecked() and view.coverage:GetText() == "Characters counted: 2")
 assert(view.statRows[1].count:GetText() == "1 (50.0%)", "percentages must use the selected character population")
 assert(view.statRows[1].label.point[4] + view.statRows[1].label.width < view.statRows[1].count.point[4],
     "adding percentage text must not overlap the category name")

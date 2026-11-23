@@ -529,7 +529,7 @@ function addon.CreateGuildView(page, header, subheader)
         profileSummary:SetText(Bare(name) .. (settings and settings.main == name and ("  |T" .. MAIN_ICON .. ":12:12|t") or ""))
         mains:SetChecked(view.mainsOnly)
         everyone:SetChecked(not view.mainsOnly)
-        coverage:SetText(stats.total .. " counted / " .. stats.all .. " characters")
+        coverage:SetText((view.mainsOnly and "Mains counted: " or "Characters counted: ") .. stats.total)
         for key, tab in pairs(statTabs) do
             local selected = key == view.category
             tab.label:SetTextColor(selected and 1 or 0.68, selected and 0.82 or 0.68, selected and 0.3 or 0.64)
@@ -620,7 +620,7 @@ function addon.CreateGuildView(page, header, subheader)
             subheader:SetText("Main character and Discord server nickname required")
         elseif addon.db.canvasTab == "guild" then
             header:SetText("Guild overview")
-            subheader:SetText(stats.mains .. " mains / " .. stats.all .. " characters - " .. stats.unassigned .. " no main selected")
+            subheader:SetText("Mains: " .. stats.mains .. " / Alts: " .. stats.alts .. " / Unassigned: " .. stats.unassigned)
         end
     end
     host:SetScript("OnShow", function() view.Refresh() end)
