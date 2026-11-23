@@ -120,9 +120,7 @@ function Compat.OwnRecipeSource(strict)
     return true
 end
 
-function Compat.PlayerGuildFacts()
-    local race = Compat.Value(UnitRace, "player")
-    if type(race) ~= "string" or #race > 40 or race:find("[%c|]") then race = nil end
+local function TalentConfigFacts(configID)
     local function Field(source, key)
         return Compat.Field(source, key)
     end
@@ -131,46 +129,106 @@ function Compat.PlayerGuildFacts()
             or (type(canaccesstable) == "function" and not canaccesstable(source)) then return nil end
         return Compat.Value(function() return #source end)
     end
-    local configID = Compat.Value(C_ClassTalents and C_ClassTalents.GetActiveConfigID)
-    if type(configID) ~= "number" then return race end
-    if Compat.Value(C_Traits and C_Traits.ConfigHasStagedChanges, configID) ~= false then return race end
-    local config = Compat.Value(C_Traits and C_Traits.GetConfigInfo, configID)
+    if not Compat.IsReadable(configID) or type(configID) ~= "number" or configID < 1
+        or configID > 2147483647 or configID ~= math.floor(configID) then return nil, nil, "config ID unavailable" end
+    local staged, stageState = Compat.Value(C_Traits and C_Traits.ConfigHasStagedChanges, configID)
+    if stageState ~= "available" then return nil, nil, "staging check: " .. stageState end
+    if staged == true then return nil, nil, "uncommitted talent changes" end
+    if staged ~= false then return nil, nil, "staging result unavailable" end
+    local config, configState = Compat.Value(C_Traits and C_Traits.GetConfigInfo, configID)
+    if type(config) ~= "table" then return nil, nil, "config data unavailable; call=" .. configState end
     local trees = Field(config, "treeIDs")
     local treeID = Field(trees, 1)
-    if type(treeID) ~= "number" or Count(trees) ~= 1 then return race end
+    if type(treeID) ~= "number" or Count(trees) ~= 1 then
+        return nil, nil, "unexpected talent trees; count=" .. Compat.SafeText(Count(trees))
+    end
     local displays = Compat.Value(C_Traits and C_Traits.GetGroupDisplayInfoByTreeID, treeID)
     local count = Count(displays)
-    if type(count) ~= "number" or count < 1 or count > 4 then return race end
+    if type(count) ~= "number" or count < 1 or count > 4 then
+        return nil, nil, "talent groups unavailable; count=" .. Compat.SafeText(count)
+    end
     local ids, names = {}, {}
     for index = 1, count do
         local display = Field(displays, index)
         local id, name = Field(display, "groupID"), Field(display, "displayName")
         if index > 4 or type(id) ~= "number" or names[id] or type(name) ~= "string"
-            or #name > 60 or name == "" or name:find("[%c|]") then return race end
+            or #name > 60 or name == "" or name:find("[%c|]") then return nil, nil, "talent group metadata unavailable" end
         ids[#ids + 1], names[id] = id, name
     end
-    if #ids == 0 then return race end
+    if #ids == 0 then return nil, nil, "talent groups unavailable" end
     local currency = Compat.Value(C_Traits and C_Traits.GetGroupCurrencyInfo, configID, ids)
-    if Count(currency) ~= #ids then return race end
+    local currencyCount = Count(currency)
+    if type(currencyCount) ~= "number" or currencyCount < 1 or currencyCount > #ids then
+        return nil, nil, "talent currencies unavailable; count=" .. Compat.SafeText(currencyCount)
+    end
     local points, seen = {}, {}
-    for index = 1, #ids do
+    for index = 1, currencyCount do
         local group = Field(currency, index)
         local id = Field(group, "traitNodeGroupID")
         local values = Field(group, "currencyInfos")
         local spent = Field(Field(values, 1), "spent")
         if not names[id] or seen[id] or type(spent) ~= "number" or spent < 0 or spent > 100
-            or spent ~= math.floor(spent) or Count(values) ~= 1 then return race end
+            or spent ~= math.floor(spent) or Count(values) ~= 1 then
+            return nil, nil, "talent points unavailable; currency count=" .. Compat.SafeText(Count(values))
+        end
         seen[id], points[id] = true, spent
     end
     local maximum, winner, tied, distribution = 0, nil, false, {}
     for _, id in ipairs(ids) do
         local spent = points[id]
-        distribution[#distribution + 1] = names[id] .. ": " .. spent
-        if spent > maximum then maximum, winner, tied = spent, names[id], false
-        elseif spent == maximum then tied = true end
+        distribution[#distribution + 1] = names[id] .. ": " .. (spent ~= nil and tostring(spent) or "Unknown")
+        if spent ~= nil then
+            if spent > maximum then maximum, winner, tied = spent, names[id], false
+            elseif spent == maximum then tied = true end
+        end
     end
+    if maximum == 0 and currencyCount ~= #ids then return nil, nil, "incomplete zero-point talent data" end
     local spec = maximum == 0 and "No talents spent" or tied and "Hybrid" or winner
-    return race, spec, table.concat(distribution, ", ")
+    return spec, table.concat(distribution, ", ")
+end
+
+function Compat.SpecReport()
+    local lines = {}
+    local function Add(label, configID)
+        local spec, _, reason = TalentConfigFacts(configID)
+        lines[#lines + 1] = label .. ": config=" .. Compat.SafeText(configID) .. "; " .. (spec or reason or "unavailable")
+    end
+    Add("Active", Compat.Value(Compat.Field(C_ClassTalents, "GetActiveConfigID")))
+    local groupConfig = Compat.Field(C_SpecializationInfo, "GetCombatConfigIDForSpecGroup")
+    Add("Primary", Compat.Value(groupConfig, 1))
+    if Compat.Value(GetNumSpecGroups) == 1 then
+        lines[#lines + 1] = "Secondary: locked"
+    else
+        Add("Secondary", Compat.Value(groupConfig, 2))
+    end
+    return lines
+end
+
+function Compat.PlayerGuildFacts()
+    local race = Compat.Value(UnitRace, "player")
+    if type(race) ~= "string" or #race > 40 or race:find("[%c|]") then race = nil end
+    local groupConfig = Compat.Field(C_SpecializationInfo, "GetCombatConfigIDForSpecGroup")
+    if type(groupConfig) ~= "function" then
+        local spec, talents = TalentConfigFacts(Compat.Value(C_ClassTalents and C_ClassTalents.GetActiveConfigID))
+        return race, spec, talents
+    end
+    local primaryID = Compat.Value(groupConfig, 1)
+    local primary, primaryPoints = TalentConfigFacts(primaryID)
+    if Compat.Value(GetNumSpecGroups) == 1 then return race, primary, primaryPoints end
+    local secondaryID = Compat.Value(groupConfig, 2)
+    local secondary, secondaryPoints
+    if secondaryID ~= nil and secondaryID ~= primaryID then
+        secondary, secondaryPoints = TalentConfigFacts(secondaryID)
+    end
+    if not primary and not secondary then return race end
+    local spec = (primary or "Unknown") .. "/" .. (secondary or "Unknown")
+    if #spec > 60 then return race end
+    local active = Compat.Value(Compat.Field(C_SpecializationInfo, "GetActiveSpecGroup"))
+    local primaryLabel = active == 1 and "Primary (active): " or "Primary: "
+    local secondaryLabel = active == 2 and "Secondary (active): " or "Secondary: "
+    local talents = primaryLabel .. (primaryPoints or "Unknown") .. "; " .. secondaryLabel .. (secondaryPoints or "Unknown")
+    if #talents > 320 then talents = "" end
+    return race, spec, talents
 end
 
 local function MapNumber(value, minimum, maximum)
