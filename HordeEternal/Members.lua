@@ -239,7 +239,7 @@ function Members.Rows()
 end
 
 function Members.Stats(mainsOnly, rows)
-    local stats = { total = 0, all = 0, mains = 0, unassigned = 0, classes = {}, races = {}, specs = {} }
+    local stats = { total = 0, all = 0, mains = 0, alts = 0, unassigned = 0, classes = {}, races = {}, specs = {} }
     if not Members.CanView() then return stats end
     for _, class in ipairs({ { "WARRIOR", "Warrior" }, { "PALADIN", "Paladin" }, { "HUNTER", "Hunter" },
         { "ROGUE", "Rogue" }, { "PRIEST", "Priest" }, { "SHAMAN", "Shaman" }, { "MAGE", "Mage" },
@@ -249,8 +249,9 @@ function Members.Stats(mainsOnly, rows)
     end
     for _, row in ipairs(rows or Members.Rows()) do
         stats.all = stats.all + 1
-        if row.state == "Main" then stats.mains = stats.mains + 1 end
-        if row.state == "No main selected" then stats.unassigned = stats.unassigned + 1 end
+        if row.state == "Main" then stats.mains = stats.mains + 1
+        elseif row.state == "Alt" then stats.alts = stats.alts + 1
+        else stats.unassigned = stats.unassigned + 1 end
         if not mainsOnly or row.state == "Main" then
             stats.total = stats.total + 1
             for _, pair in ipairs({ { stats.classes, row.className }, { stats.races, row.race },

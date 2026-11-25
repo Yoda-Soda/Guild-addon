@@ -149,6 +149,16 @@ are retained. Statistics use the complete readable guild roster, not only online
 characters or addon users. Mains-only totals exclude undeclared characters rather
 than guessing which character is their main.
 
+The header reports **Mains**, **Alts**, and **Unassigned** separately. These are
+counts of characters in the complete readable roster, not unique accounts; they
+add up to the roster total and do not change with directory search or the
+composition selector. Only characters with a valid main declaration count as
+mains or linked alts. Withdrawing that declaration removes them from those
+counts and leaves them unassigned rather than guessing that they are alts.
+The composition label shows **Mains counted** or **Characters counted** to make
+its selected population explicit; switching to Mains excludes alts and unassigned
+characters from composition totals and percentages.
+
 The searchable directory lists every verified guild character, online first,
 in a fixed-height scrollable table with a mouse wheel and native scrollbar.
 Six rows are visible, with one additional recycled buffer row for partial scrolling;
